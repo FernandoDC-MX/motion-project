@@ -5,7 +5,9 @@ const ipc = ipcRenderer
 // Read files
 const fs = require('fs');
 
-let _flag_order = 0;
+let _flag_order_date = 0;
+let _flag_order_name = 0;
+let _proyectos
 
 // Function to read a file and return its content.
 function readFile(path){
@@ -36,9 +38,10 @@ window.onload = function(){
 
 function readProyects(){
     const response = readFile('src/app/proyectos.json')
-
+    
     switch(response.Estado){
-        case 'OK': displayProyectos(response.Contenido)
+        case 'OK':  _proyectos = response.Contenido
+                    displayProyectos(0)
             break;
         case 'ERROR': alert('ERROR')
             break;
@@ -55,18 +58,57 @@ function sortByDateDesc(a, b) {
     return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 }
 
+// Sort the data in ascending way.
+function sortByNameAsc(a, b) {
+    var nameA = a.nombre.toUpperCase(); // ignore upper and lowercase
+    var nameB = b.nombre.toUpperCase(); // ignore upper and lowercase
+    if (nameA < nameB) {
+        return -1;
+    }
+    if (nameA > nameB) {
+        return 1;
+    }
+
+    // names must be equal
+    return 0;
+}
+
+// Sort the data in descending way.
+function sortByNameDesc(a, b) {
+    var nameA = a.nombre.toUpperCase(); // ignore upper and lowercase
+    var nameB = b.nombre.toUpperCase(); // ignore upper and lowercase
+    if (nameA > nameB) {
+        return -1;
+    }
+    if (nameA < nameB) {
+        return 1;
+    }
+
+    // names must be equal
+    return 0;
+}
+
 // Display projects on DOM.
-function displayProyectos(proyectos){
+function displayProyectos(filter){
     // Sort the data.
     let _sorted_array;
 
-    switch(_flag_order){
-        case 0: _sorted_array = proyectos.sort(sortByDateDesc);
-            break;
-        case 1: _sorted_array = proyectos.sort(sortByDateAsc);
-            break;
-    }
+    if(!filter)
+        switch(_flag_order_date){
+            case 0: _sorted_array = _proyectos.sort(sortByDateDesc);
+                break;
+            case 1: _sorted_array = _proyectos.sort(sortByDateAsc);
+                break;
+        }
+    else
+        switch(_flag_order_name){
+            case 0: _sorted_array = _proyectos.sort(sortByNameDesc);
+                break;
+            case 1: _sorted_array = _proyectos.sort(sortByNameAsc);
+                break;
+        }
 
+    console.log(_sorted_array)
     let _body =  document.getElementById('_table_projects');
     _body.innerHTML = '';
 
@@ -96,17 +138,31 @@ function displayProyectos(proyectos){
 }
 
 _order_date.addEventListener('click', ()=>{
-    // (_flag_order) ? _flag_order = 0 : _flag_order = 1
-    if(_flag_order){
+    // (_flag_order_date) ? _flag_order_date = 0 : _flag_order_date = 1
+    if(!_flag_order_date){
         document.querySelector('#_order_date').style.transform = "rotate(180deg)"
-        _flag_order = 0;
+        _flag_order_date = 1;
     }else{
         document.querySelector('#_order_date').style.transform = "rotate(0deg)"
-        _flag_order = 1;
+        _flag_order_date = 0;
     }
     
-    readProyects()
+    displayProyectos(0)
 })
+
+_order_name.addEventListener('click', ()=>{
+    // (_flag_order_date) ? _flag_order_date = 0 : _flag_order_date = 1
+    if(!_flag_order_name){
+        document.querySelector('#_order_name').style.transform = "rotate(180deg)"
+        _flag_order_name = 1;
+    }else{
+        document.querySelector('#_order_name').style.transform = "rotate(0deg)"
+        _flag_order_name = 0;
+    }
+    
+    displayProyectos(1)
+})
+
 
 // Close App
 closeBtn.addEventListener('click', ()=>{
