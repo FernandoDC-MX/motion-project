@@ -32,32 +32,34 @@
         </div>
     </div>
     <div class="_container">
-        <div class="form-group">
-            <input type="text" class="form-input" id="name" placeholder="Nombre del proyecto">
-            <label for="name" class="form-label">Nombre del proyecto</label>
-        </div>
-        <div class="form-group">
-            <p class="font-mono">Cantidad de canales</p>
-            <div class="channel">
-                <p>1</p>
+       <form action="">
+            <div class="form-group">
+                <input type="text" class="form-input" id="name" placeholder="Nombre del proyecto">
+                <label for="name" class="form-label">Nombre del proyecto</label>
             </div>
-            <div class="channel">
-                <p>2</p>
+            <div class="form-group">
+                <p class="font-mono">Cantidad de canales</p>
+                <div class="channel">
+                    <p>1</p>
+                </div>
+                <div class="channel">
+                    <p>2</p>
+                </div>
+                <div class="channel">
+                    <p>3</p>
+                </div>
+                <div class="channel">
+                    <p>4</p>
+                </div>
             </div>
-            <div class="channel">
-                <p>3</p>
+            <div class="form-group">
+                <p class="font-mono">Comentarios</p>
+                <textarea class="custom-textarea" name="comments" id="comments" cols="30" rows="5"></textarea>
             </div>
-            <div class="channel">
-                <p>4</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <p class="font-mono">Comentarios</p>
-             <textarea class="custom-textarea" name="comments" id="comments" cols="30" rows="5"></textarea>
-        </div>
+       </form>
         <div class="text-end">
-            <button class="btn-cstm bg-crear">Crear</button>
-            <button class="btn-cstm bg-cancel">Cancelar</button>
+            <button class="btn-cstm bg-crear" id="createBtn">Crear</button>
+            <button class="btn-cstm bg-cancel" id="cancelBtn">Cancelar</button>
        </div>
     </div>
 

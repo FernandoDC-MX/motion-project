@@ -166,5 +166,5 @@ _order_name.addEventListener('click', ()=>{
 
 // Open the window to create a project.
 _new_project.addEventListener('click', ()=>{
-    ipc.send('openCreateProject')
+    ipc.send('openCreateProject', _proyectos)
 })
