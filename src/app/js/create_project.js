@@ -19,6 +19,6 @@ function storeLocalProjects(proyectos){
 }
 
 createBtn.addEventListener('click', ()=>{
-    
-    console.log(_proyectos_local)
+    let form = document.forms._form_project
+    console.log(form)
 })
