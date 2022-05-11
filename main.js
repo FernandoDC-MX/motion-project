@@ -71,7 +71,7 @@ const createProjectWindow = () =>{
   // Create the browser window.
   let projectWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 670,
     resizable: false,
     webPreferences: {
       nodeIntegration: true,

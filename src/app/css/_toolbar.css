@@ -60,6 +60,7 @@
     flex-direction: row;
     width: 120px;
     height: 40px;
+    justify-content: end;
 }
 
 .titleBarBtns > .topBtn{
