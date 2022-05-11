@@ -1,0 +1,257 @@
+html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-size: 10pt;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #949AA7;
+    background-color: #2C313C;
+}
+
+.mainApp{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid #343B48;
+    -webkit-box-sizing: border-box;
+}
+
+.mainApp > .topBar{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 40px;
+    border-bottom: 3px solid #343B48;
+    background-color: #1B1D23;
+    -webkit-user-select: none;
+}
+
+.topBar > .titleBar{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.topBar > .titleBar{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.titleBar > .toggleButton{
+    width: 45px;
+    height: 40px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    background-image: url('../icons/menu.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.titleBar > .toggleButton:hover{
+    background-color: #272C36;
+}
+
+.titleBar > .toggleButton:active{
+    background-color: #4F9FEE;
+}
+
+.titleBar > img{
+    margin-left: 10px;
+}
+
+.titleBar > .title{
+    margin-left: 10px;
+    width: 100%;
+    line-height: 30px;
+    margin-top: 5px;
+    padding-bottom: 5px;
+    -webkit-app-region: drag;
+}
+
+.topBar > .titleBarBtns{
+    display: flex;
+    flex-direction: row;
+    width: 120px;
+    height: 40px;
+}
+
+.titleBarBtns > .topBtn{
+    width: 40px;
+    height: 40px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.titleBarBtns > .topBtn:hover{
+    background-color: #272C36;
+}
+
+.titleBarBtns > .topBtn:active{
+    background-color: #4F9EEE;
+}
+
+.titleBarBtns > .minimizeBtn{
+    background-image: url('../icons/minimize.png');
+}
+
+.titleBarBtns > .maximizeBtn{
+    background-image: url('../icons/maximize.png');
+}
+
+.titleBarBtns > .closeBtn{
+    background-image: url('../icons/close.png');
+}
+
+.titleBarBtns > .restoreBtn{
+    background-image: url('../icons/restore.png');
+}
+
+.mainApp > .contentArea{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.contentArea > .contentPages{
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+}
+
+.mt-5{
+    margin-top: 5em;
+}
+
+.mt-6{
+    margin-top: 6em;
+}
+
+.mt-7{
+    margin-top: 7em;
+}
+
+.mt-8{
+    margin-top: 8em;
+}
+
+.fs-1{
+    font-size: 1em;
+}
+
+.fs-2{
+    font-size: 1.5em;
+}
+
+._btn_custom{
+    border-radius: 12px;
+    border: 0.5px solid white;
+    background: none;
+    margin: 0.5em auto;
+    padding: 0.25em 0.75em;
+    font-weight: 500;
+    color: white;
+    font-size: 1.2rem;
+    transition: 0.2s all ease-in-out;
+}
+
+._btn_custom:hover{
+    background: #2620207e;
+}
+
+._btn_custom:active{
+    background: white;
+    color: black;
+}
+
+._container_projects{
+    width: 80%;
+    border-radius: 0.5em;
+    border: 0.5px solid white;
+    margin: 2.5em auto 0.5em;
+    padding: 3em 6em;
+}
+
+._container_projects > h5{
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+
+._container_projects table{
+    color: white;
+    font-family: monospace;
+}
+
+._container_projects ._scroll_enabled{
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: none;
+}
+
+._scroll_enabled::-webkit-scrollbar {
+    width: 10px;
+}
+
+._scroll_enabled::-webkit-scrollbar-corner {
+    background: rgba(0,0,0,0);
+}
+
+._scroll_enabled::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 6px;
+    border: 4px solid rgba(0,0,0,0);
+    background-clip: content-box;
+    min-width: 32px;
+    height: 12px;
+}
+
+._scroll_enabled::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0);
+}
+
+._container_projects table th{
+    text-transform: uppercase;
+}
+
+._container_projects ._transparent{
+    background-color: transparent;
+    color: white;
+}
+
+._container_projects ._active{
+    background-color: white;
+    color: black;
+}
+
+.table > :not(caption) > * > * {
+    padding: 1.2rem 0.5rem;
+}
+
+.table tbody tr{
+    transition: 0.3s all ease-in-out;
+}
+
+.table tbody tr:hover{
+    background: #ffffff1b;
+    cursor: pointer;
+    transform: scale(1.0002);
+    font-weight: bold;
+}
+
+._pointer{
+    cursor: pointer;
+}

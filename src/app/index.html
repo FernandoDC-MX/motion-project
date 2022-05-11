@@ -1,0 +1,80 @@
+<!--index.html-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+
+    <!-- Own style css -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Boostrap js -->
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <title>Motion</title>
+  </head>
+  <body>
+    <div class="mainApp">
+
+      <div class="topBar">
+
+        <div class="titleBar">
+            <div class="title">
+              Emotion
+            </div>
+        </div>
+
+        <div class="titleBarBtns">
+            <button id="minimizeBtn" class="topBtn minimizeBtn" title="Minimize"></button>
+            <button id="maximizeBtn" class="topBtn maximizeBtn" title="Maximize"></button>
+            <button id="closeBtn" class="topBtn closeBtn" title="Close"></button>
+        </div>
+
+      </div>
+
+      <div class="contentArea">
+        <div class="contentPages">
+          <!-- Title -->
+          <h1 class="text-center mt-5 fs-2">Bienvenido a Motion</h1>
+
+          <!-- Buttons -->
+          <div class="text-center mt-6">
+            <button class="_btn_custom">Nuevo proyecto</button>
+            <br>
+            <button class="_btn_custom">Abrir</button>
+          </div>
+
+          <!-- Contenedor de proyectos -->
+          <div class="_container_projects">
+            <h5>Recientes</h5>
+            <div class="mt-4 _scroll_enabled" id="_container_table">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col" class="_pointer">
+                      Fecha
+                      <svg xmlns="http://www.w3.org/2000/svg" id="_order_date"  width="16" height="16" fill="currentColor" class="bi bi-chevron-down ml-2" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="_table_projects">
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- You can also require other files to run in this process -->
+    <script defer src="js/menuToolbar.js"></script>
+  </body>
+</html>
