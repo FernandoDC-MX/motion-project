@@ -104,3 +104,36 @@ html, body{
     outline: none;
     background: #4646466f;
 }
+
+.text-end{
+    text-align: end;
+}
+
+.btn-cstm{
+    border-radius: 0.75em;
+    outline: none;
+    border: none;
+    padding: 0.25em 2em;
+    margin: 3.5em 0.75em 1em;
+    transition: 0.2s all ease-in-out;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+.bg-crear{
+    background: #eb5a5aea;
+    border: 1px solid #eb5a5aea;
+}
+
+.bg-crear:hover, .bg-cancel:hover{
+    background: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.bg-cancel{
+    background: none;
+    border: 1px solid white;
+    color: white;
+}
