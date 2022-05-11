@@ -7,6 +7,7 @@ const path = require('path')
 // Master communication (This variable will receive the signals that ipcRenderer sends)
 const ipc = ipcMain
 
+// [Main] Window
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -18,7 +19,6 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: false,
       devTools: true,
-      preload: path.join(__dirname, 'preload.js')
     },
     frame:false
   })
@@ -32,6 +32,7 @@ const createWindow = () => {
   // Close app
   ipc.on('closeApp', ()=>{
     mainWindow.close()
+    app.quit()
   })
 
   // Minimize app
@@ -48,6 +49,10 @@ const createWindow = () => {
     }
   })
 
+  ipc.on('openCreateProject', ()=>{
+    createProjectWindow()
+  })
+
   // Check if the window is maximized
   mainWindow.on('maximize', () =>{
     mainWindow.webContents.send('isMaximized')
@@ -56,6 +61,32 @@ const createWindow = () => {
    // Check if the window is maximized
    mainWindow.on('unmaximize', () =>{
     mainWindow.webContents.send('isRestored')
+  })
+
+  
+}
+
+// [Secondary] Create project window.
+const createProjectWindow = () =>{
+  // Create the browser window.
+  let projectWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      devTools: true,
+    },
+    frame: false
+  })
+
+  // and load the index.html of the app.
+  projectWindow.loadFile('src/app/create_project.html')
+
+  // Destroy the window
+  ipc.on('closeCreateProject', ()=>{
+    projectWindow.destroy()
   })
 }
 

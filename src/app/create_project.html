@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+
+    <!-- Own style css -->
+    <link rel="stylesheet" href="css/_toolbar.css">
+    <link rel="stylesheet" href="css/_create_project.css">
+
+    <!-- Boostrap js -->
+    <script src="bootstrap/js/bootstrap.js"></script>   
+
+    <title>Crear proyecto</title>
+</head>
+<body>
+    <!-- Toolbar -->
+    <div class="topBar">
+        <div class="titleBar">
+            <div class="title">
+              Crear nuevo proyecto
+            </div>
+        </div>
+        <div class="titleBarBtns">
+            <button id="minimizeBtn" class="topBtn minimizeBtn" title="Minimize"></button>
+            <button id="maximizeBtn" class="topBtn maximizeBtn" title="Maximize"></button>
+            <button id="closeBtn" class="topBtn closeBtn" title="Close"></button>
+        </div>
+    </div>
+
+    <script defer src="js/create_project.js"></script>
+</body>
+</html>
