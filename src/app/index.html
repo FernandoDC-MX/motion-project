@@ -13,9 +13,14 @@
 
     <!-- Own style css -->
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/form.css">
 
     <!-- Boostrap js -->
     <script src="bootstrap/js/bootstrap.js"></script>
+
+    script-src 'self' "https://kit.fontawesome.com/75db1d5d26.js";
+
     <title>Motion</title>
   </head>
   <body>
@@ -40,13 +45,12 @@
       <div class="contentArea">
         <div class="contentPages">
           <!-- Title -->
-          <h1 class="text-center mt-5 fs-2">Bienvenido a Motion</h1>
+          <h1 class="mt-5 font-mono wb fs-3">Bienvenido a Motion</h1>
 
           <!-- Buttons -->
-          <div class="text-center mt-6">
-            <button class="_btn_custom" id="_new_project">Nuevo proyecto</button>
-            <br>
-            <button class="_btn_custom">Abrir</button>
+          <div class="mt-4">
+            <button class="_btn_custom" id="_new_project"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Nuevo proyecto</button>
+            <button class="_btn_custom">Abrir</button> 
           </div>
 
           <!-- Contenedor de proyectos -->
@@ -78,6 +82,33 @@
           </div>
         </div>
       </div>
+
+      
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">Crear proyecto</p>
+        <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" aria-label="Close" width="24" height="24" fill="currentColor" class="bi bi-x cursor" viewBox="0 0 16 16">
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+      </div>
+      <div class="modal-body">
+        <section>
+          <div class="form-group">
+            <input type="text" class="form-input" id="name" placeholder="Nombre del proyecto">
+            <label for="name" class="form-label">Nombre del proyecto</label>
+          </div>
+          <div class="form-group">
+            <p class="font-mono">Comentarios</p>
+            <textarea class="custom-textarea" name="comments" id="comments" cols="30" rows="5"></textarea>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
     </div>
     <!-- You can also require other files to run in this process -->
     <script defer src="js/main_screen.js"></script>

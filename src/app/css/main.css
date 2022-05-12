@@ -5,7 +5,7 @@ html, body{
     font-size: 10pt;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #949AA7;
-    background-color: #2C313C;
+    background-color: #383839;
 }
 
 .mainApp{
@@ -127,7 +127,9 @@ html, body{
 }
 
 .contentArea > .contentPages{
-    width: 100%;
+    transform: translate(0,8em);
+    width: 60%;
+    margin: 1em auto;
     height: 100%;
     padding: 1em;
 }
@@ -156,16 +158,29 @@ html, body{
     font-size: 1.5em;
 }
 
+.fs-3{
+    font-size: 1.5em;
+}
+
+.font-mono{
+    font-family: monospace;
+}
+
+.wb{
+    font-weight: bold;
+    color: white;
+}
+
 ._btn_custom{
     border-radius: 12px;
-    border: 0.5px solid white;
-    background: none;
-    margin: 0.5em auto;
-    padding: 0.25em 0.75em;
+    border: 0.5px solid rgb(65, 65, 65);
+    margin: 0.5em 2em 0 0;
+    padding: 0.5em 1.75em;
     font-weight: 500;
     color: white;
     font-size: 1.2rem;
     transition: 0.2s all ease-in-out;
+    background: linear-gradient(180deg, #2c2c2c 0%, #383839 100%);
 }
 
 ._btn_custom:hover{
@@ -178,9 +193,9 @@ html, body{
 }
 
 ._container_projects{
-    width: 80%;
+    width: 100%;
+    background: linear-gradient(180deg, #545454 0%, #383839 100%);
     border-radius: 0.5em;
-    border: 0.5px solid white;
     margin: 2.5em auto 0.5em;
     padding: 3em 6em;
 }
@@ -197,7 +212,7 @@ html, body{
 }
 
 ._container_projects ._scroll_enabled{
-    height: 300px;
+    height: 200px;
     overflow-y: auto;
     overflow-x: none;
 }

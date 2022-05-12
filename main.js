@@ -52,37 +52,6 @@ const createWindow = () => {
     }
   })
 
-  // [Secondary] Create project window.
-  ipc.on('openCreateProject', (event, arg) =>{
-    // Create the browser window.
-    let projectWindow = new BrowserWindow({
-      width: 800,
-      height: 670,
-      resizable: false,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-        devTools: true,
-      },
-      frame: false
-    })
-
-    // and load the index.html of the app.
-    projectWindow.loadFile('src/app/create_project.html')
-
-    // Destroy the window
-    ipc.on('closeCreateProject', ()=>{
-      projectWindow.destroy()
-    })
-
-    // Event 
-    projectWindow.on('ready-to-show', () =>{
-      // Send the data.
-      projectWindow.webContents.send('enviar-proyectos',arg)
-    })
-
-  })
-
   // Check if the window is maximized
   mainWindow.on('maximize', () =>{
     mainWindow.webContents.send('isMaximized')
