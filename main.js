@@ -4,6 +4,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 
+// Enable live reload for all the files inside your project directory
+require('electron-reload')(__dirname);
+
 // Master communication (This variable will receive the signals that ipcRenderer sends)
 const ipc = ipcMain
 

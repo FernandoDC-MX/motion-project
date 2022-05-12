@@ -7,7 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
- 
   "keywords": [
     "Motion",
     "Software"
@@ -16,5 +15,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^18.1.0"
+  },
+  "dependencies": {
+    "electron-reload": "^2.0.0-alpha.1"
   }
 }
