@@ -19,13 +19,12 @@
     <!-- Boostrap js -->
     <script src="bootstrap/js/bootstrap.js"></script>
 
-    script-src 'self' "https://kit.fontawesome.com/75db1d5d26.js";
-
     <title>Motion</title>
   </head>
   <body>
     <div class="mainApp">
 
+      <!-- Toolbar -->
       <div class="topBar">
 
         <div class="titleBar">
@@ -42,6 +41,7 @@
 
       </div>
 
+      <!-- Main Area -->
       <div class="contentArea">
         <div class="contentPages">
           <!-- Title -->
@@ -80,37 +80,77 @@
               </table>
             </div>
           </div>
+
         </div>
       </div>
 
-      
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <p class="modal-title">Crear proyecto</p>
-        <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" aria-label="Close" width="24" height="24" fill="currentColor" class="bi bi-x cursor" viewBox="0 0 16 16">
-          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-        </svg>
-      </div>
-      <div class="modal-body">
-        <section>
-          <div class="form-group">
-            <input type="text" class="form-input" id="name" placeholder="Nombre del proyecto">
-            <label for="name" class="form-label">Nombre del proyecto</label>
+      <!-- Modal -->
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <p class="modal-title">Crear proyecto</p>
+              <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" aria-label="Close" width="24" height="24" fill="currentColor" class="bi bi-x cursor" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </div>
+            <div class="modal-body">
+              <section class="d-none">
+                <div class="form-group">
+                  <input type="text" class="form-input" id="name" placeholder="Nombre del proyecto">
+                  <label for="name" class="form-label">Nombre del proyecto</label>
+                </div>
+                <div class="form-group">
+                  <p class="font-mono">Comentarios</p>
+                  <textarea class="custom-textarea" name="comments" id="comments" cols="30" rows="5"></textarea>
+                </div>
+              </section>
+              <section class="">
+                <div class="form-group">
+                  <p class="font-mono">Emparejamiento</p>
+                  <p class="text-justify">
+                    Ahora vamos a conectar los sensores EMG que quieras utilizar. Cada sensor prenderá de un color diferente
+                    al momento de emparejarse
+                  </p>
+                </div>
+                <hr>
+                <div>
+                  <p class="d-inline-block">Buscando dispositivo</p>
+                  <img class="d-inline-block" src="icons/loading.gif" alt="" width="40" height="40">
+                  <div class="mt-2">
+                    <div class="device d-inline-block">
+                      
+                    </div>
+                    <div class="device d-inline-block">
+                      
+                    </div>
+                    <div class="device d-inline-block">
+                      
+                    </div>
+                    <div class="device d-inline-block">
+                      
+                    </div>
+                    <div class="device d-inline-block">
+                      
+                    </div>
+                  </div>
+                </div>
+              </section>
+              
+            </div>
+              <div class="text-end">
+                <button class="btn-cstm bg-cancelar"  data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                <button class="btn-cstm bg-crear" id="nextBtn">Siguiente</button>
+              </div>
           </div>
-          <div class="form-group">
-            <p class="font-mono">Comentarios</p>
-            <textarea class="custom-textarea" name="comments" id="comments" cols="30" rows="5"></textarea>
-          </div>
-        </section>
+        </div>
       </div>
+
     </div>
-  </div>
-</div>
-    </div>
+
     <!-- You can also require other files to run in this process -->
+    <script defer src="js/devices.js"></script>
+
     <script defer src="js/main_screen.js"></script>
     <script defer src="js/menuToolbar.js"></script>
   </body>
