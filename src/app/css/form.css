@@ -1,8 +1,9 @@
 
 .form-group{
     width: 100%;
-    margin: 1em 0;
+    margin: 3em 0;
     font-family: monospace;
+    background: transparent;
 }
 
 .form-group .form-input{
@@ -47,6 +48,22 @@
 .font-mono{
     font-family: monospace;
     color: white;
+}
+
+.form-selected{
+    width: 100%;
+    color: #cecece;
+    padding: 0.25em;
+    border-style: none none solid none;
+    border-color: white;
+    background: rgba(70, 70, 70, 0.114);
+    outline: none;
+}
+
+
+.form-selected option{
+    background: transparent;
+    color: black;
 }
 
 .custom-textarea{

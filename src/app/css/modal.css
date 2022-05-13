@@ -34,8 +34,9 @@ body.modal-open .contentArea{
 
 .modal section{
     width: 80%;
-    min-height: 100px;
-    margin: 3em auto 2em;
+    height: 350px;
+    overflow: auto;
+    margin: 3em auto 0;
     background: transparent;
     padding: 1em 3em;
 }
@@ -47,7 +48,7 @@ body.modal-open .contentArea{
 
 @media (min-width: 576px){
     .modal-dialog {
-        max-width: 800px;
+        max-width: 900px;
         margin: 1.75rem auto;
     }
 }

@@ -26,3 +26,5 @@ function changeMaximizeBtn(isMaximized){
 
 ipc.on('isMaximized', ()=>{ changeMaximizeBtn(true) })
 ipc.on('isRestored', ()=>{ changeMaximizeBtn(false) })
+
+

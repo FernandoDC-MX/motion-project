@@ -272,16 +272,69 @@ html, body{
 }
 
 .device{
-    width: 90px;
-    height: 90px;
+    width: 110px;
+    height: 110px;
     margin: 0.5em 0.5em;
     background: #e9e9e918;
     border: 1px solid white;
     transition: all ease-in-out 0.4s;
     cursor: pointer;
     border-radius: 0.5em;
+    text-align: center;
 }
+
+
 
 .device:hover{
     background: #e9e9e95f;
+}
+
+
+.device:hover > *{
+    opacity: 1;
+}
+
+
+
+.device > svg{
+    color: black;
+    margin: 1.5em auto 0.5em;
+    opacity: 0;
+    transition: 0.3s all ease-in-out;
+}
+
+.device > p{
+    color: black;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: 0.3s all ease-in-out;
+}
+
+.battery{
+    width: 95%;
+    height: 2.5em;
+    border: 1px solid white;
+    border-radius: 0.5em 0.25em 0.25em 0.5em;
+    padding: 0.2em;
+}
+
+.battery-body{
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 0.5em 0.25em 0.25em 0.5em;
+    padding: 0.35em;
+    color: black;
+    font-weight: bold;
+}
+
+.battery-head{
+    width: 10px;
+    height: 1.4em;
+    background: white;
+    position: relative;
+    left: -7px;
+    top: 4px;
+    border-radius: 0 0.25em 0.25em 0;
+
 }
