@@ -95,16 +95,21 @@
               </svg>
             </div>
             <div class="modal-body">
-              <section class="d-none">
+
+              <!-- First -->
+              <section class="active">
                 <div class="form-group">
-                  <input type="text" class="form-input" id="name" placeholder="Nombre del proyecto">
+                  <input type="text" class="form-input" id="name" placeholder="Nombre del proyecto" required>
                   <label for="name" class="form-label">Nombre del proyecto</label>
+                  <small id="errorName"></small>
                 </div>
                 <div class="form-group">
                   <p class="font-mono">Comentarios</p>
                   <textarea class="custom-textarea" name="comments" id="comments" cols="30" rows="5"></textarea>
                 </div>
               </section>
+
+              <!-- Second -->
               <section class="d-none">
                 <div class="form-group">
                   <p class="font-mono">Emparejamiento</p>
@@ -149,7 +154,9 @@
                   </div>
                 </div>
               </section>
-              <section class="">
+              
+              <!-- Third -->
+              <section class="d-none">
                 <div class="form-group">
                   <p class="font-mono">Ajustes del proyecto</p>
                   <p class="text-justify">
@@ -157,8 +164,8 @@
                     . Es importante que observes el 'cálculo estimado' que durarán los sesnores prendidos con una carga del 100% durante tu proyecto.
                     Cada ajuste te dará un mayor o menor tiempo de batería.
                   </p>
+                  <hr>
                 </div>
-                <hr>
                 <div class="form-group">
                   <p class="font-mono">Distancia</p>
                   <select class="form-selected" name="distance" id="distance">

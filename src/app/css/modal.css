@@ -33,13 +33,33 @@ body.modal-open .contentArea{
 }
 
 .modal section{
-    width: 80%;
+    width: 90%;
     height: 350px;
     overflow: auto;
     margin: 3em auto 0;
     background: transparent;
     padding: 1em 3em;
 }
+
+/* width */
+.modal section::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  .modal section::-webkit-scrollbar-track {
+    background: #c1c1c134;
+  }
+  
+  /* Handle */
+  .modal section::-webkit-scrollbar-thumb {
+    background: #acacac;
+  }
+  
+  /* Handle on hover */
+  .modal section::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 
 .modal-header svg:hover{
     color: red;
