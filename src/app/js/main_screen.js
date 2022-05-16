@@ -3,7 +3,7 @@ const fs = require('fs');
 
 let _flag_order_date = 0;
 let _flag_order_name = 0;
-let _proyectos;
+let _proyectos = [];
 
 // Close App
 closeBtn.addEventListener('click', ()=>{
@@ -34,19 +34,25 @@ function readFile(path){
 }
 
 window.onload = function(){
-    readProyects()
+    readProjects()
 }
 
-function readProyects(){
-    const response = readFile('src/app/proyectos.json')
-    
-    switch(response.Estado){
-        case 'OK':  _proyectos = response.Contenido
-                    displayProyectos(0)
-            break;
-        case 'ERROR': alert('ERROR')
-            break;
-    }
+function readProjects(){
+    _proyectos = []
+    // const response = readFile('src/app/proyectos.json')
+    fs.readdir(
+        'src/app/Proyectos',
+        (err, files) => {
+          if (err) throw err;
+          
+          for (let file of files) {
+             var x = readFile(`src\\app\\Proyectos\\${file}\\info.json`)
+             _proyectos.push(x.Contenido)
+          }
+          displayProyectos(0)
+        }
+      );
+
 }
 
 // Sort the data in ascending way.
@@ -61,8 +67,8 @@ function sortByDateDesc(a, b) {
 
 // Sort the data in ascending way.
 function sortByNameAsc(a, b) {
-    var nameA = a.nombre.toUpperCase(); // ignore upper and lowercase
-    var nameB = b.nombre.toUpperCase(); // ignore upper and lowercase
+    var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+    var nameB = b.name.toUpperCase(); // ignore upper and lowercase
     if (nameA < nameB) {
         return -1;
     }
@@ -76,8 +82,8 @@ function sortByNameAsc(a, b) {
 
 // Sort the data in descending way.
 function sortByNameDesc(a, b) {
-    var nameA = a.nombre.toUpperCase(); // ignore upper and lowercase
-    var nameB = b.nombre.toUpperCase(); // ignore upper and lowercase
+    var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+    var nameB = b.name.toUpperCase(); // ignore upper and lowercase
     if (nameA > nameB) {
         return -1;
     }
@@ -120,7 +126,7 @@ function displayProyectos(filter){
         // Create the column name.
         let _td = document.createElement('td');
         _td.setAttribute('scope','row');
-        _td.innerText = element.nombre;
+        _td.innerText = element.name;
 
         // Append the column name.
         _tr.appendChild(_td);

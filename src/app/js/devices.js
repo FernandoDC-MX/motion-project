@@ -12,7 +12,7 @@ class Project{
               "id": this.id,
               "name": this.name,
               "comments": this.comments,
-              "created_at": this.date,
+              "created_at": this.created_at,
               "path": this.path
           }
   }
@@ -171,21 +171,24 @@ cancelBtn.addEventListener('click', function(){
 
 function createProject(){
   var name = document.querySelector('#name').value;
-    var path = `${__dirname}\\Proyectos\\${name}`
+  var path = `${__dirname}\\Proyectos\\${name}`
 
-    // Se crea la carpeta 
-    if (!fs.existsSync(path)){
-        fs.mkdirSync(path, { recursive: true });
+  // Se crea la carpeta 
+  if (!fs.existsSync(path)){
+      fs.mkdirSync(path, { recursive: true });
 
-        var date = new Date();
-        var localDate = date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-        var localHour = date.getHours() + ':' + date.getMinutes() + ':' + date.getMilliseconds()
-        var id = Math.floor(Math.random() * 1000) + Date.now()
-        var comments = document.querySelector('#comments').value;
-        date = localDate + ' ' + localHour; //Local time.
+      var date = new Date();
+      var localDate = date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+      var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + date.getMilliseconds()
+      var id = Math.floor(Math.random() * 1000) + Date.now()
+      var comments = document.querySelector('#comments').value;
+      date = localDate + ' ' + localHour; //Local time.
 
-        var new_proyect = new Project(id, name, date, comments, path)
-        fs.writeFileSync(path + '\\info.json', JSON.stringify(new_proyect.JSON))
-        cancelBtn.click()
-    }
+      var new_proyect = new Project(id, name, date, comments, path)
+      console.log(new_proyect.JSON)
+      fs.writeFileSync(path + '\\info.json', JSON.stringify(new_proyect.JSON))
+      cancelBtn.click()
+  }
+  
+  readProjects()
 }
