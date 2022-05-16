@@ -111,3 +111,10 @@
     border: 1px solid white;
     color: white;
 }
+
+.text-error{
+    position: relative;
+    top: -1.5em;
+    left: 4px;
+    color: #ea4b15;
+}

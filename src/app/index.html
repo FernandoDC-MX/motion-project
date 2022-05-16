@@ -101,7 +101,7 @@
                 <div class="form-group">
                   <input type="text" class="form-input" id="name" placeholder="Nombre del proyecto" required>
                   <label for="name" class="form-label">Nombre del proyecto</label>
-                  <small id="errorName"></small>
+                  <small class="text-error" id="errorName"></small>
                 </div>
                 <div class="form-group">
                   <p class="font-mono">Comentarios</p>
@@ -117,11 +117,15 @@
                     Ahora vamos a conectar los sensores EMG que quieras utilizar. Cada sensor prenderá de un color diferente
                     al momento de emparejarse
                   </p>
+                  <hr>
                 </div>
-                <hr>
                 <div>
                   <p class="d-inline-block">Buscando dispositivo</p>
                   <img class="d-inline-block" src="icons/loading.gif" alt="" width="40" height="40">
+                  <div class="mt-3">
+                    <input type="number" value="0" id="num_devices" hidden>
+                    <small class="text-error" id="errorNumDevices"></small>
+                  </div>
                   <div class="mt-2" id="devices">
                     <div class="device d-inline-block">
                       <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-wifi" viewBox="0 0 16 16">
@@ -206,7 +210,7 @@
               
             </div>
               <div class="text-end">
-                <button class="btn-cstm bg-cancelar"  data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                <button class="btn-cstm bg-cancelar" id="cancelBtn"  data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
                 <button class="btn-cstm bg-crear d-none" id="prevBtn">Anterior</button>
                 <button class="btn-cstm bg-crear" id="nextBtn">Siguiente</button>
               </div>
@@ -218,7 +222,6 @@
 
     <!-- You can also require other files to run in this process -->
     <script defer src="js/devices.js"></script>
-
     <script defer src="js/main_screen.js"></script>
     <script defer src="js/menuToolbar.js"></script>
   </body>

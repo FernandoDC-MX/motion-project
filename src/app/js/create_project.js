@@ -56,7 +56,6 @@ createBtn.addEventListener('click', ()=>{
         
         _proyectos_local.push(new_proyect.JSON)
 
-        console.log('inde')
     }
 
 })

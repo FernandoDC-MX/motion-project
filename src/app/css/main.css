@@ -271,7 +271,7 @@ html, body{
     cursor: pointer;
 }
 
-.device{
+.device, .device_selected{
     width: 110px;
     height: 110px;
     margin: 0.5em 0.5em;
@@ -296,14 +296,14 @@ html, body{
 
 
 
-.device > svg{
+.device > svg, .device_selected > svg{
     color: black;
     margin: 1.5em auto 0.5em;
     opacity: 0;
     transition: 0.3s all ease-in-out;
 }
 
-.device > p{
+.device > p, .device_selected > p{
     color: black;
     text-transform: uppercase;
     opacity: 0;
@@ -336,5 +336,4 @@ html, body{
     left: -7px;
     top: 4px;
     border-radius: 0 0.25em 0.25em 0;
-
 }
