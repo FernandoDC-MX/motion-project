@@ -115,7 +115,6 @@ function displayProyectos(filter){
                 break;
         }
 
-    console.log(_sorted_array)
     let _body =  document.getElementById('_table_projects');
     _body.innerHTML = '';
 

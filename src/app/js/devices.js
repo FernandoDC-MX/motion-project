@@ -1,10 +1,14 @@
 class Project{
-  constructor( id, name, created_at, comments, path){
+  constructor( id, name, created_at, comments, path, num_devices, distance, frequency, data){
       this.id = id;
       this.name = name;
       this.created_at = created_at;
       this.comments = comments;
-      this.path = path
+      this.path = path;
+      this.num_devices = num_devices;
+      this.distance = distance;
+      this.frequency = frequency;
+      this.data = data;
   }
 
   get JSON(){
@@ -13,7 +17,11 @@ class Project{
               "name": this.name,
               "comments": this.comments,
               "created_at": this.created_at,
-              "path": this.path
+              "path": this.path,
+              "num_devices": this.num_devices,
+              "distance": this.distance,
+              "frequency": this.frequency,
+              "data": this.data
           }
   }
 }
@@ -182,9 +190,13 @@ function createProject(){
       var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + date.getMilliseconds()
       var id = Math.floor(Math.random() * 1000) + Date.now()
       var comments = document.querySelector('#comments').value;
+      var num_devices = document.querySelector('#num_devices').value;
+      
+      var distance = document.querySelector('')
+
       date = localDate + ' ' + localHour; //Local time.
 
-      var new_proyect = new Project(id, name, date, comments, path)
+      var new_proyect = new Project(id, name, date, comments, path, num_devices, )
       console.log(new_proyect.JSON)
       fs.writeFileSync(path + '\\info.json', JSON.stringify(new_proyect.JSON))
       cancelBtn.click()
