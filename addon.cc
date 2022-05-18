@@ -1,38 +1,21 @@
 #include <nan.h>
 
-const int maxValue = 10;
-int numberOfCalls = 0;
+void Sum(const v8::FunctionCallbackInfo<v8::Value>& args) {
+  v8::Isolate* isolate = args.GetIsolate();
 
-void WhoAmI(const Nan::FunctionCallbackInfo<v8::Value>& args) {
-  auto message = Nan::New<v8::String>("I'm a Node Hero!").ToLocalChecked();
-  args.GetReturnValue().Set(message);
-}
-
-void Increment(const Nan::FunctionCallbackInfo<v8::Value>& args) {
-  if (!args[0]->IsNumber()) {
-    Nan::ThrowError("Argument must be a number");
-    return;
+  int i;
+  double a = 3.1415926, b = 2.718;
+  for (i = 0; i < 10000000; i++){
+    a+= b;
   }
+  
+  auto total = v8::Number::New(isolate, a);
 
-  double argsValue = args[0]->NumberValue();
-  if (numberOfCalls + argsValue > maxValue) {
-    Nan::ThrowError("Counter went through the roof!");
-    return;
-  }
-
-  numberOfCalls += argsValue;
-
-  auto currentNumberOfCalls =
-    Nan::New<v8::Number>(numberOfCalls);
-
-  args.GetReturnValue().Set(currentNumberOfCalls);
+  args.GetReturnValue().Set(total);
 }
 
-void Initialize(v8::Local<v8::Object> exports) {
-  exports->Set(Nan::New("whoami").ToLocalChecked(),
-      Nan::New<v8::FunctionTemplate>(WhoAmI)->GetFunction());
-  exports->Set(Nan::New("increment").ToLocalChecked(),
-      Nan::New<v8::FunctionTemplate>(Increment)->GetFunction());
+void Initialize(v8::Local<v8::Object> exports){
+  NODE_SET_METHOD(exports, "sum", Sum);
 }
 
-NODE_MODULE(addon, Initialize)
+NAN_MODULE_WORKER_ENABLED (addon, Initialize)
