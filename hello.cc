@@ -1,6 +1,6 @@
 #include <node.h>
 
-void Sum(const v8::FunctionCallback<v8::Value>& args){
+void Sum(const v8::FunctionCallbackInfo<v8::Value>& args) {
   v8::Isolate* isolate = args.GetIsolate();
 
   int i;
