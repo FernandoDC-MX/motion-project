@@ -1,24 +1,21 @@
-// hello.cc
 #include <node.h>
 
-namespace demo {
+void Sum(const v8::FunctionCallback<v8::Value>& args){
+  v8::Isolate* isolate = args.GetIsolate();
 
-using v8::FunctionCallbackInfo;
-using v8::Isolate;
-using v8::Local;
-using v8::Object;
-using v8::String;
-using v8::Value;
+  int i;
+  double a = 3.1415926, b = 2.718;
+  for (i = 0; i < 10000000; i++){
+    a+= b;
+  }
+  
+  auto total = v8::Number::New(isolate, a);
 
-void Method(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
-  args.GetReturnValue().Set(String::NewFromUtf8(isolate, "world"));
+  args.GetReturnValue().Set(total);
 }
 
-void init(Local<Object> exports) {
-  NODE_SET_METHOD(exports, "hello", Method);
+void Initialize(v8::Local<v8::Object> exports){
+  NODE_SET_METHOD(exports, "sum", Sum);
 }
 
-NODE_MODULE(addon, init)
-
-}  // n
+NODE_MODULE(addon, Initialize)
