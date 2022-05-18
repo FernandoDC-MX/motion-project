@@ -1,4 +1,4 @@
-const addon = require('./build/Release/addon');
+const path = require('path');
 
 class Project{
   constructor( id, name, created_at, comments, path, num_devices, distance, frequency, data){
@@ -28,9 +28,6 @@ class Project{
   }
 }
 
-console.time('c++')
-addon.sum()
-console.timeEnd('c++')
 
 
 let i = 0;
