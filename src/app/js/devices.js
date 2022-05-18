@@ -2,7 +2,7 @@ const path = require('path');
 
 const _url = path.format({
   dir: 'C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\build\\Release',
-  base: 'addon.node'
+  base: 'addon'
 });
 
 console.log(_url)

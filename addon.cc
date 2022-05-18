@@ -18,4 +18,4 @@ void Initialize(v8::Local<v8::Object> exports){
   NODE_SET_METHOD(exports, "sum", Sum);
 }
 
-NODE_MODULE(addon, Initialize)
+NAN_MODULE_WORKER_ENABLED(addon, Initialize)
