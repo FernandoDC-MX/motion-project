@@ -1,5 +1,14 @@
 const path = require('path');
 
+const _url = path.format({
+  dir: 'C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\build\\Release',
+  base: 'addon.node'
+});
+
+console.log(_url)
+
+const addon = require(_url)
+
 class Project{
   constructor( id, name, created_at, comments, path, num_devices, distance, frequency, data){
       this.id = id;
@@ -28,6 +37,9 @@ class Project{
   }
 }
 
+// console.time('c++')
+// addon.sum()
+// console.timeEnd('c++')
 
 
 let i = 0;
