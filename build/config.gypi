@@ -357,16 +357,6 @@
     "want_separate_host_toolset": 0,
     "nodedir": "C:\\Users\\Daniel\\AppData\\Local\\node-gyp\\Cache\\16.15.0",
     "standalone_static_library": 1,
-    "msbuild_path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\MSBuild\\15.0\\Bin\\MSBuild.exe",
-    "cache": "C:\\Users\\Daniel\\AppData\\Local\\npm-cache",
-    "globalconfig": "C:\\Users\\Daniel\\AppData\\Roaming\\npm\\etc\\npmrc",
-    "global_prefix": "C:\\Users\\Daniel\\AppData\\Roaming\\npm",
-    "init_module": "C:\\Users\\Daniel\\.npm-init.js",
-    "local_prefix": "C:\\Users\\Daniel\\Desktop\\motion-project",
-    "metrics_registry": "https://registry.npmjs.org/",
-    "node_gyp": "C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\node-gyp\\bin\\node-gyp.js",
-    "prefix": "C:\\Users\\Daniel\\AppData\\Roaming\\npm",
-    "userconfig": "C:\\Users\\Daniel\\.npmrc",
-    "user_agent": "npm/8.5.5 node/v16.15.0 win32 x64 workspaces/false"
+    "msbuild_path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\MSBuild\\15.0\\Bin\\MSBuild.exe"
   }
 }
