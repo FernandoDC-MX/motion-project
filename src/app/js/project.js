@@ -13,5 +13,13 @@ function readInfo(_nameFolder){
     
     var _response = readFile(_path)
 
-    console.log(_response)
+    if(_response.Estado == 'OK'){
+
+    }else{
+        alert('Hubo algún error al tratar de abrir el archivo.')
+    }
 }
+
+closeBtn.addEventListener('click', () =>{
+    ipc.send('closeProject')
+})

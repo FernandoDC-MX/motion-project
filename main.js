@@ -90,6 +90,11 @@ const projectWindow = (evt, args) =>{
     // Send the data.
     window.webContents.send('enviar-nombre', args)
   })
+
+  // Close app
+  ipc.on('closeProject', ()=>{
+    window.hide()
+  })
 }
 
 // This method will be called when Electron has finished

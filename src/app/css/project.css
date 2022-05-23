@@ -57,7 +57,7 @@ html, body{
 }
 
 .channels .channel-devices ul li .p-s{
-    padding-inline-start: 40px;
+    padding-inline-start: 20px;
 }
 
 .channels .channel-devices ul li:hover{
@@ -65,7 +65,7 @@ html, body{
 }
 
 .channels .channel-devices ul li svg{
-    margin-left: 3.2em;
+    margin-left: 3em;
 }
 
 .content-area .graphs{
@@ -73,12 +73,13 @@ html, body{
     background: #282828;
 }
 
-@media screen and (max-width: 1100px) {
-    .channels .channel-devices ol li{
+@media screen and (max-width: 1240px) {
+    
+    .channels .channel-devices ul li .p-s{
         padding-inline-start: 0px;
     }
     
-    .channels .channel-devices ol li svg{
+    .channels .channel-devices ul li svg{
         margin-left: 0em;
     }
 }
