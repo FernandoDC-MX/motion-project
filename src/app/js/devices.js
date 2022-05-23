@@ -1,16 +1,5 @@
-const path = require('path');
-
-const _url = path.format({
-  dir: 'C:\\Users\\Daniel\\Desktop\\motion-project\\build\\Release',
-  base: 'addon'
-});
-
-console.log(_url)
-
-const addon = require(_url)
-
 class Project{
-  constructor( id, name, created_at, comments, path, num_devices, distance, frequency, data){
+  constructor( id, name, created_at, comments, path, num_devices, distance, frequency, data, devices){
       this.id = id;
       this.name = name;
       this.created_at = created_at;
@@ -20,6 +9,7 @@ class Project{
       this.distance = distance;
       this.frequency = frequency;
       this.data = data;
+      this.devices = devices;
   }
 
   get JSON(){
@@ -32,17 +22,34 @@ class Project{
               "num_devices": this.num_devices,
               "distance": this.distance,
               "frequency": this.frequency,
-              "data": this.data
+              "data": this.data,
+              "devices": this.devices
           }
   }
 }
 
-// console.time('c++')
-// addon.sum()
-// console.timeEnd('c++')
+class Device{
+  constructor(id, _id_muscle, _muscle_name, _hex){
+    this.id = id;
+    this._id_muscle = _id_muscle;
+    this._muscle_name = _muscle_name;
+    this._hex = _hex;
+  }
 
+  
+  get JSON(){
+    return {
+            "id": this.id,
+            "_muscle_name": this._muscle_name,
+            "_id_muscle": this._id_muscle,
+            "_hex": this._hex,
+        }
+  }
+}
 
 let i = 0;
+
+let _devicesMap = new Map()
 
 var elements = document.querySelectorAll('.device')
 
@@ -51,6 +58,7 @@ function _linkDevice() {
 
   if(this.classList.contains('device')){
     var random_color = Math.floor(Math.random()*16777215).toString(16);
+    var _device = new Device(this.getAttribute('data-id'), null, null, random_color)
 
     this.style.background = '#' + random_color
     this.style.border = '1px solid #' + random_color;
@@ -64,6 +72,7 @@ function _linkDevice() {
     this.classList.remove('device')
     this.classList.add('device_selected')
 
+    _devicesMap.set(this.getAttribute('data-id'), _device.JSON)
     _num_input.value++;
   }else{
     this.style.background = '';
@@ -77,8 +86,10 @@ function _linkDevice() {
     this.classList.remove('device_selected')
     this.classList.add('device')
 
+    _devicesMap.delete(this.getAttribute('data-id'))
     _num_input.value--;
   }
+
 };
 
 function validateForm(){
@@ -143,6 +154,8 @@ function _cleanForm(){
 
   document.querySelector('#num_devices').value = 0;
   document.querySelector('#errorNumDevices').innerHTML = '';
+
+  _devicesMap = new Map();
 }
 
 Array.from(elements).forEach(function(element) {
@@ -207,16 +220,30 @@ function createProject(){
       var id = Math.floor(Math.random() * 1000) + Date.now()
       var comments = document.querySelector('#comments').value;
       var num_devices = document.querySelector('#num_devices').value;
-      
-      var distance = document.querySelector('')
+      var distance = document.querySelector('#distance').value;
+      var frequency = document.querySelector('#frequency').value;
+      var data = document.querySelector('#data').value;
+
 
       date = localDate + ' ' + localHour; //Local time.
 
-      var new_proyect = new Project(id, name, date, comments, path, num_devices, )
-      console.log(new_proyect.JSON)
+      const _map = JSON.stringify(_devicesMap, replacer);
+      
+      var new_proyect = new Project(id, name, date, comments, path, num_devices, distance, frequency, data, _map)
       fs.writeFileSync(path + '\\info.json', JSON.stringify(new_proyect.JSON))
-      cancelBtn.click()
+      cancelBtn.click();
   }
   
   readProjects()
+}
+
+// Converts a Map to a String.
+function replacer(key, value) {
+  if(value instanceof Map) {
+    return {
+      value: Array.from(value.entries()), // or with spread: value: [...value]
+    };
+  } else {
+    return value;
+  }
 }

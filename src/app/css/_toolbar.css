@@ -1,3 +1,5 @@
+
+
 .topBar{
     display: flex;
     flex-direction: row;
@@ -6,12 +8,14 @@
     border-bottom: 3px solid #343B48;
     background-color: #1B1D23;
     -webkit-user-select: none;
+    overflow: hidden;
 }
 
 .topBar > .titleBar{
     display: flex;
     flex-direction: row;
     align-items: center;
+    color: white;
 }
 
 .topBar > .titleBar{
@@ -19,6 +23,7 @@
     flex-direction: row;
     align-items: center;
     width: 100%;
+    -webkit-app-region: drag;
 }
 
 .titleBar > .toggleButton{
@@ -47,6 +52,7 @@
 }
 
 .titleBar > .title{
+    font-family: 'Roboto', sans-serif;
     margin-left: 10px;
     width: 100%;
     line-height: 30px;
@@ -55,13 +61,30 @@
     -webkit-app-region: drag;
 }
 
+.title > .topBtn{
+    width: auto;
+    height: 40px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: 0.2s;
+    cursor: pointer;
+    color: #f0f0f0;
+}
+
+.title .topBtn:hover{
+    background: red;
+}
+
 .topBar > .titleBarBtns{
     display: flex;
     flex-direction: row;
     width: 120px;
     height: 40px;
-    justify-content: end;
 }
+
 
 .titleBarBtns > .topBtn{
     width: 40px;
@@ -97,4 +120,8 @@
 
 .titleBarBtns > .restoreBtn{
     background-image: url('../icons/restore.png');
+}
+
+.titleBarBtns > .homeBtn{
+    background-image: url('../icons/casa.png');
 }

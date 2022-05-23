@@ -1,9 +1,9 @@
-// Read files
-const fs = require('fs');
 
 let _flag_order_date = 0;
 let _flag_order_name = 0;
 let _proyectos = [];
+
+var projects = document.querySelectorAll('.project')
 
 // Close App
 closeBtn.addEventListener('click', ()=>{
@@ -50,6 +50,7 @@ function readProjects(){
              _proyectos.push(x.Contenido)
           }
           displayProyectos(0)
+          update_projects();
         }
       );
 
@@ -136,6 +137,8 @@ function displayProyectos(filter){
 
         // Append the column date.
         _tr.appendChild(_td);
+        _tr.classList.add('project')
+        _tr.setAttribute('data-id', element.name)
 
         _body.appendChild(_tr)
     });
@@ -168,3 +171,13 @@ _order_name.addEventListener('click', ()=>{
     
     displayProyectos(1)
 })
+
+function update_projects(){
+    projects = document.querySelectorAll('.project')
+
+    for(let i = 0; i < projects.length; i++) {
+        projects[i].addEventListener("click", function(){
+            ipc.send('openProject', projects[i].getAttribute('data-id'))
+        });
+    }
+}

@@ -52,6 +52,10 @@ const createWindow = () => {
     }
   })
 
+  ipc.on('openProject', (evt, args)=>{
+    projectWindow(evt, args)
+  })
+
   // Check if the window is maximized
   mainWindow.on('maximize', () =>{
     mainWindow.webContents.send('isMaximized')
@@ -61,6 +65,31 @@ const createWindow = () => {
    mainWindow.on('unmaximize', () =>{
     mainWindow.webContents.send('isRestored')
   }) 
+}
+
+const projectWindow = (evt, args) =>{
+  // Create the browser window.
+  const window = new BrowserWindow({
+    width: 1280,
+    height: 800,
+    minHeight:600,
+    minWidth: 980,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      devTools: true,
+    },
+    frame:false
+  })
+
+  // and load the index.html of the app.
+  window.loadFile('src/app/project.html')
+
+  // Event 
+  window.on('ready-to-show', () =>{
+    // Send the data.
+    window.webContents.send('enviar-nombre', args)
+  })
 }
 
 // This method will be called when Electron has finished

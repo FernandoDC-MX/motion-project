@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+
+    <!-- Own style css -->
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/_toolbar.css">
+    <link rel="stylesheet" href="css/project.css">
+
+    <!-- Boostrap js -->
+    <script src="bootstrap/js/bootstrap.js"></script>
+
+    <title></title>
+ </head>
+ <body>
+    <div class="main-container">
+        <!-- Toolbar -->
+        <div class="topBar">
+            <div class="titleBar">
+                <div class="title"></div>
+            </div>
+
+            <div class="titleBarBtns justify-content-end">
+                <button id="minimizeBtn" class="topBtn minimizeBtn d-none" title="Minimize"></button>
+                <button id="maximizeBtn" class="topBtn maximizeBtn d-none" title="Maximize"></button>
+                <button id="closeBtn" class="topBtn closeBtn" title="Close"></button>
+            </div>
+        </div>
+
+        <!-- Content area -->
+        <div class="content-area">
+            <div class="d-flex d-row h-100">
+                <div class="channels">
+                    <div class="channel-title px-3 py-2">
+                        Canales
+                    </div>
+                    <div class="channel-devices">
+                        <ul>
+                            <li class="py-2">
+                                <span>1.- </span>
+                                <span class="p-s">Seleccionar</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
+                                </svg>
+                            </li>
+                            <li class="py-2">
+                                <span>1.- </span>
+                                <span class="p-s">Seleccionar</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
+                                </svg>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="graphs">
+    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script defer src="js/project.js"></script>
+    <script defer src="js/files.js"></script>
+ </body>
+</html>
