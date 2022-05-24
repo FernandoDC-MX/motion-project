@@ -1,0 +1,48 @@
+#notification{
+    min-width: 310px;
+    min-height: 50px;
+    position: fixed;
+    left: 75%;
+    border-radius: 0.5em;
+    color: white;
+    font-size: 1rem;
+}
+
+.notification-success{
+    background: rgba(0, 128, 0, 0.467);
+    border: 1px solid green;
+}
+
+
+.notification-error{
+    background: red;
+    border: 1px solid red;
+}
+
+
+.notification-info{
+    background: aqua;
+    border: 1px solid aqua;
+}
+
+@keyframes pop-swirl {
+    0% {
+        opacity: 0;
+        top: 200px;
+    }
+    100% {
+        opacity: 1;
+        top: 43px;
+    }
+}
+
+@keyframes pop-out {
+    0% {
+        opacity: 1;
+        top: 40px;
+    }
+    100% {
+        opacity: 0;
+        top: 100px;
+    }
+}

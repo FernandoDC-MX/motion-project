@@ -1,15 +1,17 @@
 const { ipcRenderer } = require('electron')
 const ipc = ipcRenderer
+var _path;
 
 ipc.on('enviar-nombre', (e, title) =>{ 
     document.querySelector('title').innerHTML = title
     document.querySelector('.title').innerHTML = title
-
+    _title = title;
+    
     readInfo(title)
 })
 
 function readInfo(_nameFolder){
-    var _path = `${__dirname}\\Proyectos\\${_nameFolder}\\info.json`;
+    _path = `${__dirname}\\Proyectos\\${_nameFolder}\\info.json`;
     
     var _response = readFile(_path)
 
@@ -60,18 +62,108 @@ function displayChannels(canales){
 
         _lista.append(_li)
     })
+
+    setId();
+}
+
+function setId(){
+    var _channels = document.querySelectorAll('.device');
+
+    for(let i = 0; i < _channels.length; i++){
+        _channels[i].addEventListener('click', function(){
+            var _title = document.querySelector('.modal-title');
+            
+            _title.innerHTML = "Selecciona un músculo para el dispositivo:" + ' ' + this.getAttribute('data-id').replace('channel-',' ');
+        })
+    }
 }
  
 closeBtn.addEventListener('click', () =>{
     ipc.send('closeProject')
 })
 
-function reviver(key, value) {
-    if(typeof value === 'object' && value !== null) {
-      if (value.dataType === 'Map') {
-        return new Map(value.value);
-      }
+function selectMuscle(){
+    var _muscles = document.querySelectorAll('.cls-2')
+
+    for(let i = 0; i < _muscles.length; i++){
+        _muscles[i].addEventListener('mouseover', function(e){
+            // console.log(e.currentTarget)
+            // var _clone = this.cloneNode(true)
+            // var _nombre = document.querySelector('.nombre');
+
+            // // Preview image.
+            // var _preview = document.querySelector('.muscle-preview');
+
+            // var _svg = document.createElement('svg');
+            // _svg.setAttribute('xmlns',"http://www.w3.org/2000/svg");
+            // _svg.setAttribute('viewBox', '0 0 400 400');
+
+            // _svg.append(_clone)
+
+            // _preview.appendChild(_svg)
+
+            // // Info
+            // _nombre.innerHTML =_clone.getAttribute('data-name').replaceAll('-',' ').toUpperCase()
+        }),
+        _muscles[i].addEventListener('click', function(){
+            var _clone = this.cloneNode(true)
+            var _nombre = document.querySelector('.nombre');
+            var _tmp = document.querySelector('.cls-selected')
+
+            if(this.classList.contains('cls-2')){
+                this.classList.remove('cls-2')
+                this.classList.add('cls-selected')
+                // Info
+                _nombre.innerHTML =_clone.getAttribute('data-name').replaceAll('-',' ').toUpperCase()
+            }else{
+                this.classList.add('cls-2')
+                this.classList.remove('cls-selected')
+                // Info
+                _nombre.innerHTML = ''
+            }
+
+            // Preview image.
+            var _preview = document.querySelector('.muscle-preview');
+
+            var _svg = document.createElement('svg');
+            _svg.setAttribute('xmlns',"http://www.w3.org/2000/svg");
+            _svg.setAttribute('viewBox', '0 0 400 400');
+
+            _svg.append(_clone)
+
+            _preview.appendChild(_svg)
+
+            
+
+            if(_tmp){
+                _tmp.classList.remove('cls-selected');
+                _tmp.classList.add('cls-2')
+            }
+        })
     }
-    return value;
 }
 
+selectMuscle();
+
+acceptBtn.addEventListener('click', () =>{
+    var _response = readFile(_path)
+    switch(_response.Estado){
+        case 'OK':  storeMuscle(_response.Contenido)
+                    show('success', _response.Mensaje)
+            break;
+        case 'ERROR': show('error', _response.Error)
+            break;
+    }   
+})
+
+function storeMuscle(_contenido){
+    var _devices = JSON.parse(_contenido.devices);
+    
+    const map1 = new Map(
+        _devices['value'].map(object => {
+            console.log(object[0])
+        }),
+    );
+
+    console.log(map1)
+}
