@@ -73,6 +73,21 @@ html, body{
     background: #282828;
 }
 
+.cls-{
+    fill: red;
+}
+
+.cls-1{fill:#000000;}
+
+.cls-2{
+    fill:#f8f8f8;
+    cursor: pointer;
+}
+
+.cls-2:hover{
+    fill:#b91f1f;
+}
+
 @media screen and (max-width: 1240px) {
     
     .channels .channel-devices ul li .p-s{
