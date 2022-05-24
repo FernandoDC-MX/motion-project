@@ -227,7 +227,7 @@ function createProject(){
 
       date = localDate + ' ' + localHour; //Local time.
 
-      const _map = JSON.stringify(_devicesMap, replacer);
+      const _map = Object.fromEntries(_devicesMap)
       
       var new_proyect = new Project(id, name, date, comments, path, num_devices, distance, frequency, data, _map)
       fs.writeFileSync(path + '\\info.json', JSON.stringify(new_proyect.JSON))

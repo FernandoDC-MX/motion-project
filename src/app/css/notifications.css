@@ -6,17 +6,23 @@
     border-radius: 0.5em;
     color: white;
     font-size: 1rem;
+    z-index: 100000;
 }
 
 .notification-success{
-    background: rgba(0, 128, 0, 0.467);
+    background: #00800077;
     border: 1px solid green;
 }
 
 
 .notification-error{
-    background: red;
+    background: #80000077;
     border: 1px solid red;
+}
+
+.notification-warning{
+    background: #80690077;
+    border: 1px solid #fcce00;
 }
 
 

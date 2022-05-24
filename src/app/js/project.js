@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron')
 const ipc = ipcRenderer
-var _path;
+var _path, channels;
 
 ipc.on('enviar-nombre', (e, title) =>{ 
     document.querySelector('title').innerHTML = title
@@ -23,11 +23,12 @@ function readInfo(_nameFolder){
 }
 
 function displayChannels(canales){
-    const _json = JSON.parse(canales)
+    channels = new Map(Object.entries(canales));
+
     var i = 1, _lista = document.querySelector('.list');
 
-    _json['value'].forEach(element => {
-        var _config = element[1];
+    channels.forEach(element => {
+        var _config = element;
 
         var _li = document.createElement('li');
 
@@ -72,7 +73,7 @@ function setId(){
     for(let i = 0; i < _channels.length; i++){
         _channels[i].addEventListener('click', function(){
             var _title = document.querySelector('.modal-title');
-            
+            _title.setAttribute('data-id', 'title-' + this.getAttribute('data-id').replace('channel-',''))
             _title.innerHTML = "Selecciona un músculo para el dispositivo:" + ' ' + this.getAttribute('data-id').replace('channel-',' ');
         })
     }
@@ -146,24 +147,19 @@ function selectMuscle(){
 selectMuscle();
 
 acceptBtn.addEventListener('click', () =>{
-    var _response = readFile(_path)
-    switch(_response.Estado){
-        case 'OK':  storeMuscle(_response.Contenido)
-                    show('success', _response.Mensaje)
-            break;
-        case 'ERROR': show('error', _response.Error)
-            break;
-    }   
+    if(document.querySelector('.cls-selected')){
+        storeMuscle()
+        cancelBtn.click();
+    }else
+        show('warning','Tienes que seleccionar un músculo.')
 })
 
-function storeMuscle(_contenido){
-    var _devices = JSON.parse(_contenido.devices);
-    
-    const map1 = new Map(
-        _devices['value'].map(object => {
-            console.log(object[0])
-        }),
-    );
+function storeMuscle(){
+    var _currentDevice = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','');
+    var _changes = channels.get(_currentDevice)
 
-    console.log(map1)
+    _changes._muscle_name = document.querySelector('.cls-selected').getAttribute('data-name')
+
+    console.log(_changes)
+
 }
