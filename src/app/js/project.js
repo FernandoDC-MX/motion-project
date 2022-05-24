@@ -148,18 +148,26 @@ selectMuscle();
 
 acceptBtn.addEventListener('click', () =>{
     if(document.querySelector('.cls-selected')){
-        storeMuscle()
+        getMuscle()
+        show('success', 'Dispositivo ligado al músculo.')
         cancelBtn.click();
     }else
         show('warning','Tienes que seleccionar un músculo.')
 })
 
-function storeMuscle(){
+function getMuscle(){
     var _currentDevice = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','');
     var _changes = channels.get(_currentDevice)
 
-    _changes._muscle_name = document.querySelector('.cls-selected').getAttribute('data-name')
+    _changes._muscle_name = document.querySelector('.cls-selected').getAttribute('data-name');
+    channels.set(_currentDevice, _changes)
 
-    console.log(_changes)
+    var _response = readFile(_path);
 
+    switch(_response.Estado){
+        case 'OK':  
+                    _response.Contenido.devices = Object.fromEntries(channels)
+                    storeFile(_path, _response.Contenido)
+            break;
+    }
 }
