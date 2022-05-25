@@ -18,6 +18,7 @@ html, body{
     overflow: hidden;
     border: 1px solid #343B48;
     -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 
@@ -51,22 +52,30 @@ html, body{
     padding: 0 0.75em;
 }
 
+
+
 .channels .channel-devices ul li{
     transition: 0.2s all ease-in-out;
     cursor: pointer;
 }
 
-.channels .channel-devices ul li .p-s{
-    padding-inline-start: 20px;
+.channels .channel-devices ul li p{
+    color: red;
+    display: inline;
 }
+
+.ellips{
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    width: 130px;
+}
+
 
 .channels .channel-devices ul li:hover{
     background: #3b3b3b;
 }
 
-.channels .channel-devices ul li svg{
-    margin-left: 3em;
-}
 
 .content-area .graphs{
     width: 85%;
@@ -135,14 +144,25 @@ html, body{
     color: white;
 }
 
+.container-message{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    user-select: none;
+}
+
+.text-incrusted{
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #424242;
+}
 
 @media screen and (max-width: 1240px) {
     
-    .channels .channel-devices ul li .p-s{
-        padding-inline-start: 0px;
-    }
-    
-    .channels .channel-devices ul li svg{
-        margin-left: 0em;
+    .ellips{
+        width: 70px;
     }
 }

@@ -34,30 +34,39 @@ function displayChannels(canales){
 
         _li.classList.add('py-2')
         _li.classList.add('device')
+        _li.classList.add('row')
 
         _li.setAttribute('data-id', 'channel-' + _config.id)
         _li.setAttribute('data-bs-toggle',"modal")
         _li.setAttribute('data-bs-target',"#staticBackdrop")
 
-        var _span = document.createElement('span');
-        _span.innerHTML = i + '.-'
+        var _div = document.createElement('div');
+        _div.innerHTML = i + '.-'
+        _div.classList.add('col-2')
 
-        _li.appendChild(_span)
 
-        var _span = document.createElement('span');
-        _span.classList.add('p-s');
+        _li.appendChild(_div)
 
-        if(!_config._muscle_name)
-            _span.innerText = 'Seleccionar'
-        else
-            _span.innerText = _config._muscle_name
-
-        _li.appendChild(_span);
+        var _div = document.createElement('div');
+        _div.classList.add('col-8');
+        _div.classList.add('ellips');
+        
+        if(!_config._muscle_name){
+            _div.innerText = 'Seleccionar'
+        }
+        else{
+            _div.innerText = _config._muscle_name
+            _div.setAttribute('title',_config._muscle_name)
+        }
+        _li.appendChild(_div);
 
         _li.innerHTML+= `
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#${_config._hex}" class="bi bi-activity" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
-                </svg>`;
+                <div class="col-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#${_config._hex}" class="bi bi-activity" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
+                    </svg>
+                </div>    
+                `;
 
         i++;
 
@@ -159,7 +168,9 @@ function getMuscle(){
     var _currentDevice = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','');
     var _changes = channels.get(_currentDevice)
 
-    _changes._muscle_name = document.querySelector('.cls-selected').getAttribute('data-name');
+    _changes._muscle_name = document.querySelector('.cls-selected').getAttribute('data-name').replaceAll('-',' ');
+    _changes._muscle_name = _changes._muscle_name.charAt(0).toUpperCase() + _changes._muscle_name.slice(1);
+    _changes._id_muscle = document.querySelector('.cls-selected').getAttribute('data-id');
     channels.set(_currentDevice, _changes)
 
     var _response = readFile(_path);
@@ -171,3 +182,13 @@ function getMuscle(){
             break;
     }
 }
+
+staticBackdrop.addEventListener('shown.bs.modal', function(){
+    var _device = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','')
+    var _muscle_info = channels.get(_device)
+
+    if(_muscle_info){
+        document.querySelector(`path[data-id="${_muscle_info._id_muscle}"]`).classList.remove('cls-2')
+        document.querySelector(`path[data-id="${_muscle_info._id_muscle}"]`).classList.add('cls-selected')
+    }
+})
