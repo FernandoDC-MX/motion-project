@@ -24,6 +24,10 @@ function readFile(path){
     }
 }
 
+function readFiles(path){
+    return fs.readdirSync(path)
+}
+
 function storeFile(_path, _data){
     fs.writeFileSync(_path, JSON.stringify(_data))
 }

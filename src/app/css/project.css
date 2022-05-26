@@ -150,8 +150,66 @@ html, body{
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 90%;
     user-select: none;
+    padding: 1em;
+}
+
+.main-graph-container{
+    width: 98%;
+    height: 330px;
+    border-radius: 0.5em;
+    margin: 1em auto;
+    background: #303030;
+    overflow: hidden;
+}
+
+.secondary-graph-container{
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+    background: #3f3f3f;
+    padding: 1em;
+    overflow: auto;
+}
+
+.subgraph{
+    width: 100%;
+    height: 50%;
+    border: 1px solid white;
+}
+
+.menu{
+    width: 100%;
+    height: 30px;
+    background: #4b4b4b;
+    text-align: center;
+    padding: 0.25em 0;
+}
+
+.menu svg{
+    fill: #b8b8b8;
+    cursor: pointer;
+    transition: 0.2s all ease-in-out;
+}
+
+.menu .play-icon:hover{
+    fill: green;
+}
+
+.menu .pause-icon:hover{
+    fill: #004f80;
+}
+
+.menu .setting-icon:hover{
+    fill: #343434;
+}
+
+.menu .download-icon:hover{
+    fill: #3c3c3c;
 }
 
 .text-incrusted{
@@ -160,8 +218,15 @@ html, body{
     color: #424242;
 }
 
+.pr-0{
+    padding-right: 0 !important;
+}
+
+.pl-0{
+    padding-left: 0 !important;
+}
+
 @media screen and (max-width: 1240px) {
-    
     .ellips{
         width: 70px;
     }

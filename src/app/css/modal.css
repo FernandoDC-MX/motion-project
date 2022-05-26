@@ -25,9 +25,14 @@ body.modal-open .contentArea{
     border: none;
 }
 
-.modal-body{
+.bg-linear-body{
     background: linear-gradient(180deg, #393939 10%, #1c1c1c22 100%);
 }
+
+.bg-gray-modal{
+    background: rgb(57, 57, 57);
+}
+
 .cursor{
     cursor: pointer;
 }

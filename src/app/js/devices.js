@@ -210,9 +210,16 @@ function createProject(){
   var name = document.querySelector('#name').value;
   var path = `${__dirname}\\Proyectos\\${name}`
 
+
   // Se crea la carpeta 
   if (!fs.existsSync(path)){
       fs.mkdirSync(path, { recursive: true });
+
+      // Devices folder
+      _devicesMap.forEach(element => {
+        fs.mkdirSync(path + '\\Devices\\' + element.id, { recursive: true });
+      });
+  
 
       var date = new Date();
       var localDate = date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
