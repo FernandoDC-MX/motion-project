@@ -128,9 +128,11 @@ function listenerTests(){
 
 // 
 function startDataGraph(id){
-    var _mainDiv = document.querySelector(`[data-device=${id}]`);
-    var _dataDiv = _mainDiv.querySelector('.col-8')
+    var color = channels.get(id)._hex;
 
+    var _mainDiv = document.querySelector(`[data-device=${id}]`);
+
+    var _dataDiv = _mainDiv.querySelector('.col-8')
     const _canvas = document.createElement('canvas')
     const ctx = _canvas.getContext('2d');
 
@@ -140,8 +142,9 @@ function startDataGraph(id){
         data: {
             labels: [],
             datasets: [{
-                backgroundColor: "white",
-                borderColor: "rgba(0,0,0,0.1)",
+                backgroundColor: "#" + color,
+                borderColor: "#" + color,
+                label: 'Dispositivo',
                 data: []
             }]
         },
@@ -159,7 +162,76 @@ function startDataGraph(id){
     _dataDiv.innerHTML = '';
     _dataDiv.appendChild(_canvas)
 
-    demo(chart, _dataDiv);
+    var _subgraphs = _mainDiv.querySelector('.col-4');
+    _subgraphs.innerHTML = ''
+
+    var _div = document.createElement('div');
+    _div.classList.add('subgraph')
+
+
+    const _accelerometerCanvas = document.createElement('canvas')
+    const _accelerometerCtx = _accelerometerCanvas.getContext('2d');
+
+    // Device chart
+    var _accelerometerChart = new Chart(_accelerometerCtx, {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+                backgroundColor: "#" + color,
+                borderColor: "#" + color,
+                label: 'Acelerómetro',
+                data: []
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    _div.appendChild(_accelerometerCanvas)
+
+    _subgraphs.appendChild(_div)
+
+    var _div = document.createElement('div');
+    _div.classList.add('subgraph')
+
+    const _gyroCanvas = document.createElement('canvas')
+    const _gyroCtx = _gyroCanvas.getContext('2d');
+
+    const _gyroChart = new Chart(_gyroCtx, {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+                backgroundColor: "#" + color,
+                borderColor: "#" + color,
+                label: 'Giroscopio',
+                data: []
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    _div.appendChild(_gyroCanvas)
+
+    _subgraphs.appendChild(_div)
+
+    demo(chart, _accelerometerChart, _gyroChart);
 }
 
 
@@ -177,14 +249,22 @@ function addData(chart, label, data) {
     chart.update();
 }
 
-async function demo(chart, zone) {
+async function demo(chart,_accelerometerChart, _gyroChart) {
     for (let i = 0; i < 10; i++) {
-        addData(chart, i,i)
-        // console.log(`Waiting ${i+1} seconds...`);
+        var randomNumber = Math.floor(Math.random() * (10 - 1)) + 1;
+        addData(chart, i, randomNumber)
 
-        await sleep(1000);
+        randomNumber = Math.floor(Math.random() * (10 - 1)) + 1;
+        addData(_accelerometerChart, i, randomNumber)
+
+        randomNumber = Math.floor(Math.random() * (10 - 1)) + 1;
+        addData(_gyroChart, i, randomNumber)
+
+
+        // console.log(`Waiting ${i+1} seconds...`);
+        await sleep(1);
     }
-    console.log('Done');
+    show('success','Monitoreo terminado.')
 }
 
 // We will read the files that contains all the data stored by each device.
@@ -206,11 +286,6 @@ function readData(device, div){
         }
 
     }
-
-}
-
-function startTest(device){
-    const id = device.parentNode.parentNode.getAttribute('data-device');
 
 }
 
