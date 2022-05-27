@@ -22,6 +22,7 @@ function readInfo(_nameFolder){
         displayGraphs(_response.Contenido.devices);
     }else{
         alert('Hubo algún error al tratar de abrir el archivo.')
+        closeBtn.click()
     }
 }
 
