@@ -15,7 +15,7 @@
     border-color: #cecece;
     transition: all 0.5s;
     padding: 5px;
-    color: #ea4b15;
+    color: #FFB26B;
 }
 
 .form-group .form-label{
@@ -72,7 +72,7 @@
     margin-bottom: 1em;
     resize: none;
     transition: 0.4s all ease-in-out;
-    color: #ea4b15;
+    color: #FFB26B;
     border-radius: 0.5em;
     font-family: monospace;
 }

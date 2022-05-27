@@ -239,8 +239,10 @@ function createProject(){
       var new_proyect = new Project(id, name, date, comments, path, num_devices, distance, frequency, data, _map)
       fs.writeFileSync(path + '\\info.json', JSON.stringify(new_proyect.JSON))
       cancelBtn.click();
+      ipc.send('openProject', name)
   }
-  
+
+
   readProjects()
 }
 
