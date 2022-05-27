@@ -1,5 +1,6 @@
 const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
+const zoomPlugin = require('chartjs-plugin-zoom')
 const ipc = ipcRenderer
 var _path, channels;
 
@@ -154,11 +155,39 @@ function startDataGraph(id){
                     beginAtZero: true
                 }
             },
+            plugins: {
+                zoom: {
+                    zoom: {
+                      wheel: {
+                        enabled: true,
+                        speed: 0.1,
+                      },
+                      drag: {
+                        enabled: true
+                      },
+                      pinch: {
+                        enabled: true
+                      },
+                      mode: 'xy',
+                    },
+                    limits: {
+                        y: {min: 0, max: 10},}
+                }
+            },
+            transitions: {
+                zoom: {
+                  animation: {
+                    duration: 1000,
+                    easing: 'easeOutCubic'
+                  }
+                }
+            },
             responsive: true,
             maintainAspectRatio: false
         }
     });
 
+    // Chart.register(zoomPlugin)
     _dataDiv.innerHTML = '';
     _dataDiv.appendChild(_canvas)
 
@@ -227,14 +256,16 @@ function startDataGraph(id){
         }
     });
 
+
     _div.appendChild(_gyroCanvas)
 
     _subgraphs.appendChild(_div)
 
+    Chart.register(zoomPlugin)
+
+
     demo(chart, _accelerometerChart, _gyroChart);
 }
-
-
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -432,7 +463,7 @@ function setId(){
         })
     }
 }
- 
+
 closeBtn.addEventListener('click', () =>{
     ipc.send('closeProject')
 })
@@ -540,5 +571,7 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
     if(_muscle_info){
         document.querySelector(`path[data-id="${_muscle_info._id_muscle}"]`).classList.remove('cls-2')
         document.querySelector(`path[data-id="${_muscle_info._id_muscle}"]`).classList.add('cls-selected')
+
+        this.querySelector('.nombre').innerHTML = _muscle_info._muscle_name.toUpperCase()
     }
 })
