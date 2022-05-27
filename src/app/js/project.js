@@ -120,18 +120,17 @@ function listenerTests(){
 
     for(let i = 0; i < _playButtons.length; i++){
         _playButtons[i].addEventListener('click', function(){
-            const id = this.parentNode.parentNode.getAttribute('data-device');
-            
-            startDataGraph(id);
+            let id = this.parentNode.parentNode.getAttribute('data-device');
+            startDataGraph(id, this.parentNode.parentNode);
         })
     }
 }
 
 // 
-function startDataGraph(id){
+function startDataGraph(id, _div){
     var color = channels.get(id)._hex;
 
-    var _mainDiv = document.querySelector(`[data-device=${id}]`);
+    var _mainDiv = _div;
 
     var _dataDiv = _mainDiv.querySelector('.col-8')
     const _canvas = document.createElement('canvas')
@@ -171,7 +170,7 @@ function startDataGraph(id){
                       mode: 'xy',
                     },
                     limits: {
-                        y: {min: 0, max: 10},}
+                        y: {min: 1, max: 4000},}
                 }
             },
             transitions: {
@@ -281,19 +280,19 @@ function addData(chart, label, data) {
 }
 
 async function demo(chart,_accelerometerChart, _gyroChart) {
-    for (let i = 0; i < 10; i++) {
-        var randomNumber = Math.floor(Math.random() * (10 - 1)) + 1;
+    for (let i = 0; i < 100; i++) {
+        var randomNumber = Math.floor(Math.random() * (100 - 1)) + 1;
         addData(chart, i, randomNumber)
 
-        randomNumber = Math.floor(Math.random() * (10 - 1)) + 1;
+        randomNumber = Math.floor(Math.random() * (100 - 1)) + 1;
         addData(_accelerometerChart, i, randomNumber)
 
-        randomNumber = Math.floor(Math.random() * (10 - 1)) + 1;
+        randomNumber = Math.floor(Math.random() * (100 - 1)) + 1;
         addData(_gyroChart, i, randomNumber)
 
 
         // console.log(`Waiting ${i+1} seconds...`);
-        await sleep(1);
+        await sleep(100);
     }
     show('success','Monitoreo terminado.')
 }
@@ -501,6 +500,9 @@ function selectMuscle(){
                 this.classList.add('cls-selected')
                 // Info
                 _nombre.innerHTML =_clone.getAttribute('data-name').replaceAll('-',' ').toUpperCase()
+
+                document.querySelector('.muscle-preview').innerHTML = _bodyMuscles.get(this.getAttribute('data-id'))
+
             }else{
                 this.classList.add('cls-2')
                 this.classList.remove('cls-selected')
@@ -544,17 +546,20 @@ function getMuscle(){
     var _currentDevice = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','');
     var _changes = channels.get(_currentDevice)
 
+
     _changes._muscle_name = document.querySelector('.cls-selected').getAttribute('data-name').replaceAll('-',' ');
     _changes._muscle_name = _changes._muscle_name.charAt(0).toUpperCase() + _changes._muscle_name.slice(1);
     _changes._id_muscle = document.querySelector('.cls-selected').getAttribute('data-id');
+
+
     channels.set(_currentDevice, _changes)
 
-    var _response = readFile(_path);
+    var _response = readFile(_path + "\\info.json")
 
     switch(_response.Estado){
         case 'OK':  
                     _response.Contenido.devices = Object.fromEntries(channels)
-                    storeFile(_path, _response.Contenido)
+                    storeFile(_path + "\\info.json", _response.Contenido)
             break;
     }
 }
@@ -575,3 +580,4 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
         this.querySelector('.nombre').innerHTML = _muscle_info._muscle_name.toUpperCase()
     }
 })
+

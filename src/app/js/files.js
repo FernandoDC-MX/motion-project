@@ -13,8 +13,7 @@ function readFile(path){
             "Contenido": cleanData,
             "Error": null
         };
-    }catch(error){
-
+    }catch(error){ 
         return { 
             "Estado": 'ERROR',
             "Mensaje": 'Hubo un problema al tratar de extraer el contenido del archivo' + path + '.',
@@ -30,4 +29,6 @@ function readFiles(path){
 
 function storeFile(_path, _data){
     fs.writeFileSync(_path, JSON.stringify(_data))
+    
+    return _data;
 }

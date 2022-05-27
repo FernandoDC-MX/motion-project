@@ -86,6 +86,10 @@ html, body{
     fill: red;
 }
 
+.cls-3{
+    fill: whitesmoke;
+}
+
 .cls-1{fill:#191818;}
 
 .cls-2{
@@ -112,6 +116,9 @@ html, body{
     border-radius: 5px;
     margin: 1em auto;
     background: black;
+    text-align: center;
+    justify-content: center;
+    display: flex;
 }
 
 .muscle-info{
