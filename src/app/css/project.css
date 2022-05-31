@@ -101,6 +101,10 @@ html, body{
     fill:#b91f1f;
 }
 
+.cls-disabled{
+    fill: #626262;
+}
+
 .cls-selected{
     fill: #a51717;
 }
