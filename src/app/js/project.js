@@ -97,6 +97,8 @@ function displayGraphs(canales){
             var _graph = document.createElement('div');
             _graph.classList.add('col-8','col-md-8', 'col-sm-12', 'pl-0', 'text-center');
 
+            
+
             var _graph_div = document.createElement('div');
             _graph.appendChild(_graph_div)
 
@@ -171,7 +173,7 @@ function startDataGraph(id, _div){
                       mode: 'xy',
                     },
                     limits: {
-                        y: {min: 1, max: 4000},}
+                        y: {min: 1, max: 100},}
                 }
             },
             transitions: {
@@ -592,7 +594,7 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
     if(_muscle_info._id_muscle){
         var name = _muscle_info._muscle_name.toLowerCase().replaceAll(' ','-')
 
-        Array.from( document.querySelectorAll(`path[data-name="${name}"]`)).forEach(element => {
+        Array.from(document.querySelectorAll(`path[data-name="${name}"]`)).forEach(element => {
             element.classList.remove('cls-2') 
             element.classList.add('cls-selected')
             element.style.fill = 'red';
@@ -630,4 +632,16 @@ function updateDisabledMuscles(){
         })
     }
 }
+
+// window.addEventListener('resize', function(event) {
+//     function beforePrintHandler () {
+//         for (let id in Chart.instances) {
+//             console.log(Chart.instances[id].canvas.parentNode.offsetWidth)
+//             Chart.instances[id].resize(Chart.instances[id].canvas.parentNode.offsetHeight, Chart.instances[id].canvas.parentNode.offsetWidth);
+//         }
+//     }
+
+//     beforePrintHandler()
+    
+// }, true);
 

@@ -1,0 +1,6 @@
+.ownBar{
+    width: 100%;
+    height: 45px;
+    background: #1B1D23;
+    -webkit-app-region: drag;
+}

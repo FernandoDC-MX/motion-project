@@ -1,7 +1,6 @@
 html, body{
     margin: 0;
     padding: 0;
-    width: 100%;
     height: 100%;
     font-size: 10pt;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -80,8 +79,27 @@ html, body{
 .content-area .graphs{
     width: 85%;
     background: #282828;
+    height: 682px;
+    overflow: auto;
 }
 
+/* width */
+.content-area .graphs::-webkit-scrollbar {
+    width: 5px;
+}
+  
+  /* Track */
+.content-area .graphs::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+  
+  /* Handle */
+.content-area .graphs::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+  
 .cls-{
     fill: red;
 }
@@ -197,11 +215,17 @@ html, body{
 
 .main-graph-container{
     width: 98%;
-    height: 330px;
+    height: auto;
     border-radius: 0.5em;
     margin: 1em auto;
     background: #303030;
     overflow: hidden;
+}
+
+.main-graph-container .colocao{
+    height: 300px;
+    width: 100%;
+    border: 1px solid white;
 }
 
 .secondary-graph-container{
