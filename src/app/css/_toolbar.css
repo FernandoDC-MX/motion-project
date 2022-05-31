@@ -8,7 +8,7 @@
     border-bottom: 1px solid #343B48;
     background-color: #1B1D23;
     -webkit-user-select: none;
-    overflow: hidden;
+    user-select: none;
 }
 
 .topBar > .titleBar{
