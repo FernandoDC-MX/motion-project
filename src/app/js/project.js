@@ -491,7 +491,7 @@ function selectMuscle(){
             _nombre.innerHTML =_clone.getAttribute('data-name').replaceAll('-',' ').toUpperCase()
         }),
         _muscles[i].addEventListener('mouseleave', function(e){
-            cleanHover()
+            // cleanHover()
 
             var _nombre = document.querySelector('.cls-selected').getAttribute('data-name');
 
@@ -505,8 +505,6 @@ function selectMuscle(){
             }
         }),
         _muscles[i].addEventListener('click', function(){
-            var _clone = this.cloneNode(true)
-            var _nombre = document.querySelector('.nombre');
             var _tmp = document.querySelectorAll('.cls-selected')
             
             _musclesTmp.forEach(element =>{
@@ -581,16 +579,22 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
     var _device = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','')
     var _muscle_info = channels.get(_device)
 
-    if(document.querySelector('.cls-selected')){
-        document.querySelector('.cls-selected').classList.add('cls-2')
-        document.querySelector('.cls-selected').classList.remove('cls-selected')
-
+    if(document.querySelectorAll('.cls-selected')){
+        Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
+            element.classList.add('cls-2')
+            element.remove('cls-selected')
+        })
     }
 
     if(_muscle_info){
-        document.querySelector(`path[data-id="${_muscle_info._id_muscle}"]`).classList.remove('cls-2')
-        document.querySelector(`path[data-id="${_muscle_info._id_muscle}"]`).classList.add('cls-selected')
+        var name = _muscle_info._muscle_name.toLowerCase().replaceAll(' ','-')
 
+        Array.from( document.querySelectorAll(`path[data-name="${name}"]`)).forEach(element => {
+            element.classList.remove('cls-2') 
+            element.classList.add('cls-selected')
+            element.style.fill = 'red';
+        })
+        
         this.querySelector('.nombre').innerHTML = _muscle_info._muscle_name.toUpperCase()
         this.querySelector('.nombre').classList.remove('txt-shadow')
 
