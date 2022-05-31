@@ -1,5 +1,18 @@
-.modal{
-    top: 100px;
+.t-100{
+    top: 100px !important;
+}
+
+.t-15{
+    top: 15px !important;
+}
+
+.h-630{
+    height: 630px !important;
+}
+
+.w-400{
+    width: 600px;
+    margin: 0 auto;
 }
 
 body.modal-open .contentArea{

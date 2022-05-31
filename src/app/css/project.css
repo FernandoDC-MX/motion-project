@@ -109,6 +109,12 @@ html, body{
     height: 450px;
 }
 
+.btns-zone{
+    position: relative;
+    top: -10px;
+    padding: 0 2em;
+}
+
 .muscle-preview{
     width: 90%;
     height: 200px;
@@ -127,28 +133,51 @@ html, body{
 }
 
 .nombre{
-    color: white;
+    color: #FFB26B;
+    font-weight: 700;
+}
+
+.txt-shadow{
+    text-shadow: 1px 1px 1px #d1d1d1,
+        1px 2px 1px #c55f00,
+        1px 3px 1px #c55f00,
+
+    1px 6px 6px rgba(16,16,16,0.4),
+    1px 8px 10px rgba(16,16,16,0.2),
+    1px 12px 35px rgba(16,16,16,0.2),
+    1px 15px 60px rgba(16,16,16,0.4);
 }
 
 .btn-cstm{
     background: none;
     outline: none;
     border-radius: 0.5em;
-    width: 100%;
     margin: 0.5em auto;
     padding: 0.5em;
+    min-width: 49%;
+    transition: 0.2s all ease-in-out;
 }
 
 .bg-cancelar{
-    background: #b62828;
+    background: #b8282881;
     border: 1px solid #b62828;
     color: white;
 }
 
+.bg-cancelar:hover{
+    background: #b82828d7;
+}
+
 .bg-aceptar{
-    background: #284cb6;
-    border: 1px solid #284cb6;
-    color: white;
+    background: #ffb36b75;
+    border: 1px solid #FFB26B;
+    color: #222222
+}
+
+.bg-aceptar:hover{
+    background: #ffb36bc8;
+    border: 1px solid #FFB26B;
+    color: #222222
 }
 
 .container-message{
@@ -232,6 +261,15 @@ html, body{
 
 .pl-0{
     padding-left: 0 !important;
+}
+
+@keyframes highlight-text {
+    0% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 @media screen and (max-width: 1240px) {

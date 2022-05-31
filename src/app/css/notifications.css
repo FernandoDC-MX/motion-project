@@ -11,7 +11,7 @@
 
 .notification-success{
     background: #00800077;
-    border: 1px solid green;
+    border: 1px solid #ffffff75;
 }
 
 
@@ -24,7 +24,6 @@
     background: #80690077;
     border: 1px solid #fcce00;
 }
-
 
 .notification-info{
     background: aqua;

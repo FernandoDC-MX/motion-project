@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom')
 const ipc = ipcRenderer
-var _path, channels;
+var _path, channels, _musclesTmp;
 
 ipc.on('enviar-nombre', (e, title) =>{ 
     document.querySelector('title').innerHTML = title
@@ -472,67 +472,79 @@ function selectMuscle(){
     var _muscles = document.querySelectorAll('.cls-2')
 
     for(let i = 0; i < _muscles.length; i++){
-        _muscles[i].addEventListener('mouseover', function(e){
-            // console.log(e.currentTarget)
-            // var _clone = this.cloneNode(true)
-            // var _nombre = document.querySelector('.nombre');
+        _muscles[i].addEventListener('mouseenter', function(e){
+            cleanHover()
 
-            // // Preview image.
-            // var _preview = document.querySelector('.muscle-preview');
+            _musclesTmp = document.querySelectorAll(`path[data-name="${this.getAttribute('data-name')}"]`);
+            
+            for(let i = 0; i < _musclesTmp.length; i++){
+                _musclesTmp[i].style.fill = '#ffffff75';
+            }
 
-            // var _svg = document.createElement('svg');
-            // _svg.setAttribute('xmlns',"http://www.w3.org/2000/svg");
-            // _svg.setAttribute('viewBox', '0 0 400 400');
+            var _clone = this.cloneNode(true)
+            var _nombre = document.querySelector('.nombre');
+            _nombre.classList.add('txt-shadow')
 
-            // _svg.append(_clone)
+            _nombre.style.animation = 'highlight-text 1s forwards';
 
-            // _preview.appendChild(_svg)
+            // Info
+            _nombre.innerHTML =_clone.getAttribute('data-name').replaceAll('-',' ').toUpperCase()
+        }),
+        _muscles[i].addEventListener('mouseleave', function(e){
+            cleanHover()
 
-            // // Info
-            // _nombre.innerHTML =_clone.getAttribute('data-name').replaceAll('-',' ').toUpperCase()
+            var _nombre = document.querySelector('.cls-selected').getAttribute('data-name');
+
+            if(_nombre){
+                document.querySelector('.nombre').innerHTML = _nombre.toUpperCase()
+                document.querySelector('.nombre').classList.remove('txt-shadow')
+
+                Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
+                    element.style.fill = 'red'
+                })
+            }
         }),
         _muscles[i].addEventListener('click', function(){
             var _clone = this.cloneNode(true)
             var _nombre = document.querySelector('.nombre');
-            var _tmp = document.querySelector('.cls-selected')
-
-            if(this.classList.contains('cls-2')){
-                this.classList.remove('cls-2')
-                this.classList.add('cls-selected')
-                // Info
-                _nombre.innerHTML =_clone.getAttribute('data-name').replaceAll('-',' ').toUpperCase()
-
-                document.querySelector('.muscle-preview').innerHTML = _bodyMuscles.get(this.getAttribute('data-id'))
-
-            }else{
-                this.classList.add('cls-2')
-                this.classList.remove('cls-selected')
-                // Info
-                _nombre.innerHTML = ''
-            }
-
-            // Preview image.
-            var _preview = document.querySelector('.muscle-preview');
-
-            var _svg = document.createElement('svg');
-            _svg.setAttribute('xmlns',"http://www.w3.org/2000/svg");
-            _svg.setAttribute('viewBox', '0 0 400 400');
-
-            _svg.append(_clone)
-
-            _preview.appendChild(_svg)
-
+            var _tmp = document.querySelectorAll('.cls-selected')
             
+            _musclesTmp.forEach(element =>{
+                if(element.classList.contains('cls-2')){
+                    element.classList.remove('cls-2')
+                    element.classList.add('cls-selected')
+                    element.style.fill = 'red';
+    
+                }else{
+                    element.classList.add('cls-2')
+                    element.classList.remove('cls-selected')
+                    element.style.fill = 'white';                    
+                }
+            })
 
-            if(_tmp){
-                _tmp.classList.remove('cls-selected');
-                _tmp.classList.add('cls-2')
+            if(_tmp.length){
+                Array.from(_tmp).forEach(element =>{
+                    element.classList.remove('cls-selected');
+                    element.classList.add('cls-2')
+                    element.style.fill = 'white'
+                })
             }
         })
     }
 }
 
 selectMuscle();
+
+function cleanHover(){
+    if(_musclesTmp)
+        _musclesTmp.forEach(element =>{
+            element.style.fill = 'white';
+        })
+}
+
+cancelBtn.addEventListener('click', () =>{
+    cleanHover()
+})
 
 acceptBtn.addEventListener('click', () =>{
     if(document.querySelector('.cls-selected')){
@@ -572,6 +584,7 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
     if(document.querySelector('.cls-selected')){
         document.querySelector('.cls-selected').classList.add('cls-2')
         document.querySelector('.cls-selected').classList.remove('cls-selected')
+
     }
 
     if(_muscle_info){
@@ -579,6 +592,8 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
         document.querySelector(`path[data-id="${_muscle_info._id_muscle}"]`).classList.add('cls-selected')
 
         this.querySelector('.nombre').innerHTML = _muscle_info._muscle_name.toUpperCase()
+        this.querySelector('.nombre').classList.remove('txt-shadow')
+
     }
 })
 
