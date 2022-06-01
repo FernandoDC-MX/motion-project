@@ -1,3 +1,7 @@
+const _nTimes = 10;
+const min = 100;
+const max = 1;
+
 process.on('message', (msg)=>{
     demo(msg)
 })
@@ -8,9 +12,9 @@ function sleep(ms) {
 }
 
 async function demo(msg) {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < _nTimes; i++) {
         // Sending data to the main chart
-        var randomNumber = Math.floor(Math.random() * (100 - 1)) + 1;
+        var randomNumber = Math.floor(Math.random() * (max - min)) + min;
 
         process.send({
             chart:'main', 
@@ -21,20 +25,25 @@ async function demo(msg) {
         })
 
         // Sending data to the accelerometer chart
-        randomNumber = Math.floor(Math.random() * (100 - 1)) + 1;
+        var _num1 = Math.floor(Math.random() * (max - min)) + min;
+        var _num2 = Math.floor(Math.random() * (max - min)) + min;
+        var _num3 = Math.floor(Math.random() * (max - min)) + min;
+
         process.send({
             chart: 'accelerometer', 
-            data: [randomNumber, randomNumber-10, randomNumber-20],
+            data: [_num1, _num2, _num3],
             label: i,   
             device: msg.id_zone,  
             flag: 0
         })
         
-        // Sending data to the gyroscope chart
-        randomNumber = Math.floor(Math.random() * (100 - 1)) + 1;
-        process.send({
+        // Sending data to the gyro chart
+        var _num1 = Math.floor(Math.random() * (max - min)) + min;
+        var _num2 = Math.floor(Math.random() * (max - min)) + min;
+        var _num3 = Math.floor(Math.random() * (max - min)) + min;
+         process.send({
             chart:'gyroscope', 
-            data:[randomNumber, randomNumber-10, randomNumber-20], 
+            data: [_num1, _num2, _num3],
             label: i,  
             device:msg.id_zone, 
             flag: 0

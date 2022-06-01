@@ -145,23 +145,18 @@ function startDataGraph(){
             }
             else{
                 switch(msg.chart){
-                    case 'main': addData(_chartsMap.get(`${msg.device}-main`), msg.label, msg.data[0])
+                    case 'main': addData(_chartsMap.get(`${msg.device}-main`), msg.label, msg.data)
                         break;
-                    case 'accelerometer': addData(_chartsMap.get(`${msg.device}-accelerometer`), msg.label, msg.data[0])
+                    case 'accelerometer': addData(_chartsMap.get(`${msg.device}-accelerometer`), msg.label, msg.data)
                         break;
-                    case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data[0])
+                    case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data)
                         break;
                 }
             }
         })
     }
 
-    // Chart.register(zoomPlugin)
-
-
-    // demo(chart, _accelerometerChart, _gyroChart);
 }
-
 
 function createCharts(_divs){
     // We will iterate each chart zone by each device linked within the project.
@@ -339,15 +334,10 @@ function drawAccelerometerGyroChart(color){
 // Update a chart.
 function addData(chart, label, data) {
     chart.data.labels.push(label);
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
+    chart.data.datasets.forEach((dataset, index) => {
+        dataset.data.push(data[index]);
     });
     chart.update();
-}
-
-// Delay functions
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // We will read the files that contains all the data stored by each device.
