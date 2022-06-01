@@ -1,6 +1,8 @@
 const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom')
+const fork = require("child_process").fork
+
 const ipc = ipcRenderer
 var _path, channels, _musclesTmp;
 
@@ -124,138 +126,22 @@ function startDataGraph(){
 
     createCharts(_mainCharts)
 
+    for(let i = 0; i < _mainCharts.length; i++){
+        var _child = fork(__dirname + "\\js\\demo.js")
 
-    // var color = channels.get(id)._hex;
+        // Execute the test.
+        _child.send({ 
+            msg: 'do work',
+            name: i,
+            pid : _child.pid // passing pid to child
+        })
 
-    // var _mainDiv = _div;
-
-    // var _dataDiv = _mainDiv.querySelector('.col-8')
-    // const _canvas = document.createElement('canvas')
-    // const ctx = _canvas.getContext('2d');
-
-    // // Device chart
-    // var chart = new Chart(ctx, {
-    //     type: "line",
-    //     data: {
-    //         labels: [],
-    //         datasets: [{
-    //             backgroundColor: "#" + color,
-    //             borderColor: "#" + color,
-    //             label: 'Dispositivo',
-    //             data: []
-    //         }]
-    //     },
-    //     options: {
-    //         scales: {
-    //             y: {
-    //                 beginAtZero: true
-    //             }
-    //         },
-    //         plugins: {
-    //             zoom: {
-    //                 zoom: {
-    //                   wheel: {
-    //                     enabled: true,
-    //                     speed: 0.1,
-    //                   },
-    //                   drag: {
-    //                     enabled: true
-    //                   },
-    //                   pinch: {
-    //                     enabled: true
-    //                   },
-    //                   mode: 'xy',
-    //                 },
-    //                 limits: {
-    //                     y: {min: 1, max: 100},}
-    //             }
-    //         },
-    //         transitions: {
-    //             zoom: {
-    //               animation: {
-    //                 duration: 1000,
-    //                 easing: 'easeOutCubic'
-    //               }
-    //             }
-    //         },
-    //         responsive: true,
-    //         maintainAspectRatio: false
-    //     }
-    // });
-
-    // // Chart.register(zoomPlugin)
-    // _dataDiv.innerHTML = '';
-    // _dataDiv.appendChild(_canvas)
-
-    // var _subgraphs = _mainDiv.querySelector('.col-4');
-    // _subgraphs.innerHTML = ''
-
-    // var _div = document.createElement('div');
-    // _div.classList.add('subgraph')
-
-
-    // const _accelerometerCanvas = document.createElement('canvas')
-    // const _accelerometerCtx = _accelerometerCanvas.getContext('2d');
-
-    // // Device chart
-    // var _accelerometerChart = new Chart(_accelerometerCtx, {
-    //     type: "line",
-    //     data: {
-    //         labels: [],
-    //         datasets: [{
-    //             backgroundColor: "#" + color,
-    //             borderColor: "#" + color,
-    //             label: 'Acelerómetro',
-    //             data: []
-    //         }]
-    //     },
-    //     options: {
-    //         scales: {
-    //             y: {
-    //                 beginAtZero: true
-    //             }
-    //         },
-    //         responsive: true,
-    //         maintainAspectRatio: false
-    //     }
-    // });
-
-    // _div.appendChild(_accelerometerCanvas)
-
-    // _subgraphs.appendChild(_div)
-
-    // var _div = document.createElement('div');
-    // _div.classList.add('subgraph')
-
-    // const _gyroCanvas = document.createElement('canvas')
-    // const _gyroCtx = _gyroCanvas.getContext('2d');
-
-    // const _gyroChart = new Chart(_gyroCtx, {
-    //     type: "line",
-    //     data: {
-    //         labels: [],
-    //         datasets: [{
-    //             backgroundColor: "#" + color,
-    //             borderColor: "#" + color,
-    //             label: 'Giroscopio',
-    //             data: []
-    //         }]
-    //     },
-    //     options: {
-    //         scales: {
-    //             y: {
-    //                 beginAtZero: true
-    //             }
-    //         },
-    //         responsive: true,
-    //         maintainAspectRatio: false
-    //     }
-    // });
-
-
-    // _div.appendChild(_gyroCanvas)
-
-    // _subgraphs.appendChild(_div)
+        // Kill the process.
+        _child.on('message', (pid) =>{
+            console.log('Terminado: ' + pid)
+            process.kill(pid)
+        })
+    }
 
     // Chart.register(zoomPlugin)
 
@@ -274,16 +160,26 @@ function createCharts(_divs){
         var _mainChart = _mainContainer.querySelector('.col-8');
         _mainChart.innerHTML = ''
 
+        _mainChart.appendChild(drawMainChart(_device._hex))
+
         var _secondaryCharts = _mainContainer.querySelector('.col-4');
         _secondaryCharts.innerHTML = '';
 
-        _mainChart.appendChild(drawMainChart(_device._hex))
+        var _subgraph = document.createElement('div');
+        _subgraph.classList.add('subgraph');
 
-        _canvas = document.createElement("canvas");
-        _secondaryCharts.appendChild(_canvas)
+        // Accelerometer chart
+        _subgraph.appendChild(drawAccelerometerGyroChart(_device._hex))
 
-        _canvas = document.createElement("canvas");
-        _secondaryCharts.appendChild(_canvas)
+        _secondaryCharts.appendChild(_subgraph)
+
+        _subgraph = document.createElement('div');
+        _subgraph.classList.add('subgraph');
+
+        // Gyroscope chart
+        _subgraph.appendChild(drawAccelerometerGyroChart(_device._hex))
+
+        _secondaryCharts.appendChild(_subgraph)
     }
 
 }
@@ -345,17 +241,80 @@ function drawMainChart(color){
     return _canvas;
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+function drawAccelerometerGyroChart(color){
+    const _canvas = document.createElement("canvas");
+    const ctx = _canvas.getContext('2d');
 
-// Update a chart.
-function addData(chart, label, data) {
-    chart.data.labels.push(label);
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
+    // Accelerometer chart
+    var chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [
+                // X Value
+                {
+                    backgroundColor: "#ff000070",
+                    borderColor: "#ff000034",
+                    label: 'X',
+                    data: []
+                },
+                // Y Value
+                {
+                    backgroundColor: "#002aff70",
+                    borderColor: "#002aff34",
+                    label: 'Y',
+                    data: []
+                },
+                // Z Value
+                {
+                    backgroundColor: "#00ff2270",
+                    borderColor: "#00ff2234",
+                    label: 'Z',
+                    data: []
+                }
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                zoom: {
+                    zoom: {
+                      wheel: {
+                        enabled: true,
+                        speed: 0.1,
+                      },
+                      drag: {
+                        enabled: true
+                      },
+                      pinch: {
+                        enabled: true
+                      },
+                      mode: 'xy',
+                    },
+                    limits: {
+                        y: {min: 1, max: 100},}
+                }
+            },
+            transitions: {
+                zoom: {
+                  animation: {
+                    duration: 1000,
+                    easing: 'easeOutCubic'
+                  }
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
-    chart.update();
+
+
+
+    return _canvas;
 }
 
 async function demo(chart,_accelerometerChart, _gyroChart) {
@@ -374,6 +333,20 @@ async function demo(chart,_accelerometerChart, _gyroChart) {
         await sleep(100);
     }
     show('success','Monitoreo terminado.')
+}
+
+// Update a chart.
+function addData(chart, label, data) {
+    chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(data);
+    });
+    chart.update();
+}
+
+// Delay functions
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // We will read the files that contains all the data stored by each device.
@@ -674,16 +647,4 @@ function updateDisabledMuscles(){
         })
     }
 }
-
-// window.addEventListener('resize', function(event) {
-//     function beforePrintHandler () {
-//         for (let id in Chart.instances) {
-//             console.log(Chart.instances[id].canvas.parentNode.offsetWidth)
-//             Chart.instances[id].resize(Chart.instances[id].canvas.parentNode.offsetHeight, Chart.instances[id].canvas.parentNode.offsetWidth);
-//         }
-//     }
-
-//     beforePrintHandler()
-    
-// }, true);
 
