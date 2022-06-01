@@ -85,19 +85,19 @@ html, body{
 }
 
 /* width */
-.content-area .zone::-webkit-scrollbar {
+.content-area .graphs::-webkit-scrollbar {
     width: 5px;
 }
   
   /* Track */
-.content-area .zone::-webkit-scrollbar-track {
+.content-area .graphs::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 5px;
 }
   
   /* Handle */
-.content-area .zone::-webkit-scrollbar-thumb {
-    background: #888;
+.content-area .graphs::-webkit-scrollbar-thumb {
+    background: rgb(97, 97, 97);
     border-radius: 5px;
 }
   
@@ -217,6 +217,7 @@ html, body{
 .main-graph-container{
     width: 98%;
     height: auto;
+    padding: 1em;
     border-radius: 0.5em;
     margin: 1em auto;
     background: #303030;
