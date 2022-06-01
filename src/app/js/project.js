@@ -5,6 +5,7 @@ const fork = require("child_process").fork
 
 const ipc = ipcRenderer
 var _path, channels, _musclesTmp;
+var _chartsMap = new Map()
 
 ipc.on('enviar-nombre', (e, title) =>{ 
     document.querySelector('title').innerHTML = title
@@ -128,18 +129,30 @@ function startDataGraph(){
 
     for(let i = 0; i < _mainCharts.length; i++){
         var _child = fork(__dirname + "\\js\\demo.js")
-
+       
         // Execute the test.
         _child.send({ 
             msg: 'do work',
-            name: i,
-            pid : _child.pid // passing pid to child
+            pid : _child.pid, // passing pid to child
+            id_zone: _mainCharts[i].getAttribute('data-device')
         })
 
         // Kill the process.
-        _child.on('message', (pid) =>{
-            console.log('Terminado: ' + pid)
-            process.kill(pid)
+        _child.on('message', (msg) =>{
+            if(msg.flag){
+                process.kill(msg.id)
+                show('success','Monitoreo terminado.')
+            }
+            else{
+                switch(msg.chart){
+                    case 'main': addData(_chartsMap.get(`${msg.device}-main`), msg.label, msg.data[0])
+                        break;
+                    case 'accelerometer': addData(_chartsMap.get(`${msg.device}-accelerometer`), msg.label, msg.data[0])
+                        break;
+                    case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data[0])
+                        break;
+                }
+            }
         })
     }
 
@@ -160,7 +173,9 @@ function createCharts(_divs){
         var _mainChart = _mainContainer.querySelector('.col-8');
         _mainChart.innerHTML = ''
 
-        _mainChart.appendChild(drawMainChart(_device._hex))
+        var _res = drawMainChart(_device._hex)
+        _mainChart.appendChild(_res[0])
+        _chartsMap.set(`${_device.id}-main`, _res[1])
 
         var _secondaryCharts = _mainContainer.querySelector('.col-4');
         _secondaryCharts.innerHTML = '';
@@ -169,7 +184,9 @@ function createCharts(_divs){
         _subgraph.classList.add('subgraph');
 
         // Accelerometer chart
-        _subgraph.appendChild(drawAccelerometerGyroChart(_device._hex))
+        _res = drawAccelerometerGyroChart(_device._hex)
+        _subgraph.appendChild(_res[0]);
+        _chartsMap.set(`${_device.id}-accelerometer`, _res[1])
 
         _secondaryCharts.appendChild(_subgraph)
 
@@ -177,7 +194,9 @@ function createCharts(_divs){
         _subgraph.classList.add('subgraph');
 
         // Gyroscope chart
-        _subgraph.appendChild(drawAccelerometerGyroChart(_device._hex))
+        _res = drawAccelerometerGyroChart(_device._hex)
+        _subgraph.appendChild(_res[0]);
+        _chartsMap.set(`${_device.id}-gyroscope`, _res[1])
 
         _secondaryCharts.appendChild(_subgraph)
     }
@@ -238,7 +257,7 @@ function drawMainChart(color){
         }
     });
 
-    return _canvas;
+    return [_canvas, chart];
 }
 
 function drawAccelerometerGyroChart(color){
@@ -314,25 +333,7 @@ function drawAccelerometerGyroChart(color){
 
 
 
-    return _canvas;
-}
-
-async function demo(chart,_accelerometerChart, _gyroChart) {
-    for (let i = 0; i < 100; i++) {
-        var randomNumber = Math.floor(Math.random() * (100 - 1)) + 1;
-        addData(chart, i, randomNumber)
-
-        randomNumber = Math.floor(Math.random() * (100 - 1)) + 1;
-        addData(_accelerometerChart, i, randomNumber)
-
-        randomNumber = Math.floor(Math.random() * (100 - 1)) + 1;
-        addData(_gyroChart, i, randomNumber)
-
-
-        // console.log(`Waiting ${i+1} seconds...`);
-        await sleep(100);
-    }
-    show('success','Monitoreo terminado.')
+    return [_canvas, chart];
 }
 
 // Update a chart.
