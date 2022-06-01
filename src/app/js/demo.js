@@ -41,7 +41,8 @@ async function demo(msg) {
         var _num1 = Math.floor(Math.random() * (max - min)) + min;
         var _num2 = Math.floor(Math.random() * (max - min)) + min;
         var _num3 = Math.floor(Math.random() * (max - min)) + min;
-         process.send({
+
+        process.send({
             chart:'gyroscope', 
             data: [_num1, _num2, _num3],
             label: i,  
