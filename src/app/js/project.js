@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
-const zoomPlugin = require('chartjs-plugin-zoom')
+const zoomPlugin = require('chartjs-plugin-zoom');
 const fork = require("child_process").fork
 
 const ipc = ipcRenderer
@@ -642,9 +642,12 @@ function updateDisabledMuscles(){
 }
 
 function settings(){
-    var _options = document.querySelectorAll('.setting-options li')
-    let title = document.querySelector('#setting-title')
-    let description = document.querySelector('#setting-description')
+    var _options = document.querySelectorAll('.setting-options li');
+    let title = document.querySelector('#setting-title');
+    let description = document.querySelector('#setting-description');
+
+   
+
 
 
     for(let i = 0; i < _options.length; i++){
@@ -662,18 +665,61 @@ function settings(){
             switch(this.getAttribute('data-option')){
                 case 'basic':   title.innerHTML = 'Configuración básica';
                                 description.innerHTML = 'La configuración básica sirve para...'
+                                setSettingsValues(0,0,0,0, true)                                
                     break;
                 case 'medium':  title.innerHTML = 'Configuración media';
                                 description.innerHTML = 'La configuración media sirve para...'
+                                setSettingsValues(1,1,1,1, true)
                     break;
                 case 'hard':    title.innerHTML = 'Configuración experta';
                                 description.innerHTML = 'La configuración experta sirve para...'
+                                setSettingsValues(2,2,2,2, true)                                
                     break;
                 case 'advanced':title.innerHTML = 'Configuración avanzada';
                                 description.innerHTML = 'La configuración avanzada sirve para...'
+                                setSettingsValues(0,0,0,0, false)                                
                     break;
             }
 
         })
     }
 }
+
+const setSettingsValues = (_valueSample, _valueNumber, _valueImu, _valueExample, flag) =>{
+    // Inputs
+    let sample_rate = document.querySelector('#sample-rate');
+    let number_rate = document.querySelector('#number-rate');
+    let imu_rate = document.querySelector('#imu-rate');
+    let example_rate = document.querySelector('#example-rate');
+
+    sample_rate.value = _valueSample;
+    number_rate.value = _valueNumber;
+    imu_rate.value = _valueImu;
+    example_rate.value = _valueExample;
+
+    for(let i = 0; i < document.querySelectorAll('.form-group select').length; i++){
+        document.querySelectorAll('.form-group select')[i].disabled = flag
+    }
+}
+
+btnSaveSettings.addEventListener('click', () => {
+    var _values = document.querySelectorAll('.form-group select');
+    var _json = {sample_rate: _values[0].value, number_rate: _values[1].value, imu_rate: _values[2].value, example_rate: _values[3].value}
+
+    var _response = readFile(_path + "\\info.json")
+
+    switch(_response.Estado){
+        case 'OK': var _content = _response.Contenido;
+                    _content['settings'] = _json;
+                    storeFile(_path + "\\info.json", _content)
+            break;
+        case 'ERROR': show('error', 'Hubo un problema al guardar la información.')
+            break;
+    }
+
+
+})
+
+btnCloseSettings.addEventListener('click', () =>{
+
+})

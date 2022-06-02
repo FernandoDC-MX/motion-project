@@ -295,10 +295,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <p class="modal-title">Configuración para los muestreos</p>
-              <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" aria-label="Close" width="24" height="24" fill="currentColor" class="bi bi-x cursor" viewBox="0 0 16 16">
-                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-              </svg>            
+              <p class="modal-title">Configuración para los muestreos</p>    
             </div>
             <div class="modal-body bg-gray-modal p-0">
               <div class="container-fluid">
@@ -334,7 +331,7 @@
                         <div class="col-3">
                           <div class="form-group">
                             <p class="font-mono">V. de muestreo (Hz)</p>
-                            <select class="form-selected" name="sample-rate" id="sample-rate">
+                            <select class="form-selected" name="sample-rate" id="sample-rate" disabled>
                               <option value="0" default>6000</option>
                               <option value="1" default>8000</option>
                               <option value="2" default>11025</option>
@@ -346,7 +343,7 @@
                         <div class="col-3">
                           <div class="form-group">
                             <p class="font-mono">Número de datos</p>
-                            <select class="form-selected" name="sample-rate" id="number-rate">
+                            <select class="form-selected" name="number-rate" id="number-rate" disabled>
                               <option value="0" default>6000</option>
                               <option value="1" default>8000</option>
                               <option value="2" default>11025</option>
@@ -358,7 +355,7 @@
                         <div class="col-3">
                           <div class="form-group">
                             <p class="font-mono">Número de datos (IMU)</p>
-                            <select class="form-selected" name="sample-rate" id="imu-rate">
+                            <select class="form-selected" name="imu-rate" id="imu-rate" disabled>
                               <option value="0" default>6000</option>
                               <option value="1" default>8000</option>
                               <option value="2" default>11025</option>
@@ -370,7 +367,7 @@
                         <div class="col-3">
                           <div class="form-group">
                             <p class="font-mono">Número de datos (IMU)</p>
-                            <select class="form-selected" name="sample-rate" id="imu-rate">
+                            <select class="form-selected" name="example-rate" id="example-rate">
                               <option value="0" default>6000</option>
                               <option value="1" default>8000</option>
                               <option value="2" default>11025</option>
@@ -382,8 +379,8 @@
                       </div>
 
                       <div class="text-end">
-                        <button type="button" class="btn btn-clse" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-save">Guardar ajustes</button>
+                        <button type="button" class="btn btn-clse" id="btnCloseSettings" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-save" id="btnSaveSettings">Guardar ajustes</button>
                       </div>
                   </div>
                 </div>

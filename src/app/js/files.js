@@ -1,6 +1,7 @@
 // Read files
 const fs = require('fs');
 
+
 // Function to read a file and return its content.
 function readFile(path){
     try{
@@ -30,5 +31,7 @@ function readFiles(path){
 function storeFile(_path, _data){
     fs.writeFileSync(_path, JSON.stringify(_data))
     
-    return _data;
+    show('success', 'Configuración guardada correctamente.')
+
+    // return _data;
 }
