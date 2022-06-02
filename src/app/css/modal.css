@@ -10,8 +10,8 @@
     height: 630px !important;
 }
 
-.h-300{
-    min-height: 350px;
+.h-150{
+    min-height: 175px;
     height: auto;
 }
 
@@ -133,6 +133,22 @@ background: #555;
 
 .color-description{
     color: #808080;
+}
+
+.text-end{
+    text-align: end;
+}
+
+.btn-save{
+    color: #fff;
+    background-color: #FF7B54;
+    border-color: #FF7B54;
+}
+
+.btn-clse{
+    color: #fff;
+    background-color: #808080;
+    border-color: #808080;
 }
 
 @media (min-width: 576px){
