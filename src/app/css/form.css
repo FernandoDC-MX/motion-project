@@ -73,9 +73,8 @@
     margin-bottom: 1em;
     resize: none;
     transition: 0.4s all ease-in-out;
-    color: #FFB26B;
+    color: #FF7B54;
     border-radius: 0.5em;
-    font-family: monospace;
 }
 
 .custom-textarea:focus{
@@ -88,17 +87,15 @@
     outline: none;
     border: none;
     padding: 0.25em 2em;
-    margin: 3.5em 0.75em 1em;
     transition: 0.2s all ease-in-out;
     font-size: 1.2rem;
     font-weight: bold;
     font-family: monospace;
 }
 
-
 .bg-crear{
-    background: #eb5a5aea;
-    border: 1px solid #eb5a5aea;
+    background: #FF7B54;
+    border: 1px solid #FF7B54;
 }
 
 .bg-crear:hover, .bg-cancel:hover{
