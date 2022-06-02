@@ -643,10 +643,13 @@ function updateDisabledMuscles(){
 
 function settings(){
     var _options = document.querySelectorAll('.setting-options li')
+    let title = document.querySelector('#setting-title')
+    let description = document.querySelector('#setting-description')
+
 
     for(let i = 0; i < _options.length; i++){
         _options[i].addEventListener('click', function(){
-
+            
             // Unselect the last option selected.
             if(document.querySelector('.setting-options .bg-square')){
                 document.querySelector('.setting-options .bg-square').classList.remove('bg-square')
@@ -657,7 +660,17 @@ function settings(){
 
             // Displays the correct description and sets the default values.
             switch(this.getAttribute('data-option')){
-                case 'basic': 
+                case 'basic':   title.innerHTML = 'Configuración básica';
+                                description.innerHTML = 'La configuración básica sirve para...'
+                    break;
+                case 'medium':  title.innerHTML = 'Configuración media';
+                                description.innerHTML = 'La configuración media sirve para...'
+                    break;
+                case 'hard':    title.innerHTML = 'Configuración experta';
+                                description.innerHTML = 'La configuración experta sirve para...'
+                    break;
+                case 'advanced':title.innerHTML = 'Configuración avanzada';
+                                description.innerHTML = 'La configuración avanzada sirve para...'
                     break;
             }
 

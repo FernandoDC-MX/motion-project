@@ -10,10 +10,17 @@
     height: 630px !important;
 }
 
+.h-300{
+    min-height: 350px;
+    height: auto;
+}
+
 .w-400{
     width: 600px;
     margin: 0 auto;
 }
+
+
 
 body.modal-open .contentArea{
     -webkit-filter: blur(4px);

@@ -48,6 +48,7 @@
     font-family: 'Rubik';
     color: #f8f8f8;
     font-size: 1rem;
+    user-select: none;
 }
 
 .form-selected{
