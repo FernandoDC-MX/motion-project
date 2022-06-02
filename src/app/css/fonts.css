@@ -4,6 +4,11 @@
 }  
 
 @font-face {
+    font-family: 'Roboto-Regular';
+    src: url('../fonts/Roboto/Roboto-Regular.woff') /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}  
+
+@font-face {
     font-family: 'Rubik';
     src: url('../fonts/Rubik/Rubik-Regular.woff') /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
 }  

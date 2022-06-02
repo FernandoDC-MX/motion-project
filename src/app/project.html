@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="css/project.css">
     <link rel="stylesheet" href="css/modal.css">
     <link rel="stylesheet" href="css/notifications.css">
+    <link rel="stylesheet" href="css/form.css">
+
 
     <!-- Boostrap js -->
     <script src="bootstrap/js/bootstrap.js"></script>
@@ -313,26 +315,81 @@
                 <div class="row">
                   <div class="col-2 p-0 bg-square-dark">
                     <ul class="setting-options">
-                      <li>
+                      <li class="bg-square" data-option="basic">
                         <img src="icons/arrow-right.png" alt="">
                         Básico
                       </li>
-                      <li>
+                      <li data-option="medium">
                         <img src="icons/arrow-right.png" alt="">
                         Medio
                       </li>
-                      <li>
+                      <li data-option="hard">
                         <img src="icons/arrow-right.png" alt="">
                         Difícil
                       </li>
-                      <li>
+                      <li data-option="advanced">
                         <img src="icons/arrow-right.png" alt="">
                         Avanzado
                       </li>
                     </ul>
                   </div>
-                  <div class="col-10 bg-square">
-
+                  <div class="col-10 p-4 bg-square">
+                      <h4 class="custom-title pt-2">Configuración básica</h4>
+                      <p class=" border-bottom custom-paragraph color-description pb-3">Amet reprehenderit nostrud exercitation id ex aute culpa veniam id voluptate laboris id deserunt. Qui consequat magna
+                        nisi enim fugiat. Ullamco minim labore laborum ad magna in officia eiusmod enim dolor sit fugiat. Ipsum voluptate
+                        dolor do qui ad do nostrud dolor sint ipsum esse consequat do. Ad duis non officia est nisi laboris eiusmod pariatur
+                        esse enim laboris. Quis fugiat magna consequat esse exercitation.
+                      </p>
+                      <div class="row">
+                        <div class="col-3">
+                          <div class="form-group">
+                            <p class="font-mono">V. de muestreo (Hz)</p>
+                            <select class="form-selected" name="sample-rate" id="sample-rate">
+                              <option value="0" default>6000</option>
+                              <option value="1" default>8000</option>
+                              <option value="2" default>11025</option>
+                              <option value="3" default>16000</option>
+                              <option value="4" default>22050</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-3">
+                          <div class="form-group">
+                            <p class="font-mono">Número de datos</p>
+                            <select class="form-selected" name="sample-rate" id="number-rate">
+                              <option value="0" default>6000</option>
+                              <option value="1" default>8000</option>
+                              <option value="2" default>11025</option>
+                              <option value="3" default>16000</option>
+                              <option value="4" default>22050</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-3">
+                          <div class="form-group">
+                            <p class="font-mono">Número de datos (IMU)</p>
+                            <select class="form-selected" name="sample-rate" id="imu-rate">
+                              <option value="0" default>6000</option>
+                              <option value="1" default>8000</option>
+                              <option value="2" default>11025</option>
+                              <option value="3" default>16000</option>
+                              <option value="4" default>22050</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-3">
+                          <div class="form-group">
+                            <p class="font-mono">Número de datos (IMU)</p>
+                            <select class="form-selected" name="sample-rate" id="imu-rate">
+                              <option value="0" default>6000</option>
+                              <option value="1" default>8000</option>
+                              <option value="2" default>11025</option>
+                              <option value="3" default>16000</option>
+                              <option value="4" default>22050</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
                   </div>
                 </div>
               </div>

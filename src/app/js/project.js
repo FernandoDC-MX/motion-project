@@ -646,11 +646,20 @@ function settings(){
 
     for(let i = 0; i < _options.length; i++){
         _options[i].addEventListener('click', function(){
+
+            // Unselect the last option selected.
             if(document.querySelector('.setting-options .bg-square')){
                 document.querySelector('.setting-options .bg-square').classList.remove('bg-square')
             }
 
+            // Select the new one.
             this.classList.add('bg-square')
+
+            // Displays the correct description and sets the default values.
+            switch(this.getAttribute('data-option')){
+                case 'basic': 
+                    break;
+            }
 
         })
     }

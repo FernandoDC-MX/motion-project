@@ -2,8 +2,8 @@
 .form-group{
     width: 100%;
     margin: 3em 0;
-    font-family: monospace;
     background: transparent;
+    font-family: 'Rubik';
 }
 
 .form-group .form-input{
@@ -15,19 +15,18 @@
     border-color: #cecece;
     transition: all 0.5s;
     padding: 5px;
-    color: #FFB26B;
+    color: #FF7B54;
 }
 
 .form-group .form-label{
     font-size: 1em;
-    color: #d8d8d8;
     display: block;
     opacity: 1;
     transform: translate(0.2em, -2em);
     transform-origin: 0 0;
     transition: all 0.3s;
+    user-select: none;
 }
-
 
 .form-group .form-input::placeholder{
     color: transparent;
@@ -46,8 +45,9 @@
 }
 
 .font-mono{
-    font-family: monospace;
-    color: white;
+    font-family: 'Rubik';
+    color: #f8f8f8;
+    font-size: 1rem;
 }
 
 .form-selected{
@@ -56,14 +56,14 @@
     padding: 0.25em;
     border-style: none none solid none;
     border-color: white;
-    background: rgba(70, 70, 70, 0.114);
+    background: #383838;
     outline: none;
 }
 
 
 .form-selected option{
     background: transparent;
-    color: black;
+    color: white;
 }
 
 .custom-textarea{
