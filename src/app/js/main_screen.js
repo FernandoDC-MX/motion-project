@@ -39,14 +39,14 @@ window.onload = function(){
 
 function readProjects(){
     _proyectos = []
-    // const response = readFile('src/app/proyectos.json')
+
     fs.readdir(
-        'src/app/Proyectos',
+        __dirname + '\\Proyectos',
         (err, files) => {
           if (err) throw err;
           
           for (let file of files) {
-             var x = readFile(`src\\app\\Proyectos\\${file}\\info.json`)
+             var x = readFile(__dirname + `\\Proyectos\\${file}\\info.json`)
              _proyectos.push(x.Contenido)
           }
           displayProyectos(0)
