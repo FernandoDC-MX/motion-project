@@ -27,6 +27,8 @@ function readInfo(_nameFolder){
         alert('Hubo algún error al tratar de abrir el archivo.')
         closeBtn.click()
     }
+
+    settings()
 }
 
 function displayChannels(canales){
@@ -639,3 +641,17 @@ function updateDisabledMuscles(){
     }
 }
 
+function settings(){
+    var _options = document.querySelectorAll('.setting-options li')
+
+    for(let i = 0; i < _options.length; i++){
+        _options[i].addEventListener('click', function(){
+            if(document.querySelector('.setting-options .bg-square')){
+                document.querySelector('.setting-options .bg-square').classList.remove('bg-square')
+            }
+
+            this.classList.add('bg-square')
+
+        })
+    }
+}

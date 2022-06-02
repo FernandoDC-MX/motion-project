@@ -46,6 +46,14 @@ body.modal-open .contentArea{
     background: rgb(57, 57, 57);
 }
 
+.bg-square{
+    background: #383838;
+}
+
+.bg-square-dark{
+    background: #282828;
+}
+
 .cursor{
     cursor: pointer;
 }
@@ -64,25 +72,42 @@ body.modal-open .contentArea{
     width: 5px;
   }
   
-  /* Track */
-  .modal section::-webkit-scrollbar-track {
-    background: #c1c1c134;
-  }
-  
-  /* Handle */
-  .modal section::-webkit-scrollbar-thumb {
-    background: #acacac;
-  }
-  
-  /* Handle on hover */
-  .modal section::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+/* Track */
+.modal section::-webkit-scrollbar-track {
+background: #c1c1c134;
+}
+
+/* Handle */
+.modal section::-webkit-scrollbar-thumb {
+background: #acacac;
+}
+
+/* Handle on hover */
+.modal section::-webkit-scrollbar-thumb:hover {
+background: #555;
+}
 
 .modal-header svg:hover{
     color: red;
 }
 
+.setting-options{
+    padding: 0;
+    direction: rtl;
+}
+
+.setting-options li{
+    list-style: none;
+    transition: 0.2s all ease-in-out;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    font-family: 'Roboto';
+    color: #F8F8F8;
+}
+
+.setting-options li:hover{
+    background: #5050501e;
+}
 
 @media (min-width: 576px){
     .modal-dialog {
