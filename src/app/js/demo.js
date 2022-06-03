@@ -1,6 +1,6 @@
-const _nTimes = 10;
-const min = 100;
-const max = 1;
+const _nTimes = 100; //Times to iterate the loop.
+const max = 100; // Max value
+const min = 1; // Min value
 
 process.on('message', (msg)=>{
     demo(msg)
@@ -50,7 +50,7 @@ async function demo(msg) {
             flag: 0
         })
 
-        await sleep(500);
+        await sleep(100);
     }
 
     // Send the order to kill the process.

@@ -349,8 +349,29 @@ function drawAccelerometerGyroChart(color){
 
 // Update a chart.
 function addData(chart, label, data) {
+    // We will use this variable to determine if a label was erased or not.
+    let flag = false;
+
+    // Put the new label on the chart
     chart.data.labels.push(label);
+
+    // Iterate each chart's datasets
     chart.data.datasets.forEach((dataset, index) => {
+
+        // If the array's length is superior to 10, the firs element will be deleted.
+        if(dataset.data.length > 50){
+
+            // Delete the first data.
+            dataset.data.shift()
+
+            // If the flag is false
+            if(!flag){
+                flag = true;
+                chart.data.labels.shift()
+            }
+            
+        }
+
         dataset.data.push(data[index]);
     });
     chart.update();
