@@ -273,20 +273,8 @@ html, body{
     transition: 0.2s all ease-in-out;
 }
 
-.menu .play-icon:hover{
-    fill: green;
-}
-
-.menu .pause-icon:hover{
-    fill: #004f80;
-}
-
-.menu .setting-icon:hover{
-    fill: #343434;
-}
-
-.menu .download-icon:hover{
-    fill: #3c3c3c;
+.menu svg:hover{
+    fill: #FF7B54;
 }
 
 .text-incrusted{

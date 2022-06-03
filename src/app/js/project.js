@@ -630,3 +630,7 @@ btnSaveSettings.addEventListener('click', () => {
 btnCloseSettings.addEventListener('click', () =>{
 
 })
+
+stopBtn.addEventListener('click', () => {
+    
+})
