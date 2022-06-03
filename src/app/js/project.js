@@ -416,8 +416,10 @@ function reDrawChart(map){
 
     map.chart.data.datasets.forEach((dataset, index) => {
         dataset.data = map.values[index]
+        map.values[index] = []
     });
     
+    map.labels = []
     map.chart.update()
 }
 
