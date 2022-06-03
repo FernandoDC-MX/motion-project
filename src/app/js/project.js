@@ -131,7 +131,7 @@ function startDataGraph(){
     var _mainCharts = document.querySelectorAll('.main-graph-container');
 
     createCharts(_mainCharts)
-
+    
     for(let i = 0; i < _mainCharts.length; i++){
         var _child = fork(__dirname + "\\js\\demo.js")
        
@@ -161,6 +161,7 @@ function startDataGraph(){
         })
     }
 
+    show('info','La prueba ha empezado.')
 }
 
 // 
