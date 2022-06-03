@@ -7,6 +7,7 @@
     color: white;
     font-size: 1rem;
     z-index: 100000;
+    font-family: 'Rubik';
 }
 
 .notification-success{
@@ -25,8 +26,8 @@
 }
 
 .notification-info{
-    background: aqua;
-    border: 1px solid aqua;
+    background: #04146677;
+    border: 1px solid #002aff;
 }
 
 @keyframes pop-swirl {

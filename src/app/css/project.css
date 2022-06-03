@@ -51,8 +51,6 @@ html, body{
     padding: 0 0.75em;
 }
 
-
-
 .channels .channel-devices ul li{
     transition: 0.2s all ease-in-out;
     cursor: pointer;

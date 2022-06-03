@@ -632,5 +632,5 @@ btnCloseSettings.addEventListener('click', () =>{
 })
 
 stopBtn.addEventListener('click', () => {
-    
+    show('info','La prueba ha sido detenida.')
 })
