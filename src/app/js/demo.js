@@ -50,9 +50,9 @@ async function demo(msg) {
             flag: 0
         })
 
-        await sleep(100);
+        await sleep(70);
     }
 
     // Send the order to kill the process.
-    process.send({id: msg.pid, flag: 1})
+    process.send({id: msg.pid, flag: 1, device: msg.id_zone})
 }

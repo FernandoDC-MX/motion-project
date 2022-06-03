@@ -132,6 +132,7 @@ function startDataGraph(){
 
     createCharts(_mainCharts)
 
+
     // Display Pause Button and Hide the Play Button
     playBtn.classList.add('d-none')
     pauseBtn.classList.remove('d-none')
@@ -154,6 +155,10 @@ function startDataGraph(){
                 // Display Play Button and Hide the Pause Button
                 playBtn.classList.remove('d-none')
                 pauseBtn.classList.add('d-none')
+
+                reDrawChart(_chartsMap.get(`${msg.device}-main`));                
+                reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`));                
+                reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`));                
 
                 show('success','Monitoreo terminado.')
             }
@@ -186,7 +191,7 @@ function createCharts(_divs){
 
         var _res = drawMainChart(_device._hex)
         _mainChart.appendChild(_res[0])
-        _chartsMap.set(`${_device.id}-main`, _res[1])
+        _chartsMap.set(`${_device.id}-main`, {'chart':_res[1], 'values': [[]], 'labels': []})
 
         var _secondaryCharts = _mainContainer.querySelector('.col-4');
         _secondaryCharts.innerHTML = '';
@@ -197,7 +202,7 @@ function createCharts(_divs){
         // Accelerometer chart
         _res = drawAccelerometerGyroChart(_device._hex)
         _subgraph.appendChild(_res[0]);
-        _chartsMap.set(`${_device.id}-accelerometer`, _res[1])
+        _chartsMap.set(`${_device.id}-accelerometer`, {'chart':_res[1], 'values': [[],[],[]], 'labels': []})
 
         _secondaryCharts.appendChild(_subgraph)
 
@@ -207,7 +212,7 @@ function createCharts(_divs){
         // Gyroscope chart
         _res = drawAccelerometerGyroChart(_device._hex)
         _subgraph.appendChild(_res[0]);
-        _chartsMap.set(`${_device.id}-gyroscope`, _res[1])
+        _chartsMap.set(`${_device.id}-gyroscope`, {'chart':_res[1], 'values': [[],[],[]], 'labels': []})
 
         _secondaryCharts.appendChild(_subgraph)
     }
@@ -348,15 +353,16 @@ function drawAccelerometerGyroChart(color){
 }
 
 // Update a chart.
-function addData(chart, label, data) {
+function addData(map, label, data) {
     // We will use this variable to determine if a label was erased or not.
     let flag = false;
 
     // Put the new label on the chart
-    chart.data.labels.push(label);
+    map.chart.data.labels.push(label);
+    map.labels.push(label)
 
     // Iterate each chart's datasets
-    chart.data.datasets.forEach((dataset, index) => {
+    map.chart.data.datasets.forEach((dataset, index) => {
 
         // If the array's length is superior to 10, the firs element will be deleted.
         if(dataset.data.length > 50){
@@ -367,14 +373,19 @@ function addData(chart, label, data) {
             // If the flag is false
             if(!flag){
                 flag = true;
-                chart.data.labels.shift()
+                map.chart.data.labels.shift()
             }
             
         }
 
+        // Store all the data.
+        map.values[index].push(data[index]);
+
+        // Draw the data stored into the chart's array.
         dataset.data.push(data[index]);
     });
-    chart.update();
+
+    map.chart.update();
 }
 
 // We will read the files that contains all the data stored by each device.
@@ -397,6 +408,16 @@ function readData(device, div){
 
     }
 
+}
+
+function reDrawChart(map){
+    map.chart.data.labels = map.labels;
+
+    map.chart.data.datasets.forEach((dataset, index) => {
+        dataset.data = map.values[index]
+    });
+    
+    map.chart.update()
 }
 
 function setId(){
