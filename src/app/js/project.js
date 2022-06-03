@@ -156,6 +156,7 @@ function startDataGraph(){
                 playBtn.classList.remove('d-none')
                 pauseBtn.classList.add('d-none')
 
+                // Redraw each chart with all the data generated.
                 reDrawChart(_chartsMap.get(`${msg.device}-main`));                
                 reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`));                
                 reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`));                

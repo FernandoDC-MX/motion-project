@@ -50,7 +50,7 @@ async function demo(msg) {
             flag: 0
         })
 
-        await sleep(70);
+        await sleep(250);
     }
 
     // Send the order to kill the process.
