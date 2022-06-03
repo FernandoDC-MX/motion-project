@@ -131,7 +131,12 @@ function startDataGraph(){
     var _mainCharts = document.querySelectorAll('.main-graph-container');
 
     createCharts(_mainCharts)
-    
+
+    // Display Pause Button and Hide the Play Button
+    playBtn.classList.add('d-none')
+    pauseBtn.classList.remove('d-none')
+
+
     for(let i = 0; i < _mainCharts.length; i++){
         var _child = fork(__dirname + "\\js\\demo.js")
        
@@ -146,6 +151,10 @@ function startDataGraph(){
         _child.on('message', (msg) =>{
             if(msg.flag){
                 process.kill(msg.id)
+                // Display Play Button and Hide the Pause Button
+                playBtn.classList.remove('d-none')
+                pauseBtn.classList.add('d-none')
+
                 show('success','Monitoreo terminado.')
             }
             else{
