@@ -159,14 +159,10 @@ html, body{
 }
 
 .txt-shadow{
-    text-shadow: 1px 1px 1px #d1d1d1,
+    text-shadow: 1px 1px 1px #FFB26B,
         1px 2px 1px #c55f00,
         1px 3px 1px #c55f00,
 
-    1px 6px 6px rgba(16,16,16,0.4),
-    1px 8px 10px rgba(16,16,16,0.2),
-    1px 12px 35px rgba(16,16,16,0.2),
-    1px 15px 60px rgba(16,16,16,0.4);
 }
 
 .btn-cstm{
@@ -291,7 +287,7 @@ html, body{
 
 @keyframes highlight-text {
     0% {
-        transform: scale(1.5);
+        transform: scale(1.1);
     }
     100% {
         transform: scale(1);

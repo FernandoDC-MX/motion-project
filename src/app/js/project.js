@@ -411,15 +411,23 @@ function readData(device, div){
 
 }
 
+// Update a chart
 function reDrawChart(map){
+    // Update labels
     map.chart.data.labels = map.labels;
 
+    // Update datasets
     map.chart.data.datasets.forEach((dataset, index) => {
         dataset.data = map.values[index]
+
+        // Clean map values.
         map.values[index] = []
     });
     
+    // Clean map labels
     map.labels = []
+
+    // Redraw chart
     map.chart.update()
 }
 
