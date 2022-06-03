@@ -35,6 +35,7 @@ function displayChannels(canales){
     channels = new Map(Object.entries(canales));
 
     var i = 1, _lista = document.querySelector('.list');
+    _lista.innerHTML = '';
 
     channels.forEach(element => {
         var _config = element;
@@ -87,7 +88,8 @@ function displayChannels(canales){
 
 function displayGraphs(canales){
     const _canales = new Map(Object.entries(canales));
-    const _zone = document.querySelector('.zone');
+    const _zone = document.querySelector('._charts');
+    _zone.innerHTML = ''
 
     _canales.forEach(element =>{
         if(element._id_muscle){
@@ -118,6 +120,7 @@ function displayGraphs(canales){
 
 }
 
+// 
 playBtn.addEventListener('click', function(){
     startDataGraph();
 });
@@ -160,6 +163,7 @@ function startDataGraph(){
 
 }
 
+// 
 function createCharts(_divs){
     // We will iterate each chart zone by each device linked within the project.
     for(let i = 0; i < _divs.length; i++){
@@ -364,104 +368,6 @@ function readData(device, div){
 
 }
 
-const createGraph = () =>{
-    var _canvas = document.createElement('canvas');
-    const _graphic = _canvas.getContext('2d');
-    const myChart = new Chart(_graphic, {
-        type: 'bar',
-        data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            responsive: true,
-            maintainAspectRatio: false
-
-        }
-    });
-
-    return _canvas;
-}
-
-const lineGraph = () =>{
-
-  
-
-    var _canvas = document.createElement('canvas');
-    const _graphic = _canvas.getContext('2d');
-
-
-
-
-var dataFirst = {
-    label: "Car A - Speed (mph)",
-    data: [0, 59, 75, 20, 20, 55, 40],
-    lineTension: 0,
-    fill: false,
-    borderColor: 'red'
-  };
-
-var dataSecond = {
-    label: "Car B - Speed (mph)",
-    data: [20, 15, 60, 60, 65, 30, 70],
-    lineTension: 0,
-    fill: false,
-  borderColor: 'blue'
-  };
-
-var speedData = {
-  labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
-  datasets: [dataFirst]
-};
-
-var chartOptions = {
-  legend: {
-    display: true,
-    position: 'top',
-    labels: {
-      boxWidth: 80,
-      fontColor: 'black'
-    }
-  },
-  responsive: true,
-  maintainAspectRatio: false
-};
-
-var lineChart = new Chart(_graphic, {
-  type: 'line',
-  data: speedData,
-  options: chartOptions
-});
-
-
-    return _canvas;
-}
-
 function setId(){
     var _channels = document.querySelectorAll('.device');
 
@@ -505,8 +411,7 @@ function selectMuscle(){
                 element.style.fill = 'white'
             })
 
-
-            if(document.querySelector('.cls-selected').getAttribute('data-name')){
+            if(document.querySelector('.cls-selected')){
                 var _nombre = document.querySelector('.cls-selected').getAttribute('data-name')
 
                 document.querySelector('.nombre').innerHTML = _nombre.toUpperCase()
@@ -519,7 +424,7 @@ function selectMuscle(){
         }),
         _muscles[i].addEventListener('click', function(){
             var _tmp = document.querySelectorAll('.cls-selected')
-            
+
             _musclesTmp.forEach(element =>{
                 if(element.classList.contains('cls-2')){
                     element.classList.remove('cls-2')
@@ -582,6 +487,9 @@ function getMuscle(){
         case 'OK':  
                     _response.Contenido.devices = Object.fromEntries(channels)
                     storeFile(_path + "\\info.json", _response.Contenido)
+                    displayChannels(_response.Contenido.devices)
+                    displayGraphs(_response.Contenido.devices);
+                    selectMuscle()
             break;
     }
 }
@@ -646,10 +554,7 @@ function settings(){
     let title = document.querySelector('#setting-title');
     let description = document.querySelector('#setting-description');
 
-   
-
-
-
+    
     for(let i = 0; i < _options.length; i++){
         _options[i].addEventListener('click', function(){
             
@@ -712,6 +617,8 @@ btnSaveSettings.addEventListener('click', () => {
         case 'OK': var _content = _response.Contenido;
                     _content['settings'] = _json;
                     storeFile(_path + "\\info.json", _content)
+                    show('success', 'Configuración guardada correctamente.')
+                    btnCloseSettings.click()
             break;
         case 'ERROR': show('error', 'Hubo un problema al guardar la información.')
             break;

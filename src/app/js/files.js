@@ -31,7 +31,5 @@ function readFiles(path){
 function storeFile(_path, _data){
     fs.writeFileSync(_path, JSON.stringify(_data))
     
-    show('success', 'Configuración guardada correctamente.')
-
-    // return _data;
+    return _data;
 }
