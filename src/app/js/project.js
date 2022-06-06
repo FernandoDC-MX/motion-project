@@ -37,14 +37,39 @@ function displayChannels(canales){
     var i = 1, _lista = document.querySelector('.list');
     _lista.innerHTML = '';
 
+    var _li = document.createElement('li');
+    _li.classList.add('row','py-1')
+
+    var _col = document.createElement('div');
+    _col.classList.add('col-2');
+    _col.innerText = '#';
+
+    _li.appendChild(_col);
+
+    _col = document.createElement('div');
+    _col.classList.add('col-7');
+    _col.innerText = 'Músculo';
+
+    _li.appendChild(_col);
+
+    _col = document.createElement('div');
+    _col.classList.add('col-3');
+    _col.innerText = 'Bat';
+
+    _li.appendChild(_col);
+
+    _li.style.borderBottom = '1px solid white'
+
+    _lista.appendChild(_li)
+
+
     channels.forEach(element => {
         var _config = element;
 
         var _li = document.createElement('li');
 
-        _li.classList.add('py-2')
-        _li.classList.add('device')
-        _li.classList.add('row')
+        _li.classList.add('py-2', 'device', 'row')
+
 
         _li.setAttribute('data-id', 'channel-' + _config.id)
         _li.setAttribute('data-bs-toggle',"modal")
@@ -58,8 +83,7 @@ function displayChannels(canales){
         _li.appendChild(_div)
 
         var _div = document.createElement('div');
-        _div.classList.add('col-8');
-        _div.classList.add('ellips');
+        _div.classList.add('col-7', 'ellips');
         
         if(!_config._muscle_name){
             _div.innerText = 'Seleccionar'
@@ -70,13 +94,22 @@ function displayChannels(canales){
         }
         _li.appendChild(_div);
 
-        _li.innerHTML+= `
-                <div class="col-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#${_config._hex}" class="bi bi-activity" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
-                    </svg>
-                </div>    
-                `;
+        _div = document.createElement('div');
+        _div.classList.add('col-3');
+
+        var _sub = document.createElement('div');
+        _sub.classList.add('mx-auto','text-center', 'battery-container')
+        _sub.style.border= `1px solid #${_config._hex}`
+
+        var _p = document.createElement('p');
+        _p.style.color = "#" + _config._hex;
+        _p.innerHTML = '94'
+
+        _sub.appendChild(_p)
+
+        _div.appendChild(_sub)
+
+        _li.appendChild(_div);
 
         i++;
 
@@ -463,8 +496,6 @@ function selectMuscle(){
             var _clone = this.cloneNode(true)
             var _nombre = document.querySelector('.nombre');
             _nombre.classList.add('txt-shadow')
-
-            _nombre.style.animation = 'highlight-text 1s forwards';
 
             // Info
             _nombre.innerHTML =_clone.getAttribute('data-name').replaceAll('-',' ').toUpperCase()
