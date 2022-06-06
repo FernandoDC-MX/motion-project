@@ -760,10 +760,17 @@ searchDevicesBtn.addEventListener('click', async () =>{
 
     for(let i = 0; i < 4; i++){
         await sleep(1000)
-        var _p = document.createElement('p');
-        _p.innerText = 'Hola';
 
-        _searched.appendChild(_p)
+        var _sub = document.createElement('div');
+        _sub.setAttribute('data-mac', '192.212.100.' + i)
+    
+        var _p = document.createElement('p');
+        _p.innerText = 'MAC Address: ' + _sub.getAttribute('data-mac')
+        _p.setAttribute('title', _p.innerText)
+
+        _sub.appendChild(_p)
+
+        _searched.appendChild(_sub)
     }
 
     _div.classList.add('d-none')
