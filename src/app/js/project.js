@@ -721,10 +721,58 @@ btnSaveSettings.addEventListener('click', () => {
 
 })
 
-btnCloseSettings.addEventListener('click', () =>{
+btnCloseSettings.addEventListener('click', async () =>{
 
 })
 
 stopBtn.addEventListener('click', () => {
     show('info','La prueba ha sido detenida.')
 })
+
+document.querySelectorAll('.channel-clickable').forEach(element =>{
+    element.addEventListener('click', () =>{
+        var svg = element.querySelector('.arrow-svg');
+        var _sibling = element.nextElementSibling;
+
+
+        if(_sibling.classList.contains('d-none')){
+            _sibling.classList.remove('d-none')
+            svg.style.transform = 'rotate(180deg)'
+        }else{
+            _sibling.classList.add('d-none')
+            _sibling.style.height = '100px'
+            svg.style.transform = 'rotate(0deg)'
+        }
+
+    })
+})
+
+searchDevicesBtn.addEventListener('click', async () =>{
+    searchDevicesBtn.classList.add('d-none')
+    var _searched = document.querySelector('.searched')
+    _searched.innerHTML = '';
+
+    var _div = searchDevicesBtn.parentNode.parentNode.querySelector('.d-flex');
+    _div.classList.remove('d-none')
+
+    var _loading = searchDevicesBtn.parentNode.parentNode.querySelector('.loading');
+    _loading.style.animation = 'rotating 2s linear infinite';
+
+    for(let i = 0; i < 4; i++){
+        await sleep(1000)
+        var _p = document.createElement('p');
+        _p.innerText = 'Hola';
+
+        _searched.appendChild(_p)
+    }
+
+    _div.classList.add('d-none')
+    searchDevicesBtn.classList.remove('d-none')
+    _loading.style.animation = '';
+});
+
+
+// Delay functions
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
