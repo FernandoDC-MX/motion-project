@@ -2,13 +2,21 @@
 let _flag_order_date = 0;
 let _flag_order_name = 0;
 let _proyectos = [];
-
+const maxResBtn = document.getElementById('maximizeBtn')
 var projects = document.querySelectorAll('.project')
+const { ipcRenderer } = require('electron')
+const ipc = ipcRenderer
 
 // Close App
 closeBtn.addEventListener('click', ()=>{
     ipc.send('closeApp')
 })
+
+// Minimize App
+minimizeBtn.addEventListener('click', () =>{
+    ipc.send('minimizeApp')
+})
+
 
 // Function to read a file and return its content.
 function readFile(path){
@@ -181,3 +189,23 @@ function update_projects(){
         });
     }
 }
+
+// Maximize App
+maximizeBtn.addEventListener('click', () =>{
+    ipc.send('maximizeRestoreApp')
+})
+
+function changeMaximizeBtn(isMaximized){
+    if(isMaximized){
+        maxResBtn.title = 'Restore'
+        maxResBtn.classList.remove('maximizeBtn');
+        maxResBtn.classList.add('restoreBtn');
+    }else{
+        maxResBtn.title = 'Maximize'
+        maxResBtn.classList.remove('restoreBtn');
+        maxResBtn.classList.add('maximizeBtn');
+    }
+}
+
+ipc.on('isMaximized', ()=>{ changeMaximizeBtn(true) })
+ipc.on('isRestored', ()=>{ changeMaximizeBtn(false) })

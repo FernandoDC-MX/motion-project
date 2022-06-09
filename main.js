@@ -15,8 +15,6 @@ const ipc = ipcMain
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 800,
     minHeight:600,
     minWidth: 980,
     webPreferences: {
@@ -26,6 +24,8 @@ const createWindow = () => {
     },
     frame:false
   })
+
+  mainWindow.maximize()
 
   // and load the index.html of the app.
   mainWindow.loadFile('src/app/index.html')
@@ -71,8 +71,6 @@ const createWindow = () => {
 const projectWindow = (evt, args) =>{
   // Create the browser window.
   const window = new BrowserWindow({
-    width: 1280,
-    height: 800,
     minHeight:600,
     minWidth: 980,
     webPreferences: {
@@ -82,6 +80,9 @@ const projectWindow = (evt, args) =>{
     },
     frame:false
   })
+
+  window.maximize()
+
 
   // and load the index.html of the app.
   window.loadFile('src/app/project.html')
@@ -96,6 +97,30 @@ const projectWindow = (evt, args) =>{
   ipc.on('closeProject', ()=>{
     window.hide()
   })
+
+   // Minimize app
+   ipc.on('minimizeProject', ()=>{
+    window.minimize()
+  })
+
+  // Check if the window is maximized
+  window.on('maximize', () =>{
+    window.webContents.send('isMaximized')
+  })
+
+  // Maximize app
+  ipc.on('maximizeRestoreProject', ()=>{
+    if(window.isMaximized()){
+      window.restore()
+    }else{
+      window.maximize()
+    }
+  })
+
+  // Check if the window is maximized
+  window.on('unmaximize', () =>{
+    window.webContents.send('isRestored')
+  }) 
 }
 
 // This method will be called when Electron has finished

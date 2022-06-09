@@ -2,6 +2,8 @@ const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
 const fork = require("child_process").fork
+const maxResBtn = document.getElementById('maximizeBtn')
+
 
 const ipc = ipcRenderer
 var _path, channels, _musclesTmp;
@@ -479,6 +481,30 @@ function setId(){
 closeBtn.addEventListener('click', () =>{
     ipc.send('closeProject')
 })
+
+minimizeBtn.addEventListener('click', () =>{
+    ipc.send('minimizeProject')
+})
+
+function changeMaximizeBtn(isMaximized){
+    if(isMaximized){
+        maxResBtn.title = 'Restore'
+        maxResBtn.classList.remove('maximizeBtn');
+        maxResBtn.classList.add('restoreBtn');
+    }else{
+        maxResBtn.title = 'Maximize'
+        maxResBtn.classList.remove('restoreBtn');
+        maxResBtn.classList.add('maximizeBtn');
+    }
+}
+
+// Maximize App
+maximizeBtn.addEventListener('click', () =>{
+    ipc.send('maximizeRestoreProject')
+})
+
+ipc.on('isMaximized', ()=>{ changeMaximizeBtn(true) })
+ipc.on('isRestored', ()=>{ changeMaximizeBtn(false) })
 
 function selectMuscle(){
     var _muscles = document.querySelectorAll('.cls-2')
