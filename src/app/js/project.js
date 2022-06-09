@@ -1,10 +1,10 @@
 const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
+const { link } = require('fs');
 const fork = require("child_process").fork
 const maxResBtn = document.getElementById('maximizeBtn')
-
-
+const _hexColors = ['#F5BD85','#85F5AE','#85C8F5','#F585CC'];
 const ipc = ipcRenderer
 var _path, channels, _musclesTmp;
 var _chartsMap = new Map()
@@ -18,6 +18,7 @@ ipc.on('enviar-nombre', (e, title) =>{
 })
 
 function readInfo(_nameFolder){
+    console.log(_hexColors['#'])
     _path = `${__dirname}\\Proyectos\\${_nameFolder}`;
     
     var _response = readFile(_path + "\\info.json")
@@ -34,128 +35,141 @@ function readInfo(_nameFolder){
 }
 
 function displayChannels(canales){
-    channels = new Map(Object.entries(canales));
+    var _lista = document.querySelector('.list');
+    if(canales){
+        channels = new Map(Object.entries(canales));
 
-    var i = 1, _lista = document.querySelector('.list');
-    _lista.innerHTML = '';
-
-    var _li = document.createElement('li');
-    _li.classList.add('row','py-1')
-
-    var _col = document.createElement('div');
-    _col.classList.add('col-2');
-    _col.innerHTML = `<img src="icons/hash.png" width="21" height="21" alt="Número" title="Número"/>`
-
-    _li.appendChild(_col);
-
-    _col = document.createElement('div');
-    _col.classList.add('col-7','text-center');
-    // _col.innerText = 'Músculo';
-    _col.innerHTML = `<img src="icons/muscle.png" width="21" height="21" alt="Músculos" title="Músculos"/>`
-
-    _li.appendChild(_col);
-
-    _col = document.createElement('div');
-    _col.classList.add('col-3');
-    // _col.innerText = 'Bat';
-    _col.innerHTML = `<img src="icons/batery.png" width="21" height="21" alt="Nivel de batería" title="Nivel de batería"/>`
-
-
-    _li.appendChild(_col);
-
-    _li.style.borderBottom = '1px solid white'
-
-    _lista.appendChild(_li)
-
-
-    channels.forEach(element => {
-        var _config = element;
+        var i = 1;
+        _lista.innerHTML = '';
 
         var _li = document.createElement('li');
+        _li.classList.add('row','py-1')
 
-        _li.classList.add('py-2', 'device', 'row')
+        var _col = document.createElement('div');
+        _col.classList.add('col-2');
+        _col.innerHTML = `<img src="icons/hash.png" width="21" height="21" alt="Número" title="Número"/>`
+
+        _li.appendChild(_col);
+
+        _col = document.createElement('div');
+        _col.classList.add('col-7','text-center');
+        // _col.innerText = 'Músculo';
+        _col.innerHTML = `<img src="icons/muscle.png" width="21" height="21" alt="Músculos" title="Músculos"/>`
+
+        _li.appendChild(_col);
+
+        _col = document.createElement('div');
+        _col.classList.add('col-3');
+        // _col.innerText = 'Bat';
+        _col.innerHTML = `<img src="icons/batery.png" width="21" height="21" alt="Nivel de batería" title="Nivel de batería"/>`
 
 
-        _li.setAttribute('data-id', 'channel-' + _config.id)
-        _li.setAttribute('data-bs-toggle',"modal")
-        _li.setAttribute('data-bs-target',"#staticBackdrop")
+        _li.appendChild(_col);
 
-        var _div = document.createElement('div');
-        _div.innerHTML = i + '.-'
-        _div.classList.add('col-2')
+        _li.style.borderBottom = '1px solid white'
+
+        _lista.appendChild(_li)
 
 
-        _li.appendChild(_div)
+        channels.forEach(element => {
+            var _config = element;
 
-        var _div = document.createElement('div');
-        _div.classList.add('col-7', 'ellips');
-        
-        if(!_config._muscle_name){
-            _div.innerText = 'Seleccionar'
-        }
-        else{
-            _div.innerText = _config._muscle_name
-            _li.setAttribute('title',_config._muscle_name)
-        }
-        _li.appendChild(_div);
+            var _li = document.createElement('li');
 
-        _div = document.createElement('div');
-        _div.classList.add('col-3');
+            _li.classList.add('py-2', 'device', 'row')
 
-        var _sub = document.createElement('div');
-        _sub.classList.add('mx-auto','text-center', 'battery-container')
-        _sub.style.border= `1px solid #${_config._hex}`
 
-        var _p = document.createElement('p');
-        _p.style.color = "#" + _config._hex;
-        _p.innerHTML = '94'
+            _li.setAttribute('data-id', 'channel-' + _config.id)
+            _li.setAttribute('data-bs-toggle',"modal")
+            _li.setAttribute('data-bs-target',"#staticBackdrop")
 
-        _sub.appendChild(_p)
+            var _div = document.createElement('div');
+            _div.innerHTML = i + '.-'
+            _div.classList.add('col-2')
 
-        _div.appendChild(_sub)
 
-        _li.appendChild(_div);
+            _li.appendChild(_div)
 
-        i++;
+            var _div = document.createElement('div');
+            _div.classList.add('col-7', 'ellips');
+            
+            if(!_config._muscle_name){
+                _div.innerText = 'Seleccionar'
+            }
+            else{
+                _div.innerText = _config._muscle_name
+                _li.setAttribute('title',_config._muscle_name)
+            }
+            _li.appendChild(_div);
 
-        _lista.append(_li)
-    })
+            _div = document.createElement('div');
+            _div.classList.add('col-3');
 
-    setId();
+            var _sub = document.createElement('div');
+            _sub.classList.add('mx-auto','text-center', 'battery-container')
+            _sub.style.border= `1px solid #${_config._hex}`
+
+            var _p = document.createElement('p');
+            _p.style.color = "#" + _config._hex;
+            _p.innerHTML = '94'
+
+            _sub.appendChild(_p)
+
+            _div.appendChild(_sub)
+
+            _li.appendChild(_div);
+
+            i++;
+
+            _lista.append(_li)
+        })
+
+        setId();
+    }else{
+        var _p = document.createElement('p')
+        _p.classList.add('color-description','py-2','user-select-none')
+        _p.innerHTML = 'No hay ningún dispositivo vinculado a este proyecto. Vincula uno en la sección <b>Dispositivos.</b>'
+
+        _lista.appendChild(_p)
+    }
 }
 
 function displayGraphs(canales){
-    const _canales = new Map(Object.entries(canales));
-    const _zone = document.querySelector('._charts');
-    _zone.innerHTML = ''
+    if(canales){
+        const _canales = new Map(Object.entries(canales));
+        const _zone = document.querySelector('._charts');
+        _zone.innerHTML = ''
 
-    _canales.forEach(element =>{
-        if(element._id_muscle){
-            document.querySelector('.container-message').classList.add('d-none');
+        document.querySelector('.menu').classList.remove('d-none')
+        _canales.forEach(element =>{
+            if(element._id_muscle){
+                document.querySelector('.container-message').classList.add('d-none');
 
-            var _div = document.createElement('div');
-            _div.classList.add('main-graph-container', 'row');
-            _div.setAttribute('data-device', element.id)
+                var _div = document.createElement('div');
+                _div.classList.add('main-graph-container', 'row');
+                _div.setAttribute('data-device', element.id)
 
-            var _graph = document.createElement('div');
-            _graph.classList.add('col-8','col-md-8', 'col-sm-12', 'pl-0', 'text-center');
+                var _graph = document.createElement('div');
+                _graph.classList.add('col-8','col-md-8', 'col-sm-12', 'pl-0', 'text-center');
 
-            var _graph_div = document.createElement('div');
-            _graph.appendChild(_graph_div)
+                var _graph_div = document.createElement('div');
+                _graph.appendChild(_graph_div)
 
-            _div.appendChild(_graph)
+                _div.appendChild(_graph)
 
-            var _subgraphs = document.createElement('div');
-            _subgraphs.classList.add('col-4','col-md-4','col-sm-12', 'pr-0', 'text-center')
+                var _subgraphs = document.createElement('div');
+                _subgraphs.classList.add('col-4','col-md-4','col-sm-12', 'pr-0', 'text-center')
 
-            _div.appendChild(_subgraphs)
+                _div.appendChild(_subgraphs)
 
-            readData(element, _div)
+                readData(element, _div)
 
-            _zone.appendChild(_div)
-        }
-    })
-
+                _zone.appendChild(_div)
+            }
+        })
+    }else{
+        document.querySelector('.container-message').classList.remove('d-none')
+    }
 }
 
 // 
@@ -792,6 +806,8 @@ searchDevicesBtn.addEventListener('click', async () =>{
 
         var _sub = document.createElement('div');
         _sub.setAttribute('data-mac', '192.212.100.' + i)
+        _sub.setAttribute('data-bs-toggle',"modal")
+        _sub.setAttribute('data-bs-target',"#linkModal")
     
         var _p = document.createElement('p');
         _p.innerText = 'MAC Address: ' + _sub.getAttribute('data-mac')
@@ -807,6 +823,12 @@ searchDevicesBtn.addEventListener('click', async () =>{
     _loading.style.animation = '';
 });
 
+
+linkBtn.addEventListener('click', () => {
+    linkBtn.parentNode.classList.add('d-none')
+    linkBtn.parentNode.nextElementSibling.classList.remove('d-none')
+    linkBtn.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Espera a que el dispositivo se vincule con el proyecto.'
+})
 
 // Delay functions
 function sleep(ms) {

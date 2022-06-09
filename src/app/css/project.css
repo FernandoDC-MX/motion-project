@@ -354,6 +354,90 @@ html, body{
     background: rgb(48, 48, 48);
 }
 
+.linking{
+    width: 90%;
+    height: 200px;
+    margin: 1em auto;
+}
+
+.linking img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.linking .btn-circle-lg{
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    text-align: center;
+    outline: none;
+    border: 1px solid #FF7B54;
+    font-family: 'Rubik';
+    background: #ff7c54f6;
+    color: white;
+    transition: 0.2s all ease-in-out;
+}
+
+.linking .btn-circle-lg:active {
+    transform: scale(0.9);
+    /* Scaling button to 0.98 to its original size */
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+    /* Lowering the shadow */
+}
+
+.linking .btn-circle-lg:hover{
+    background: #ff7c54c4;
+}
+
+.wave {
+    width: 3px;
+    height: 70px;
+    background: linear-gradient(45deg, #FF7B54, #ffbba7);
+    margin: 10px;
+    animation: wave 1s linear infinite;
+    border-radius: 20px;
+}
+
+.wave:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .wave:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  .wave:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+  .wave:nth-child(5) {
+    animation-delay: 0.4s;
+  }
+  .wave:nth-child(6) {
+    animation-delay: 0.5s;
+  }
+  .wave:nth-child(7) {
+    animation-delay: 0.6s;
+  }
+  .wave:nth-child(8) {
+    animation-delay: 0.7s;
+  }
+  .wave:nth-child(9) {
+    animation-delay: 0.8s;
+  }
+  .wave:nth-child(10) {
+    animation-delay: 0.9s;
+  }
+
+@keyframes wave {
+    0% {
+      transform: scale(0.2);
+    }
+    50% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0.2);
+    }
+  }
+
 @-webkit-keyframes rotating /* Safari and Chrome */ {
     from {
       -webkit-transform: rotate(0deg);
