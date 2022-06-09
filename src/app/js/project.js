@@ -691,15 +691,15 @@ function settings(){
 
             // Displays the correct description and sets the default values.
             switch(this.getAttribute('data-option')){
-                case 'basic':   title.innerHTML = 'Configuración básica';
+                case 'basic':   title.innerHTML = 'Modalidad 1';
                                 description.innerHTML = 'La configuración básica sirve para...'
                                 setSettingsValues(0,0,0,0, true)                                
                     break;
-                case 'medium':  title.innerHTML = 'Configuración media';
+                case 'medium':  title.innerHTML = 'Modalidad 2';
                                 description.innerHTML = 'La configuración media sirve para...'
                                 setSettingsValues(1,1,1,1, true)
                     break;
-                case 'hard':    title.innerHTML = 'Configuración experta';
+                case 'hard':    title.innerHTML = 'Modalidad 3';
                                 description.innerHTML = 'La configuración experta sirve para...'
                                 setSettingsValues(2,2,2,2, true)                                
                     break;
