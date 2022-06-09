@@ -10,7 +10,7 @@ require('electron-reload')(__dirname, {ignored: /Proyectos|[\/\\]\./});
 
 // Master communication (This variable will receive the signals that ipcRenderer sends)
 const ipc = ipcMain
-
+let mainWindow;
 
 // Splash screen.
 const splashScreen = () =>{
@@ -27,7 +27,7 @@ const splashScreen = () =>{
     },
     backgroundColor: '#383838',
     show: false,
-    frame: true
+    frame: false
   })
 
   // and load the index.html of the app.
@@ -51,7 +51,7 @@ const splashScreen = () =>{
 // [Main] Window
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     minHeight:600,
     minWidth: 1000,
     webPreferences: {
@@ -110,10 +110,9 @@ const createWindow = () => {
 
 const projectWindow = (evt, args) =>{
   // Create the browser window.
-  const window = new BrowserWindow({
+  let window = new BrowserWindow({
     minHeight:600,
     minWidth: 1000,
-    backgroundColor: '#383838',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -121,7 +120,7 @@ const projectWindow = (evt, args) =>{
     },
     frame:false,
     show: false,
-    backgroundColor: '#383838',
+    background: '#383838',
   })
 
   window.maximize()
@@ -139,8 +138,8 @@ const projectWindow = (evt, args) =>{
 
   // Close app
   ipc.on('closeProject', ()=>{
-    createWindow()
-    window.hide()
+    mainWindow.show()
+    window.destroy()
   })
 
    // Minimize app
