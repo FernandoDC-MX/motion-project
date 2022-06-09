@@ -44,19 +44,22 @@ function displayChannels(canales){
 
     var _col = document.createElement('div');
     _col.classList.add('col-2');
-    _col.innerText = '#';
+    _col.innerHTML = `<img src="icons/hash.png" width="21" height="21" alt="Número" title="Número"/>`
 
     _li.appendChild(_col);
 
     _col = document.createElement('div');
-    _col.classList.add('col-7');
-    _col.innerText = 'Músculo';
+    _col.classList.add('col-7','text-center');
+    // _col.innerText = 'Músculo';
+    _col.innerHTML = `<img src="icons/muscle.png" width="21" height="21" alt="Músculos" title="Músculos"/>`
 
     _li.appendChild(_col);
 
     _col = document.createElement('div');
     _col.classList.add('col-3');
-    _col.innerText = 'Bat';
+    // _col.innerText = 'Bat';
+    _col.innerHTML = `<img src="icons/batery.png" width="21" height="21" alt="Nivel de batería" title="Nivel de batería"/>`
+
 
     _li.appendChild(_col);
 

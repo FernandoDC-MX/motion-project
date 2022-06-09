@@ -119,6 +119,8 @@ html, body{
 
 .cls-1{fill:#191818;}
 
+.cls-h{fill:none;stroke:gray;stroke-linecap:round;stroke-linejoin:round;stroke-width:10px;}
+
 .cls-2{
     fill:#f8f8f8;
     cursor: pointer;
