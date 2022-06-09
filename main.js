@@ -25,6 +25,9 @@ const splashScreen = () =>{
       contextIsolation: false,
       devTools: true,
     },
+    backgroundColor: '#383838',
+    show: false,
+    frame: true
   })
 
   // and load the index.html of the app.
@@ -41,7 +44,7 @@ const splashScreen = () =>{
     setTimeout(function () {
       splash_screen.close();
       createWindow()
-    }, 2000);
+    }, 4000);
   })
 }
 
@@ -57,7 +60,8 @@ const createWindow = () => {
       devTools: true,
     },
     frame:false,
-    show: false
+    show: false,
+    backgroundColor: '#383838',
   })
 
   mainWindow.maximize()
@@ -116,7 +120,8 @@ const projectWindow = (evt, args) =>{
       devTools: true,
     },
     frame:false,
-    show: false
+    show: false,
+    backgroundColor: '#383838',
   })
 
   window.maximize()
