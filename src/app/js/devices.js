@@ -223,7 +223,7 @@ function createProject(){
 
       var date = new Date();
       var localDate = date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-      var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + date.getMilliseconds()
+      var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
       var id = Math.floor(Math.random() * 1000) + Date.now()
       var comments = document.querySelector('#comments').value;
       var num_devices = document.querySelector('#num_devices').value;

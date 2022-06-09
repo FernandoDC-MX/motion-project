@@ -363,7 +363,21 @@ html, body{
       -o-transform: rotate(360deg);
       transform: rotate(360deg);
     }
-  }
+}
+
+@keyframes rotating /* Safari and Chrome */ {
+    from {
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    to {
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+}
+
 
 @media screen and (max-width: 1240px) {
     .ellips{
