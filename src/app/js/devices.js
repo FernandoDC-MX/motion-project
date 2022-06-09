@@ -28,25 +28,6 @@ class Project{
   }
 }
 
-class Device{
-  constructor(id, _id_muscle, _muscle_name, _hex){
-    this.id = id;
-    this._id_muscle = _id_muscle;
-    this._muscle_name = _muscle_name;
-    this._hex = _hex;
-  }
-
-  
-  get JSON(){
-    return {
-            "id": this.id,
-            "_muscle_name": this._muscle_name,
-            "_id_muscle": this._id_muscle,
-            "_hex": this._hex,
-        }
-  }
-}
-
 let i = 0;
 
 
@@ -143,12 +124,9 @@ function createProject(){
   if (!fs.existsSync(path)){
       fs.mkdirSync(path, { recursive: true });
 
-      // // Devices folder
-      // _devicesMap.forEach(element => {
-      //   fs.mkdirSync(path + '\\Devices\\' + element.id, { recursive: true });
-      // });
-  
-
+      // Devices folder
+      fs.mkdirSync(path + '\\Devices\\' , { recursive: true });
+    
       var date = new Date();
       var localDate = date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
       var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)

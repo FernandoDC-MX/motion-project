@@ -1,13 +1,33 @@
 const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
-const { link } = require('fs');
 const fork = require("child_process").fork
 const maxResBtn = document.getElementById('maximizeBtn')
 const _hexColors = ['#F5BD85','#85F5AE','#85C8F5','#F585CC'];
 const ipc = ipcRenderer
 var _path, channels, _musclesTmp;
 var _chartsMap = new Map()
+let _devices;
+
+class Device{
+    constructor(id, _id_muscle, _muscle_name, _hex){
+      this.id = id;
+      this._id_muscle = _id_muscle;
+      this._muscle_name = _muscle_name;
+      this._hex = _hex;
+    }
+  
+    
+    get JSON(){
+      return {
+              "id": this.id,
+              "_muscle_name": this._muscle_name,
+              "_id_muscle": this._id_muscle,
+              "_hex": this._hex,
+          }
+    }
+  }
+  
 
 ipc.on('enviar-nombre', (e, title) =>{ 
     document.querySelector('title').innerHTML = title
@@ -18,12 +38,12 @@ ipc.on('enviar-nombre', (e, title) =>{
 })
 
 function readInfo(_nameFolder){
-    console.log(_hexColors['#'])
     _path = `${__dirname}\\Proyectos\\${_nameFolder}`;
     
     var _response = readFile(_path + "\\info.json")
 
     if(_response.Estado == 'OK'){
+        _devices = _response.Contenido.devices;
         displayChannels(_response.Contenido.devices)
         displayGraphs(_response.Contenido.devices);
     }else{
@@ -483,18 +503,6 @@ function reDrawChart(map){
     map.chart.update()
 }
 
-function setId(){
-    var _channels = document.querySelectorAll('.device');
-
-    for(let i = 0; i < _channels.length; i++){
-        _channels[i].addEventListener('click', function(){
-            var _title = document.querySelector('.modal-title');
-            _title.setAttribute('data-id', 'title-' + this.getAttribute('data-id').replace('channel-',''))
-            _title.innerHTML = "Selecciona un músculo para el dispositivo:" + ' ' + this.getAttribute('data-id').replace('channel-',' ');
-        })
-    }
-}
-
 closeBtn.addEventListener('click', () =>{
     ipc.send('closeProject')
 })
@@ -808,6 +816,7 @@ searchDevicesBtn.addEventListener('click', async () =>{
         _sub.setAttribute('data-mac', '192.212.100.' + i)
         _sub.setAttribute('data-bs-toggle',"modal")
         _sub.setAttribute('data-bs-target',"#linkModal")
+        _sub.classList.add('founded')
     
         var _p = document.createElement('p');
         _p.innerText = 'MAC Address: ' + _sub.getAttribute('data-mac')
@@ -816,19 +825,74 @@ searchDevicesBtn.addEventListener('click', async () =>{
         _sub.appendChild(_p)
 
         _searched.appendChild(_sub)
+
+        setAddress()
     }
 
     _div.classList.add('d-none')
     searchDevicesBtn.classList.remove('d-none')
     _loading.style.animation = '';
+
 });
 
-
-linkBtn.addEventListener('click', () => {
+linkBtn.addEventListener('click', async () => {
     linkBtn.parentNode.classList.add('d-none')
     linkBtn.parentNode.nextElementSibling.classList.remove('d-none')
-    linkBtn.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Espera a que el dispositivo se vincule con el proyecto.'
+    linkBtn.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Espera a que el dispositivo se vincule con el proyecto.';
+
+    var _address = document.querySelector('#linkModal .modal-title').innerText.replace('Vincular dispositivo ', '')
+    var color = _hexColors[pickColor()]
+    var _device = new Device(_address, null, null, '#' + color)
+
+    var map = new Map()
+
+    var _response = readFile(_path + "\\info.json")
+    
+    if(_response.Contenido.devices){
+
+    }else{
+        map.set(_address, _device.JSON);
+        _response.Contenido.devices = Object.fromEntries(map)
+        storeFile(_path + "\\info.json", _response.Contenido)
+        displayChannels(_response.Contenido.devices)
+        displayGraphs(_response.Contenido.devices);
+        show('success', 'Dispositivo vinculado correctamente.')
+        console.log(document.querySelector('#linkClose'))
+    }
 })
+
+const pickColor = () =>{
+    var index = 0;
+
+    if(_devices){
+        index = _devices.length;
+    }
+
+    return index;
+}
+
+function setAddress(){
+    var _addresses = document.querySelectorAll('.founded');
+
+    for(let i = 0; i < _addresses.length; i++){
+        _addresses[i].addEventListener('click', function(){
+            var _address = this.getAttribute('data-mac')
+            document.querySelector('#linkModal .modal-title').innerHTML = 'Vincular dispositivo ' + _address;
+        })
+    }
+}
+
+function setId(){
+    var _channels = document.querySelectorAll('.device');
+
+    for(let i = 0; i < _channels.length; i++){
+        _channels[i].addEventListener('click', function(){
+            var _title = document.querySelector('.modal-title');
+            _title.setAttribute('data-id', 'title-' + this.getAttribute('data-id').replace('channel-',''))
+            _title.innerHTML = "Selecciona un músculo para el dispositivo:" + ' ' + this.getAttribute('data-id').replace('channel-',' ');
+        })
+    }
+}
 
 // Delay functions
 function sleep(ms) {
