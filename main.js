@@ -11,18 +11,53 @@ require('electron-reload')(__dirname, {ignored: /Proyectos|[\/\\]\./});
 // Master communication (This variable will receive the signals that ipcRenderer sends)
 const ipc = ipcMain
 
-// [Main] Window
-const createWindow = () => {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    minHeight:600,
-    minWidth: 980,
+
+// Splash screen.
+const splashScreen = () =>{
+   // Create the browser window.
+   const splash_screen = new BrowserWindow({
+    height:450,
+    width: 400,
+    transparent: true, 
+    alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       devTools: true,
     },
-    frame:false
+  })
+
+  // and load the index.html of the app.
+  splash_screen.loadFile('src/app/splash.html')
+
+  // Center screen
+  splash_screen.center();
+
+  // Event 
+  splash_screen.on('ready-to-show', () =>{
+    // Send the data.
+    splash_screen.show()
+
+    setTimeout(function () {
+      splash_screen.close();
+      createWindow()
+    }, 2000);
+  })
+}
+
+// [Main] Window
+const createWindow = () => {
+  // Create the browser window.
+  const mainWindow = new BrowserWindow({
+    minHeight:600,
+    minWidth: 1000,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      devTools: true,
+    },
+    frame:false,
+    show: false
   })
 
   mainWindow.maximize()
@@ -54,6 +89,7 @@ const createWindow = () => {
   })
 
   ipc.on('openProject', (evt, args)=>{
+    mainWindow.hide()
     projectWindow(evt, args)
   })
 
@@ -72,13 +108,15 @@ const projectWindow = (evt, args) =>{
   // Create the browser window.
   const window = new BrowserWindow({
     minHeight:600,
-    minWidth: 980,
+    minWidth: 1000,
+    backgroundColor: '#383838',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       devTools: true,
     },
-    frame:false
+    frame:false,
+    show: false
   })
 
   window.maximize()
@@ -91,10 +129,12 @@ const projectWindow = (evt, args) =>{
   window.on('ready-to-show', () =>{
     // Send the data.
     window.webContents.send('enviar-nombre', args)
+    window.show()
   })
 
   // Close app
   ipc.on('closeProject', ()=>{
+    createWindow()
     window.hide()
   })
 
@@ -127,7 +167,8 @@ const projectWindow = (evt, args) =>{
 // initialization and is ready to create browser windows.
 // Algunas APIs pueden solamente ser usadas despues de que este evento ocurra.
 app.whenReady().then(() => {
-  createWindow()
+  // createWindow()
+  splashScreen()
   
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
