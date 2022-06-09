@@ -69,7 +69,7 @@ body.modal-open .contentArea{
 }
 
 .modal section{
-    width: 90%;
+    width: 99%;
     height: 350px;
     overflow: auto;
     margin: 3em auto 0;

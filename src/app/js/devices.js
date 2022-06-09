@@ -49,48 +49,6 @@ class Device{
 
 let i = 0;
 
-let _devicesMap = new Map()
-
-var elements = document.querySelectorAll('.device')
-
-function _linkDevice() {
-  var _num_input = document.querySelector('#num_devices')
-
-  if(this.classList.contains('device')){
-    var random_color = Math.floor(Math.random()*16777215).toString(16);
-    var _device = new Device(this.getAttribute('data-id'), null, null, random_color)
-
-    this.style.background = '#' + random_color
-    this.style.border = '1px solid #' + random_color;
-    Array.from(this.childNodes).forEach((element, index) => {
-        if(element.style !== undefined){
-          element.style.opacity = '1'
-        }
-    })
-
-    this.querySelector('p').innerHTML = 'Conectado'
-    this.classList.remove('device')
-    this.classList.add('device_selected')
-
-    _devicesMap.set(this.getAttribute('data-id'), _device.JSON)
-    _num_input.value++;
-  }else{
-    this.style.background = '';
-    this.style.border = '1px solid white'
-    Array.from(this.childNodes).forEach((element, index) => {
-      if(element.style !== undefined){
-        element.style.opacity = '0'
-      }
-    })
-    this.querySelector('p').innerHTML = 'Conectar'
-    this.classList.remove('device_selected')
-    this.classList.add('device')
-
-    _devicesMap.delete(this.getAttribute('data-id'))
-    _num_input.value--;
-  }
-
-};
 
 function validateForm(){
   const sectionElement = document.querySelector('.active')
@@ -109,14 +67,6 @@ function validateForm(){
                       }
                       else
                         document.querySelector('#errorName').innerHTML = '';
-          break;
-        case 'num_devices':
-                        if(element.value <= 0){
-                          document.querySelector('#errorNumDevices').innerHTML = 'Tienes que seleccionar uno o más dispositivos';
-                          flag = 1;
-                        }else{
-                          document.querySelector('#errorNumDevices').innerHTML = '';
-                        }
           break;
       }
     })
@@ -138,34 +88,12 @@ function _cleanForm(){
   // Name
   document.querySelector('#name').value = '';
   document.querySelector('#errorName').innerHTML = '';
-
-  // Devices
-  document.querySelectorAll('.device_selected').forEach(element =>{
-    Array.from(element.childNodes).forEach((element, index) => {
-      if(element.style !== undefined){
-        element.style.opacity = '0'
-      }
-    })
-    element.classList.add('device')
-    element.classList.remove('device_selected')
-    element.style.background = '';
-    element.style.border = '1px solid white';
-  })
-
-  document.querySelector('#num_devices').value = 0;
-  document.querySelector('#errorNumDevices').innerHTML = '';
-
-  _devicesMap = new Map();
 }
-
-Array.from(elements).forEach(function(element) {
-  element.addEventListener('click', _linkDevice);
-});
 
 nextBtn.addEventListener('click', function(){
   if(!validateForm()){
 
-    if(i >= 2){
+    if(i >= 1){
       createProject()
     }else{
       this.innerHTML = 'Siguiente';
@@ -173,8 +101,8 @@ nextBtn.addEventListener('click', function(){
       document.querySelectorAll('section')[i].classList.remove('active')
 
       i++;
-      if(i >= 2){
-        i = 2
+      if(i >= 1){
+        i = 1
         this.innerHTML = 'Crear';
       }
 
@@ -215,10 +143,10 @@ function createProject(){
   if (!fs.existsSync(path)){
       fs.mkdirSync(path, { recursive: true });
 
-      // Devices folder
-      _devicesMap.forEach(element => {
-        fs.mkdirSync(path + '\\Devices\\' + element.id, { recursive: true });
-      });
+      // // Devices folder
+      // _devicesMap.forEach(element => {
+      //   fs.mkdirSync(path + '\\Devices\\' + element.id, { recursive: true });
+      // });
   
 
       var date = new Date();
@@ -226,7 +154,7 @@ function createProject(){
       var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
       var id = Math.floor(Math.random() * 1000) + Date.now()
       var comments = document.querySelector('#comments').value;
-      var num_devices = document.querySelector('#num_devices').value;
+      var num_devices = 0
       var distance = document.querySelector('#distance').value;
       var frequency = document.querySelector('#frequency').value;
       var data = document.querySelector('#data').value;
@@ -234,9 +162,9 @@ function createProject(){
 
       date = localDate + ' ' + localHour; //Local time.
 
-      const _map = Object.fromEntries(_devicesMap)
+      // const _map = Object.fromEntries(_devicesMap)
       
-      var new_proyect = new Project(id, name, date, comments, path, num_devices, distance, frequency, data, _map)
+      var new_proyect = new Project(id, name, date, comments, path, num_devices, distance, frequency, data, null)
       fs.writeFileSync(path + '\\info.json', JSON.stringify(new_proyect.JSON))
       cancelBtn.click();
       ipc.send('openProject', name)
