@@ -354,9 +354,9 @@ function drawMainChart(color){
         data: {
             labels: [],
             datasets: [{
-                backgroundColor: "#" + color,
-                borderColor: "#" + color,
-                label: 'Dispositivo',
+                backgroundColor: color,
+                borderColor: color,
+                label: 'EMG',
                 data: []
             }]
         },
@@ -968,6 +968,47 @@ function setId(){
             _title.setAttribute('data-id', 'title-' + this.getAttribute('data-id').replace('channel-',''))
             _title.innerHTML = "Selecciona un músculo para el dispositivo:" + ' ' + this.getAttribute('data-id').replace('channel-',' ');
         })
+    }
+}
+
+hideBeatBtn.addEventListener('click', () =>{
+    var _chartsBeat = document.querySelectorAll('.main-graph-container .col-8')
+    var flag;
+
+    // If the button was pressed before, then...
+    if(hideBeatBtn.classList.contains('pressed')){
+        hideBeatBtn.classList.remove('pressed')
+        flag = 0;
+    }else{
+        hideBeatBtn.classList.add('pressed')
+        flag = 1;
+    }
+
+    // Iterate the loop to hide/show each beat graph.
+    for(let i = 0; i < _chartsBeat.length; i++){
+        flag ? _chartsBeat[i].classList.add('d-none') : _chartsBeat[i].classList.remove('d-none') 
+    }
+
+    extendsChart('main', flag)
+})
+
+function extendsChart(chart, flag){
+    var _charts;
+
+    switch(chart){
+        case 'main': _charts = document.querySelectorAll('.main-graph-container .col-4')
+            break;
+    }
+
+    // Iterate the loop to hide/show each beat graph.
+    for(let i = 0; i < _charts.length; i++){
+        if(flag){
+            _charts[i].classList.add('col-md-12');
+            _charts[i].classList.remove('col-md-4');
+        }else{
+            _charts[i].classList.remove('col-md-12');
+            _charts[i].classList.add('col-md-4');
+        }
     }
 }
 
