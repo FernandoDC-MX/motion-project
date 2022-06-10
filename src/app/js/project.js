@@ -980,9 +980,11 @@ hideBeatBtn.addEventListener('click', () =>{
     // If the button was pressed before, then...
     if(hideBeatBtn.classList.contains('pressed')){
         hideBeatBtn.classList.remove('pressed')
+        hideBeatBtn.querySelector('p').classList.add('d-none')
         flag = 0;
     }else{
         hideBeatBtn.classList.add('pressed')
+        hideBeatBtn.querySelector('p').classList.remove('d-none')
         flag = 1;
     }
 
@@ -1001,9 +1003,11 @@ hideAceBtn.addEventListener('click', ()=>{
      // If the button was pressed before, then...
      if(hideAceBtn.classList.contains('pressed')){
         hideAceBtn.classList.remove('pressed')
+        hideAceBtn.querySelector('p').classList.add('d-none')
         flag = 0;
     }else{
         hideAceBtn.classList.add('pressed')
+        hideAceBtn.querySelector('p').classList.remove('d-none')
         flag = 1;
     }
 
@@ -1025,9 +1029,11 @@ hideGyroBtn.addEventListener('click', ()=>{
      // If the button was pressed before, then...
      if(hideGyroBtn.classList.contains('pressed')){
         hideGyroBtn.classList.remove('pressed')
+        hideGyroBtn.querySelector('p').classList.add('d-none')
         flag = 0;
     }else{
         hideGyroBtn.classList.add('pressed')
+        hideGyroBtn.querySelector('p').classList.remove('d-none')
         flag = 1;
     }
 

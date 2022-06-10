@@ -417,6 +417,15 @@ html, body{
     outline: none;
 }
 
+.d-charts button p{
+    width: 32px;
+    height: 2px;
+    background: #FF7B54;
+    position: absolute;
+    transform: rotate(135deg) translate(8px, 2px);
+    top: 18px;   
+}
+
 .wave {
     width: 3px;
     height: 70px;
