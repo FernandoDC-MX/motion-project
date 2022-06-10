@@ -7,7 +7,7 @@ const _hexColors = ['#F5BD85','#85F5AE','#85C8F5','#F585CC'];
 const ipc = ipcRenderer
 var _path, channels, _musclesTmp;
 var _chartsMap = new Map()
-let _devices;
+let _devices = [{'hola': '1'}];
 
 class Device{
     constructor(id, _id_muscle, _muscle_name, _hex){
@@ -165,38 +165,42 @@ function existsMuscle(canales){
 }
 
 function displayGraphs(canales){
-    const _canales = new Map(Object.entries(canales));
-    if(existsMuscle(_canales)){
-        const _zone = document.querySelector('._charts');
-        _zone.innerHTML = ''
+    if(canales){
+        const _canales = new Map(Object.entries(canales));
 
-        document.querySelector('.menu').classList.remove('d-none')
-        _canales.forEach(element =>{
-            if(element._id_muscle){
-                document.querySelector('.container-message').classList.add('d-none');
+        if(existsMuscle(_canales)){
+            const _zone = document.querySelector('._charts');
+            _zone.innerHTML = ''
 
-                var _div = document.createElement('div');
-                _div.classList.add('main-graph-container', 'row');
-                _div.setAttribute('data-device', element.id)
+            document.querySelector('.menu').classList.remove('d-none')
+            _canales.forEach(element =>{
+                if(element._id_muscle){
+                    document.querySelector('.container-message').classList.add('d-none');
 
-                var _graph = document.createElement('div');
-                _graph.classList.add('col-8','col-md-8', 'col-sm-12', 'pl-0', 'text-center');
+                    var _div = document.createElement('div');
+                    _div.classList.add('main-graph-container', 'row');
+                    _div.setAttribute('data-device', element.id)
 
-                var _graph_div = document.createElement('div');
-                _graph.appendChild(_graph_div)
+                    var _graph = document.createElement('div');
+                    _graph.classList.add('col-8','col-md-8', 'col-sm-12', 'pl-0', 'text-center');
 
-                _div.appendChild(_graph)
+                    var _graph_div = document.createElement('div');
+                    _graph.appendChild(_graph_div)
 
-                var _subgraphs = document.createElement('div');
-                _subgraphs.classList.add('col-4','col-md-4','col-sm-12', 'pr-0', 'text-center')
+                    _div.appendChild(_graph)
 
-                _div.appendChild(_subgraphs)
+                    var _subgraphs = document.createElement('div');
+                    _subgraphs.classList.add('col-4','col-md-4','col-sm-12', 'pr-0', 'text-center')
 
-                readData(element, _div)
+                    _div.appendChild(_subgraphs)
 
-                _zone.appendChild(_div)
-            }
-        })
+                    readData(element, _div)
+
+                    _zone.appendChild(_div)
+                }
+            })
+        }
+        
     }else{
         document.querySelector('.container-message').classList.remove('d-none')
     }
@@ -808,8 +812,14 @@ document.querySelectorAll('.channel-clickable').forEach(element =>{
 
 searchDevicesBtn.addEventListener('click', async () =>{
     searchDevicesBtn.classList.add('d-none')
+
     var _searched = document.querySelector('.searched')
     _searched.innerHTML = '';
+
+    var _founded = document.createElement('p');
+    _founded.classList.add('color-description','d-none', 'mx-3')
+
+    _searched.appendChild(_founded)
 
     var _div = searchDevicesBtn.parentNode.parentNode.querySelector('.d-flex');
     _div.classList.remove('d-none')
@@ -817,11 +827,14 @@ searchDevicesBtn.addEventListener('click', async () =>{
     var _loading = searchDevicesBtn.parentNode.parentNode.querySelector('.loading');
     _loading.style.animation = 'rotating 2s linear infinite';
 
+    var _cont = 0;
+
     for(let i = 0; i < 4; i++){
-        await sleep(1000)
+        await sleep(500)
+        const _address = '192.212.100.' + i
 
         var _sub = document.createElement('div');
-        _sub.setAttribute('data-mac', '192.212.100.' + i)
+        _sub.setAttribute('data-mac', _address)
         _sub.setAttribute('data-bs-toggle',"modal")
         _sub.setAttribute('data-bs-target',"#linkModal")
         _sub.classList.add('founded')
@@ -830,14 +843,17 @@ searchDevicesBtn.addEventListener('click', async () =>{
         _p.innerText = 'MAC Address: ' + _sub.getAttribute('data-mac')
         _p.setAttribute('title', _p.innerText)
 
-        _sub.appendChild(_p)
-
-        _searched.appendChild(_sub)
-
-        setAddress()
+        if(!_devices || !(_address in _devices)){
+            _sub.appendChild(_p)
+            _searched.appendChild(_sub)
+            setAddress()
+            _cont++;
+        }
     }
 
     _div.classList.add('d-none')
+    _founded.classList.remove('d-none')
+    _founded.innerText = 'Encontrados: ' + _cont;
     searchDevicesBtn.classList.remove('d-none')
     _loading.style.animation = '';
 
