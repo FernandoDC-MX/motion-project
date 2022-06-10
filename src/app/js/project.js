@@ -208,17 +208,18 @@ function displayGraphs(canales){
             const _zone = document.querySelector('._charts');
             _zone.innerHTML = ''
 
+            document.querySelector('.container-message').classList.add('d-none');
+
             document.querySelector('.menu').classList.remove('d-none')
             _canales.forEach(element =>{
                 if(element._id_muscle){
-                    document.querySelector('.container-message').classList.add('d-none');
 
                     var _div = document.createElement('div');
                     _div.classList.add('main-graph-container', 'row');
                     _div.setAttribute('data-device', element.id)
 
                     var _graph = document.createElement('div');
-                    _graph.classList.add('col-8','col-md-8', 'col-sm-12', 'pl-0', 'text-center');
+                    _graph.classList.add('col-8','col-md-8', 'col-sm-12', 'pl-0', 'text-center','h-100');
 
                     var _graph_div = document.createElement('div');
                     _graph.appendChild(_graph_div)
@@ -226,7 +227,7 @@ function displayGraphs(canales){
                     _div.appendChild(_graph)
 
                     var _subgraphs = document.createElement('div');
-                    _subgraphs.classList.add('col-4','col-md-4','col-sm-12', 'pr-0', 'text-center')
+                    _subgraphs.classList.add('col-4','col-md-4','col-sm-12', 'pr-0', 'text-center', 'h-100')
 
                     _div.appendChild(_subgraphs)
 
@@ -313,6 +314,7 @@ function createCharts(_divs){
 
         var _mainChart = _mainContainer.querySelector('.col-8');
         _mainChart.innerHTML = ''
+        
 
         var _res = drawMainChart(_device._hex)
         _mainChart.appendChild(_res[0])
@@ -991,6 +993,30 @@ hideBeatBtn.addEventListener('click', () =>{
 
     extendsChart('main', flag)
 })
+
+hideAceBtn.addEventListener('click', ()=>{
+    var _accelerometerCharts = document.querySelectorAll('.main-graph-container .col-4 .subgraph')
+    var flag;
+
+     // If the button was pressed before, then...
+     if(hideBeatBtn.classList.contains('pressed')){
+        hideBeatBtn.classList.remove('pressed')
+        flag = 0;
+    }else{
+        hideBeatBtn.classList.add('pressed')
+        flag = 1;
+    }
+
+    // Iterate the loop to hide/show each beat graph.
+    for(let i = 0; i < _accelerometerCharts.length; i++){
+        if( i % 2)
+            flag ? _accelerometerCharts[i].classList.add('d-none') : _accelerometerCharts[i].classList.remove('d-none') 
+        else
+            flag ? _accelerometerCharts[i].style.height = "100%" : _accelerometerCharts[i].style.height = "50%" 
+    }
+
+})
+
 
 function extendsChart(chart, flag){
     var _charts;
