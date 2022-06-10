@@ -117,9 +117,9 @@ html, body{
     fill: whitesmoke;
 }
 
-.cls-1{fill:#191818;}
+.cls-1{fill:#ffffff;}
 
-.cls-h{fill:none;stroke:gray;stroke-linecap:round;stroke-linejoin:round;stroke-width:10px;}
+.cls-h{fill:none;stroke:rgb(255, 255, 255);stroke-linecap:round;stroke-linejoin:round;stroke-width:10px;}
 
 .cls-2{
     fill:#f8f8f8;
@@ -400,6 +400,22 @@ html, body{
 
 .linking .btn-circle-lg:hover{
     background: #ff7c54c4;
+}
+
+.d-charts{
+    width: 13%;
+    height: 55px;
+    position: absolute;
+    bottom: 0;
+}
+
+.d-charts button{
+    border-radius: 0.5em;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #242424;
+    background: #242424;
+    outline: none;
 }
 
 .wave {
