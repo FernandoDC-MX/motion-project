@@ -127,10 +127,10 @@ function displayChannels(canales){
 
             var _sub = document.createElement('div');
             _sub.classList.add('mx-auto','text-center', 'battery-container')
-            _sub.style.border= `1px solid #${_config._hex}`
+            _sub.style.border= `1px solid ${_config._hex}`
 
             var _p = document.createElement('p');
-            _p.style.color = "#" + _config._hex;
+            _p.style.color = _config._hex;
             _p.innerHTML = '94'
 
             _sub.appendChild(_p)
