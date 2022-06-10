@@ -999,11 +999,11 @@ hideAceBtn.addEventListener('click', ()=>{
     var flag;
 
      // If the button was pressed before, then...
-     if(hideBeatBtn.classList.contains('pressed')){
-        hideBeatBtn.classList.remove('pressed')
+     if(hideAceBtn.classList.contains('pressed')){
+        hideAceBtn.classList.remove('pressed')
         flag = 0;
     }else{
-        hideBeatBtn.classList.add('pressed')
+        hideAceBtn.classList.add('pressed')
         flag = 1;
     }
 
@@ -1015,6 +1015,32 @@ hideAceBtn.addEventListener('click', ()=>{
             flag ? _accelerometerCharts[i].style.height = "100%" : _accelerometerCharts[i].style.height = "50%" 
     }
 
+    extendsChart('sub', flag)
+})
+
+hideGyroBtn.addEventListener('click', ()=>{
+    var _gyroCharts = document.querySelectorAll('.main-graph-container .col-4 .subgraph')
+    var flag;
+
+     // If the button was pressed before, then...
+     if(hideGyroBtn.classList.contains('pressed')){
+        hideGyroBtn.classList.remove('pressed')
+        flag = 0;
+    }else{
+        hideGyroBtn.classList.add('pressed')
+        flag = 1;
+    }
+
+    // Iterate the loop to hide/show each beat graph.
+    for(let i = 0; i < _gyroCharts.length; i++){
+        if(!(i % 2))
+            flag ? _gyroCharts[i].classList.add('d-none') : _gyroCharts[i].classList.remove('d-none') 
+        else
+            flag ? _gyroCharts[i].style.height = "100%" : _gyroCharts[i].style.height = "50%" 
+    }
+
+    extendsChart('sub', flag)
+
 })
 
 
@@ -1023,19 +1049,35 @@ function extendsChart(chart, flag){
 
     switch(chart){
         case 'main': _charts = document.querySelectorAll('.main-graph-container .col-4')
+                    // Iterate the loop to hide/show each beat graph.
+                    for(let i = 0; i < _charts.length; i++){
+                        if(flag){
+                            _charts[i].classList.add('col-md-12');
+                            _charts[i].classList.remove('col-md-4');
+                        }else{
+                            _charts[i].classList.remove('col-md-12');
+                            _charts[i].classList.add('col-md-4');
+                        }
+                    }
+            break;
+        case 'sub': _charts = document.querySelectorAll('.main-graph-container .col-8')
+                    if(hideAceBtn.classList.contains('pressed') && hideGyroBtn.classList.contains('pressed')){
+                        // Iterate the loop to hide/show each beat graph.
+                        for(let i = 0; i < _charts.length; i++){
+                            _charts[i].classList.add('col-md-12');
+                            _charts[i].classList.remove('col-md-8');
+                        }
+                    }else{
+                        // Iterate the loop to hide/show each beat graph.
+                        for(let i = 0; i < _charts.length; i++){
+                            _charts[i].classList.remove('col-md-12');
+                            _charts[i].classList.add('col-md-8');
+                        }
+                    }
             break;
     }
 
-    // Iterate the loop to hide/show each beat graph.
-    for(let i = 0; i < _charts.length; i++){
-        if(flag){
-            _charts[i].classList.add('col-md-12');
-            _charts[i].classList.remove('col-md-4');
-        }else{
-            _charts[i].classList.remove('col-md-12');
-            _charts[i].classList.add('col-md-4');
-        }
-    }
+    
 }
 
 // Delay functions
