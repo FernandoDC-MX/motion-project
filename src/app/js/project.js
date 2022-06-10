@@ -920,7 +920,7 @@ linkBtn.addEventListener('click', async () => {
         map.set(_address, _device.JSON);
         _response.Contenido.devices = Object.fromEntries(map)
     }
-
+    fs.mkdirSync(_path + '\\Devices\\' + _address , { recursive: true });
     storeFile(_path + "\\info.json", _response.Contenido)
     _devices = _response.Contenido.devices
     displayChannels(_response.Contenido.devices)
