@@ -10,11 +10,12 @@ var _chartsMap = new Map()
 let _devices = [{'hola': '1'}];
 
 class Device{
-    constructor(id, _id_muscle, _muscle_name, _hex){
+    constructor(id, _id_muscle, _muscle_name, _hex, name){
       this.id = id;
       this._id_muscle = _id_muscle;
       this._muscle_name = _muscle_name;
       this._hex = _hex;
+      this.name = name
     }
   
     
@@ -24,6 +25,7 @@ class Device{
               "_muscle_name": this._muscle_name,
               "_id_muscle": this._id_muscle,
               "_hex": this._hex,
+              "name": this.name
           }
     }
   }
@@ -158,19 +160,32 @@ function displayChannels(canales){
 function displayLinked(devices){
     var _linked = document.querySelector('.linked');
     _linked.innerHTML = '';
-    
+
     if(devices){
         Object.entries(devices).forEach((entry) => {
             const [key, value] = entry;
 
             var _div = document.createElement('div');
+            _div.classList.add('col-8')
+
             var _p = document.createElement('p');
             _p.style.color = devices[key]._hex;
-            _p.innerText = 'MAC Address: ' + key;
+            _p.innerText = devices[key].name;
 
             _div.appendChild(_p);
 
             _linked.appendChild(_div)
+
+            var _div = document.createElement('div');
+            _div.classList.add('col-4')
+
+            var _p = document.createElement('button');
+            _p.classList.add('btn-circle-xs')
+
+            _div.appendChild(_p);
+
+            _linked.appendChild(_div)
+
         });
     }
 }
@@ -220,6 +235,8 @@ function displayGraphs(canales){
                     _zone.appendChild(_div)
                 }
             })
+        }else{
+            document.querySelector('.container-message').classList.remove('d-none');
         }
         
     }else{
@@ -888,7 +905,7 @@ linkBtn.addEventListener('click', async () => {
     linkBtn.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Espera a que el dispositivo se vincule con el proyecto.';
 
     var _address = document.querySelector('#linkModal .modal-title').innerText.replace('Vincular dispositivo ', '')
-    var _device = new Device(_address, null, null, _hexColors[pickColor()])
+    var _device = new Device(_address, null, null, _hexColors[pickColor()], _address)
 
     await sleep(1000)
     var _response = readFile(_path + "\\info.json")
@@ -908,6 +925,7 @@ linkBtn.addEventListener('click', async () => {
     _devices = _response.Contenido.devices
     displayChannels(_response.Contenido.devices)
     displayGraphs(_response.Contenido.devices);
+    displayLinked(_devices)
     show('success', 'Dispositivo vinculado correctamente.')
     document.querySelector(`[data-mac="${_address}"]`).remove()
 

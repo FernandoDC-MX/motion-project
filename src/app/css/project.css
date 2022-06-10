@@ -365,9 +365,22 @@ html, body{
     max-height: 100%;
 }
 
-.linking .btn-circle-lg{
+.btn-circle-lg{
     width: 80px;
     height: 80px;
+    border-radius: 100%;
+    text-align: center;
+    outline: none;
+    border: 1px solid #FF7B54;
+    font-family: 'Rubik';
+    background: #ff7c54f6;
+    color: white;
+    transition: 0.2s all ease-in-out;
+}
+
+.btn-circle-xs{
+    width: 10px;
+    height: 10px;
     border-radius: 100%;
     text-align: center;
     outline: none;
