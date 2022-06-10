@@ -154,9 +154,19 @@ function displayChannels(canales){
     }
 }
 
+function existsMuscle(canales){
+    var flag = 0;
+
+    canales.forEach(canal => {
+        if(canal._id_muscle)  flag = 1;
+    })
+
+    return flag;
+}
+
 function displayGraphs(canales){
-    if(canales){
-        const _canales = new Map(Object.entries(canales));
+    const _canales = new Map(Object.entries(canales));
+    if(existsMuscle(_canales)){
         const _zone = document.querySelector('._charts');
         _zone.innerHTML = ''
 
@@ -856,6 +866,7 @@ linkBtn.addEventListener('click', async () => {
     }
 
     storeFile(_path + "\\info.json", _response.Contenido)
+    _devices = _response.Contenido.devices
     displayChannels(_response.Contenido.devices)
     displayGraphs(_response.Contenido.devices);
     show('success', 'Dispositivo vinculado correctamente.')
