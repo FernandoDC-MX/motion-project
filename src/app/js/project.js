@@ -768,8 +768,6 @@ btnSaveSettings.addEventListener('click', () => {
         case 'ERROR': show('error', 'Hubo un problema al guardar la información.')
             break;
     }
-
-
 })
 
 btnCloseSettings.addEventListener('click', async () =>{
@@ -841,31 +839,42 @@ linkBtn.addEventListener('click', async () => {
     linkBtn.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Espera a que el dispositivo se vincule con el proyecto.';
 
     var _address = document.querySelector('#linkModal .modal-title').innerText.replace('Vincular dispositivo ', '')
-    var color = _hexColors[pickColor()]
-    var _device = new Device(_address, null, null, '#' + color)
+    var _device = new Device(_address, null, null, _hexColors[pickColor()])
 
-    var map = new Map()
-
+    await sleep(1000)
     var _response = readFile(_path + "\\info.json")
     
     if(_response.Contenido.devices){
-
+        var _tmp = _response.Contenido.devices;
+        _tmp[_address] = _device.JSON;
+        _response.Contenido.devices = _tmp
+        
     }else{
+        var map = new Map()
         map.set(_address, _device.JSON);
         _response.Contenido.devices = Object.fromEntries(map)
-        storeFile(_path + "\\info.json", _response.Contenido)
-        displayChannels(_response.Contenido.devices)
-        displayGraphs(_response.Contenido.devices);
-        show('success', 'Dispositivo vinculado correctamente.')
-        console.log(document.querySelector('#linkClose'))
     }
+
+    storeFile(_path + "\\info.json", _response.Contenido)
+    displayChannels(_response.Contenido.devices)
+    displayGraphs(_response.Contenido.devices);
+    show('success', 'Dispositivo vinculado correctamente.')
+    document.querySelector(`[data-mac="${_address}"]`).remove()
+
+    linkClose.click()
+
+    // Restore animation modal
+    linkBtn.parentNode.classList.remove('d-none')
+    linkBtn.parentNode.nextElementSibling.classList.add('d-none')
+    linkBtn.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Presiona el botón para empezar la vinculación del dispositivo.';
+
 })
 
 const pickColor = () =>{
     var index = 0;
 
-    if(_devices){
-        index = _devices.length;
+    if(_devices){       
+        index =  Object.keys(_devices).length;
     }
 
     return index;
