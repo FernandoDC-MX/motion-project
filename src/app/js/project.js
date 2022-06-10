@@ -46,6 +46,7 @@ function readInfo(_nameFolder){
         _devices = _response.Contenido.devices;
         displayChannels(_response.Contenido.devices)
         displayGraphs(_response.Contenido.devices);
+        displayLinked(_response.Contenido.devices)
     }else{
         alert('Hubo algún error al tratar de abrir el archivo.')
         closeBtn.click()
@@ -151,6 +152,26 @@ function displayChannels(canales){
         _p.innerHTML = 'No hay ningún dispositivo vinculado a este proyecto. Vincula uno en la sección <b>Dispositivos.</b>'
 
         _lista.appendChild(_p)
+    }
+}
+
+function displayLinked(devices){
+    var _linked = document.querySelector('.linked');
+    _linked.innerHTML = '';
+    
+    if(devices){
+        Object.entries(devices).forEach((entry) => {
+            const [key, value] = entry;
+
+            var _div = document.createElement('div');
+            var _p = document.createElement('p');
+            _p.style.color = devices[key]._hex;
+            _p.innerText = 'MAC Address: ' + key;
+
+            _div.appendChild(_p);
+
+            _linked.appendChild(_div)
+        });
     }
 }
 
@@ -817,7 +838,7 @@ searchDevicesBtn.addEventListener('click', async () =>{
     _searched.innerHTML = '';
 
     var _founded = document.createElement('p');
-    _founded.classList.add('color-description','d-none', 'mx-3')
+    _founded.classList.add('color-description','d-none', 'mx-3', 'mt-4','mb-0')
 
     _searched.appendChild(_founded)
 
@@ -837,17 +858,19 @@ searchDevicesBtn.addEventListener('click', async () =>{
         _sub.setAttribute('data-mac', _address)
         _sub.setAttribute('data-bs-toggle',"modal")
         _sub.setAttribute('data-bs-target',"#linkModal")
-        _sub.classList.add('founded')
     
         var _p = document.createElement('p');
         _p.innerText = 'MAC Address: ' + _sub.getAttribute('data-mac')
         _p.setAttribute('title', _p.innerText)
 
+        _sub.appendChild(_p)
+        // Display the element in founded zone.
         if(!_devices || !(_address in _devices)){
-            _sub.appendChild(_p)
+            _sub.classList.add('founded')
             _searched.appendChild(_sub)
             setAddress()
             _cont++;
+            displayLinked(_devices)
         }
     }
 

@@ -339,7 +339,7 @@ html, body{
     font-family: 'Rubik';
 }
 
-.searched div p{
+.searched div p, .linked div p{
     width: 85%;
     margin: 0 auto;
     overflow:hidden;
