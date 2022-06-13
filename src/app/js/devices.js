@@ -40,10 +40,11 @@ function validateForm(){
     Array.from(_entries_input).forEach(element =>{
       switch(element.id){
         case 'name': if(!element.value){
-                        if(fs.existsSync(`${__dirname}\\Proyectos\\${element.value}`))
-                          document.querySelector('#errorName').innerHTML = 'Este nombre ya existe. Trata con otro.';
-                        else
-                          document.querySelector('#errorName').innerHTML = 'Este campo debe de ser llenado obligatoriamente.';
+                        document.querySelector('#errorName').innerHTML = 'Este campo debe de ser llenado obligatoriamente.';
+                        flag = 1;
+                      }
+                      else if (fs.existsSync(`${__dirname}\\Proyectos\\${element.value}`)){
+                        document.querySelector('#errorName').innerHTML = 'Este nombre ya existe. Trata con otro.';
                         flag = 1;
                       }
                       else

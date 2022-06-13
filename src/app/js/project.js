@@ -367,10 +367,6 @@ playBtn.addEventListener('click', () => {
     } 
 });
 
-function resumeCharts(){
-     
-}
-
 // Pause the test.
 pauseBtn.addEventListener('click', () =>{
     // 👇️ Using forEach
