@@ -9,8 +9,11 @@ const maxResBtn = document.getElementById('maximizeBtn')
 const _hexColors = ['#F5BD85','#85F5AE','#85C8F5','#F585CC'];
 const ipc = ipcRenderer
 var _path, channels, _musclesTmp;
-let _devices = [{'hola': '1'}];
 
+let iterator = 0;
+
+// Storage structures
+let _devices = [{'hola': '1'}];
 var _chartsMap = new Map()
 let arrChilds = new Map()
 
@@ -270,60 +273,113 @@ stopBtn.addEventListener('click', () =>{
 
 // Start the test.
 playBtn.addEventListener('click', () => {
+    
     // Gets all the main charts.
     var _mainCharts = document.querySelectorAll('.main-graph-container');
 
-    createCharts(_mainCharts)
+    if(!playBtn.classList.contains('pressed')){
+        // Display Pause Button and Hide the Play Button
+        playBtn.classList.add('d-none')
+        pauseBtn.classList.remove('d-none')
 
+        createCharts(_mainCharts)
+        playBtn.classList.add('pressed')
+        iterator = 0;
 
-    // Display Pause Button and Hide the Play Button
-    playBtn.classList.add('d-none')
-    pauseBtn.classList.remove('d-none')
-
-
-    for(let i = 0; i < _mainCharts.length; i++){
-        var _child = fork(__dirname + "\\js\\demo.js")
-
-        arrChilds.set(_child.pid, _child)
-       
-        // Execute the test.
-        _child.send({ 
-            msg: 'do work',
-            pid : _child.pid, // passing pid to child
-            id_zone: _mainCharts[i].getAttribute('data-device'),
-            play: 1
-        })
-
-        // Kill the process.
-        _child.on('message', (msg) =>{
-            if(msg.flag){
-                process.kill(msg.id)
-                // Display Play Button and Hide the Pause Button
-                playBtn.classList.remove('d-none')
-                pauseBtn.classList.add('d-none')
-
-                // Redraw each chart with all the data generated.
-                reDrawChart(_chartsMap.get(`${msg.device}-main`));                
-                reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`));                
-                reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`));                
-
-                show('success','Monitoreo terminado.')
-            }
-            else{
-                switch(msg.chart){
-                    case 'main': addData(_chartsMap.get(`${msg.device}-main`), msg.label, msg.data)
+        for(let i = 0; i < _mainCharts.length; i++){
+            var _child = fork(__dirname + "\\js\\demo.js")
+    
+            arrChilds.set(_child.pid, _child)
+           
+            // Execute the test.
+            _child.send({ 
+                msg: 'do work',
+                pid : _child.pid, // passing pid to child
+                id_zone: _mainCharts[i].getAttribute('data-device'),
+                play: 1,
+                iterator: iterator
+            })
+    
+            _child.on('message', (msg) =>{
+                switch(msg.flag){
+                    // Start the process.
+                    case 0: switch(msg.chart){
+                                case 'main': addData(_chartsMap.get(`${msg.device}-main`), msg.label, msg.data)
+                                    break;
+                                case 'accelerometer': addData(_chartsMap.get(`${msg.device}-accelerometer`), msg.label, msg.data)
+                                    break;
+                                case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data)
+                                    break;
+                            }
                         break;
-                    case 'accelerometer': addData(_chartsMap.get(`${msg.device}-accelerometer`), msg.label, msg.data)
+                    case 1: // Display Play Button and Hide the Pause Button
+                            playBtn.classList.remove('d-none')
+                            pauseBtn.classList.add('d-none')
+    
+                            if(msg.iterator === msg.max){ 
+                                // Redraw each chart with all the data generated.
+                                reDrawChart(_chartsMap.get(`${msg.device}-main`));                
+                                reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`));                
+                                reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`));
+    
+                                show('success','Monitoreo terminado.')
+                                process.kill(msg.id)
+
+                                playBtn.classList.remove('pressed')
+                                arrChilds.clear()
+                            }
                         break;
-                    case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data)
-                        break;
+                    case 2: iterator = msg.iterator
+                            show('info','La prueba ha sido pausada por el usuario')
+
+                            // Display Pause Button and Hide the Play Button
+                            playBtn.classList.remove('d-none')
+                            pauseBtn.classList.add('d-none')
+                          break;
                 }
-            }
-        })
-    }
+            })
+        }
+        
+        show('info','La prueba ha empezado.')
 
-    show('info','La prueba ha empezado.')
+    }else{
+        // Display Play Button and Hide the Pause Button
+        playBtn.classList.add('d-none')
+        pauseBtn.classList.remove('d-none')
+        
+
+        let i = 0;
+        // Resume the pending data.
+        arrChilds.forEach((value, key) => {
+            // Execute the test.
+            value.send({ 
+                msg: 'do work',
+                pid : key, // passing pid to child
+                id_zone: _mainCharts[i].getAttribute('data-device'),
+                play: 1,
+                iterator: iterator
+            })
+            
+            i++;
+        });
+
+        show('info', 'La prueba ha sido reanudada')
+    } 
 });
+
+function resumeCharts(){
+     
+}
+
+// Pause the test.
+pauseBtn.addEventListener('click', () =>{
+    // 👇️ Using forEach
+    arrChilds.forEach((value, key) => {
+        value.send({
+            play: 0
+        })
+    });
+})
 
 // 
 function createCharts(_divs){
