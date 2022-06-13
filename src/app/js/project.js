@@ -1,13 +1,18 @@
+// Packages
 const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
 const fork = require("child_process").fork
+
+// Variables
 const maxResBtn = document.getElementById('maximizeBtn')
 const _hexColors = ['#F5BD85','#85F5AE','#85C8F5','#F585CC'];
 const ipc = ipcRenderer
 var _path, channels, _musclesTmp;
-var _chartsMap = new Map()
 let _devices = [{'hola': '1'}];
+
+var _chartsMap = new Map()
+let arrChilds = new Map()
 
 class Device{
     constructor(id, _id_muscle, _muscle_name, _hex, name){
@@ -245,13 +250,26 @@ function displayGraphs(canales){
     }
 }
 
-// 
-playBtn.addEventListener('click', function(){
-    startDataGraph();
+// Finish the test.
+stopBtn.addEventListener('click', () =>{
+    // Kill all the childs created.
+    arrChilds.forEach((value, key) => {
+        process.kill(key)
+    });
+
+    // Clear the map.
+    arrChilds.clear()
+
+    // Message
+    show('info','La prueba ha sido terminada por el usuario.')
+
+    // Display Play Button and Hide the Pause Button
+    playBtn.classList.remove('d-none')
+    pauseBtn.classList.add('d-none')
 });
 
-// 
-function startDataGraph(){
+// Start the test.
+playBtn.addEventListener('click', () => {
     // Gets all the main charts.
     var _mainCharts = document.querySelectorAll('.main-graph-container');
 
@@ -265,12 +283,15 @@ function startDataGraph(){
 
     for(let i = 0; i < _mainCharts.length; i++){
         var _child = fork(__dirname + "\\js\\demo.js")
+
+        arrChilds.set(_child.pid, _child)
        
         // Execute the test.
         _child.send({ 
             msg: 'do work',
             pid : _child.pid, // passing pid to child
-            id_zone: _mainCharts[i].getAttribute('data-device')
+            id_zone: _mainCharts[i].getAttribute('data-device'),
+            play: 1
         })
 
         // Kill the process.
@@ -302,7 +323,7 @@ function startDataGraph(){
     }
 
     show('info','La prueba ha empezado.')
-}
+});
 
 // 
 function createCharts(_divs){
@@ -828,10 +849,6 @@ btnCloseSettings.addEventListener('click', async () =>{
 
 })
 
-stopBtn.addEventListener('click', () => {
-    show('info','La prueba ha sido detenida.')
-})
-
 document.querySelectorAll('.channel-clickable').forEach(element =>{
     element.addEventListener('click', () =>{
         var svg = element.querySelector('.arrow-svg');
@@ -909,7 +926,7 @@ linkBtn.addEventListener('click', async () => {
     var _address = document.querySelector('#linkModal .modal-title').innerText.replace('Vincular dispositivo ', '')
     var _device = new Device(_address, null, null, _hexColors[pickColor()], _address)
 
-    await sleep(1000)
+    await sleep(1500)
     var _response = readFile(_path + "\\info.json")
     
     if(_response.Contenido.devices){
