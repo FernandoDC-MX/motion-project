@@ -267,7 +267,7 @@ stopBtn.addEventListener('click', () =>{
     show('info','La prueba ha sido terminada por el usuario.')
 
     // Display Play Button and Hide the Pause Button
-    playBtn.classList.remove('d-none')
+    playBtn.classList.remove('d-none','pressed')
     pauseBtn.classList.add('d-none')
 });
 
