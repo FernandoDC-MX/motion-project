@@ -17,6 +17,7 @@ html, body{
     overflow: hidden;
     border: 1px solid #343B48;
     -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .mainApp > .topBar{
@@ -27,6 +28,7 @@ html, body{
     border-bottom: 3px solid #343B48;
     background-color: #1B1D23;
     -webkit-user-select: none;
+    user-select: none;
 }
 
 .topBar > .titleBar{
@@ -333,7 +335,7 @@ html, body{
     height: 1.4em;
     background: white;
     position: relative;
-    left: -7px;
+    left: -2px;
     top: 4px;
     border-radius: 0 0.25em 0.25em 0;
 }

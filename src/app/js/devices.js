@@ -127,6 +127,9 @@ function createProject(){
 
       // Devices folder
       fs.mkdirSync(path + '\\Devices\\' , { recursive: true });
+
+      // Data folder
+      fs.mkdirSync(path + '\\Data\\' , { recursive: true });
     
       var date = new Date();
       var localDate = date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
