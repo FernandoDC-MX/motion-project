@@ -134,7 +134,7 @@ html, body{
 }
 
 .cls-selected{
-    fill: #a51717;
+    fill: #FF7B54;
 }
 
 .h-custom{
@@ -230,6 +230,7 @@ html, body{
 .zone{
     width: 98%;
     margin: 0 auto 2.5em;
+    height: auto;
     padding: 1em 0;
 }
 
@@ -504,8 +505,12 @@ html, body{
 }
 
 
-@media screen and (max-width: 1240px) {
+@media screen and (max-width: 1360px) {
     .ellips{
-        width: 70px;
+        width: 100px;
+    }
+
+    .main-graph-container{
+        height: 270px;
     }
 }

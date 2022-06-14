@@ -719,7 +719,7 @@ function selectMuscle(){
                 document.querySelector('.nombre').classList.remove('txt-shadow')
 
                 Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
-                    element.style.fill = 'red'
+                    element.style.fill = '#FF7B54'
                 })
             }
         }),
@@ -730,7 +730,7 @@ function selectMuscle(){
                 if(element.classList.contains('cls-2')){
                     element.classList.remove('cls-2')
                     element.classList.add('cls-selected')
-                    element.style.fill = 'red';
+                    element.style.fill = '#FF7B54';
     
                 }else{
                     element.classList.add('cls-2')
@@ -818,7 +818,7 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
         Array.from(document.querySelectorAll(`path[data-name="${name}"]`)).forEach(element => {
             element.classList.remove('cls-2') 
             element.classList.add('cls-selected')
-            element.style.fill = 'red';
+            element.style.fill = '#FF7B54';
         })
 
         this.querySelector('.nombre').innerHTML = _muscle_info._muscle_name.toUpperCase()
