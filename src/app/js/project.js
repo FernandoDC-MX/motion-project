@@ -1235,6 +1235,7 @@ document.onkeyup = function () {
             toggleMenu.style.width = '60px'
             toggleMenuFlag = 0
         }
+        
       return false;
     }
   }
