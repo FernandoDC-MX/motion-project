@@ -3,14 +3,14 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
-
+let flag_reopen = 0;
 
 // Enable live reload for all the files inside your project directory
 require('electron-reload')(__dirname, {ignored: /Proyectos|[\/\\]\./});
 
 // Master communication (This variable will receive the signals that ipcRenderer sends)
 const ipc = ipcMain
-let mainWindow, windwo;
+let mainWindow, project;
 
 // Splash screen.
 const splashScreen = () =>{
@@ -109,61 +109,65 @@ const createWindow = () => {
 }
 
 const projectWindow = (evt, args) =>{
+
   // Create the browser window.
-  window = new BrowserWindow({
+  project = new BrowserWindow({
     minHeight:600,
     minWidth: 1000,
+    Height:800,
+    Width: 1000,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       devTools: true,
     },
-    frame:false,
-    show: false,
-    background: '#383838',
+    frame: false,
+    backgroundColor: '#383838'
   })
 
-  window.maximize()
-
+  project.maximize()
 
   // and load the index.html of the app.
-  window.loadFile('src/app/project.html')
+  project.loadFile('src/app/project.html')
 
   // Event 
-  window.on('ready-to-show', () =>{
+  project.on('ready-to-show', () =>{
     // Send the data.
-    window.webContents.send('enviar-nombre', args)
-    window.show()
+    project.webContents.send('enviar-nombre', args)
   })
 
   // Close app
   ipc.on('closeProject', ()=>{
     mainWindow.show()
-    window.close()
+    project.close()
   })
 
    // Minimize app
    ipc.on('minimizeProject', ()=>{
-    window.minimize()
+    project.minimize()
   })
 
-  // Check if the window is maximized
-  window.on('maximize', () =>{
-    window.webContents.send('isMaximized')
+  // Check if the project is maximized
+  project.on('maximize', () =>{
+    project.webContents.send('isMaximized_2')
+  })
+
+  project.on('closed',()=>{
+      ipc.removeAllListeners('maximizeRestoreProject');
   })
 
   // Maximize app
   ipc.on('maximizeRestoreProject', ()=>{
-    if(window.isMaximized()){
-      window.restore()
+    if(project.isMaximized()){
+      project.restore()
     }else{
-      window.maximize()
+      project.maximize()
     }
   })
 
-  // Check if the window is maximized
-  window.on('unmaximize', () =>{
-    window.webContents.send('isRestored')
+  // Check if the project is maximized
+  project.on('unmaximize', () =>{
+    project.webContents.send('isRestored_2')
   }) 
 }
 

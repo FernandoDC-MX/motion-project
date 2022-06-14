@@ -655,8 +655,8 @@ maximizeBtn.addEventListener('click', () =>{
     ipc.send('maximizeRestoreProject')
 })
 
-ipc.on('isMaximized', ()=>{ changeMaximizeBtn(true) })
-ipc.on('isRestored', ()=>{ changeMaximizeBtn(false) })
+ipc.on('isMaximized_2', ()=>{ changeMaximizeBtn(true) })
+ipc.on('isRestored_2', ()=>{ changeMaximizeBtn(false) })
 
 function selectMuscle(){
     var _muscles = document.querySelectorAll('.cls-2')
