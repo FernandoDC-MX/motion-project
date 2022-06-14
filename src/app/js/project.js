@@ -36,9 +36,9 @@ class Device{
               "name": this.name
           }
     }
-  }
-  
+}
 
+// Set the window's title.
 ipc.on('enviar-nombre', (e, title) =>{ 
     document.querySelector('title').innerHTML = title
     document.querySelector('.title').innerHTML = title
@@ -47,6 +47,7 @@ ipc.on('enviar-nombre', (e, title) =>{
     readInfo(title)
 })
 
+// Read the info.json inside the Project's folder.
 function readInfo(_nameFolder){
     _path = `${__dirname}\\Proyectos\\${_nameFolder}`;
     
@@ -65,6 +66,7 @@ function readInfo(_nameFolder){
     settings()
 }
 
+// Display the channels on the left side.
 function displayChannels(canales){
     var _lista = document.querySelector('.list');
     if(canales){
@@ -165,6 +167,7 @@ function displayChannels(canales){
     }
 }
 
+// Display the linked devices.
 function displayLinked(devices){
     var _linked = document.querySelector('.linked');
     _linked.innerHTML = '';
@@ -198,6 +201,7 @@ function displayLinked(devices){
     }
 }
 
+// Return if at least one device has linked with a muscle.
 function existsMuscle(canales){
     var flag = 0;
 
@@ -208,6 +212,7 @@ function existsMuscle(canales){
     return flag;
 }
 
+// Create the charts zone.
 function displayGraphs(canales){
     if(canales){
         const _canales = new Map(Object.entries(canales));
@@ -377,7 +382,7 @@ pauseBtn.addEventListener('click', () =>{
     });
 })
 
-// 
+// Create the canvas and the charts.
 function createCharts(_divs){
     // We will iterate each chart zone by each device linked within the project.
     for(let i = 0; i < _divs.length; i++){
@@ -419,6 +424,7 @@ function createCharts(_divs){
 
 }
 
+// Draw all the mains charts. 
 function drawMainChart(color){
     const _canvas = document.createElement("canvas");
     const ctx = _canvas.getContext('2d');
@@ -476,6 +482,7 @@ function drawMainChart(color){
     return [_canvas, chart];
 }
 
+// Draw all the Accelerometers and Gyros Charts.
 function drawAccelerometerGyroChart(color){
     const _canvas = document.createElement("canvas");
     const ctx = _canvas.getContext('2d');
@@ -630,14 +637,17 @@ function reDrawChart(map){
     map.chart.update()
 }
 
+// Close the window.
 closeBtn.addEventListener('click', () =>{
     ipc.send('closeProject')
 })
 
+// Minimize the window.
 minimizeBtn.addEventListener('click', () =>{
     ipc.send('minimizeProject')
 })
 
+// Restore/Maximize the window.
 function changeMaximizeBtn(isMaximized){
     if(isMaximized){
         maxResBtn.title = 'Restore'
@@ -658,6 +668,7 @@ maximizeBtn.addEventListener('click', () =>{
 ipc.on('isMaximized_2', ()=>{ changeMaximizeBtn(true) })
 ipc.on('isRestored_2', ()=>{ changeMaximizeBtn(false) })
 
+// Events to link a muscle with a device.
 function selectMuscle(){
     var _muscles = document.querySelectorAll('.cls-2')
 
@@ -721,6 +732,7 @@ function selectMuscle(){
     }
 }
 
+// Restore the original colors.
 function cleanHover(){
     if(_musclesTmp)
         _musclesTmp.forEach(element =>{
@@ -732,6 +744,7 @@ cancelBtn.addEventListener('click', () =>{
     cleanHover()
 })
 
+// Event to link the device with the muscle and save into the info.json file.
 acceptBtn.addEventListener('click', () =>{
     if(document.querySelector('.cls-selected')){
         getMuscle()
@@ -741,6 +754,7 @@ acceptBtn.addEventListener('click', () =>{
         show('warning','Tienes que seleccionar un músculo.')
 })
 
+// Store the info inside the info.json file.
 function getMuscle(){
     var _currentDevice = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','');
     var _changes = channels.get(_currentDevice)
@@ -766,6 +780,7 @@ function getMuscle(){
     }
 }
 
+// Enable/Disable all the muscles that are already unselected/selected.
 staticBackdrop.addEventListener('shown.bs.modal', function(){
     var _device = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','')
     var _muscle_info = channels.get(_device)
@@ -796,6 +811,7 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
     disableMuscles(_muscle_info);
 })
 
+// Disable the muscles that are already selected.
 function disableMuscles(_muscle_info){
     channels.forEach((value, key) =>{
         if(value._muscle_name !== _muscle_info._muscle_name && value._muscle_name)
@@ -811,6 +827,7 @@ function disableMuscles(_muscle_info){
     updateDisabledMuscles();
 }
 
+//Avoid that a muscle can be linked twice on different devices in the project.
 function updateDisabledMuscles(){
     var musculos = document.querySelectorAll('.cls-disabled')
 
@@ -821,6 +838,7 @@ function updateDisabledMuscles(){
     }
 }
 
+// Displays the info in the modal settings.
 function settings(){
     var _options = document.querySelectorAll('.setting-options li');
     let title = document.querySelector('#setting-title');
@@ -862,6 +880,7 @@ function settings(){
     }
 }
 
+// Sets the values in the modal settings inputs.
 const setSettingsValues = (_valueSample, _valueNumber, _valueImu, _valueExample, flag) =>{
     // Inputs
     let sample_rate = document.querySelector('#sample-rate');
@@ -879,6 +898,7 @@ const setSettingsValues = (_valueSample, _valueNumber, _valueImu, _valueExample,
     }
 }
 
+// Save settings.
 btnSaveSettings.addEventListener('click', () => {
     var _values = document.querySelectorAll('.form-group select');
     var _json = {sample_rate: _values[0].value, number_rate: _values[1].value, imu_rate: _values[2].value, example_rate: _values[3].value}
@@ -897,10 +917,12 @@ btnSaveSettings.addEventListener('click', () => {
     }
 })
 
+// Close modal settings.
 btnCloseSettings.addEventListener('click', async () =>{
 
 })
 
+// CSS event: Displays a zone.
 document.querySelectorAll('.channel-clickable').forEach(element =>{
     element.addEventListener('click', () =>{
         var svg = element.querySelector('.arrow-svg');
@@ -919,6 +941,7 @@ document.querySelectorAll('.channel-clickable').forEach(element =>{
     })
 })
 
+// Search devices.
 searchDevicesBtn.addEventListener('click', async () =>{
     searchDevicesBtn.classList.add('d-none')
 
@@ -970,6 +993,7 @@ searchDevicesBtn.addEventListener('click', async () =>{
 
 });
 
+// Link event.
 linkBtn.addEventListener('click', async () => {
     linkBtn.parentNode.classList.add('d-none')
     linkBtn.parentNode.nextElementSibling.classList.remove('d-none')
@@ -1009,6 +1033,7 @@ linkBtn.addEventListener('click', async () => {
 
 })
 
+// Return a color that has not been selected yet.
 const pickColor = () =>{
     var index = 0;
 
@@ -1019,6 +1044,7 @@ const pickColor = () =>{
     return index;
 }
 
+// Sets title in the modal link.
 function setAddress(){
     var _addresses = document.querySelectorAll('.founded');
 
@@ -1030,6 +1056,7 @@ function setAddress(){
     }
 }
 
+// Sets title in the modal muscle.
 function setId(){
     var _channels = document.querySelectorAll('.device');
 
@@ -1042,6 +1069,7 @@ function setId(){
     }
 }
 
+// Hides the beat chart.
 hideBeatBtn.addEventListener('click', () =>{
     var _chartsBeat = document.querySelectorAll('.main-graph-container .col-8')
     var flag;
@@ -1065,6 +1093,7 @@ hideBeatBtn.addEventListener('click', () =>{
     extendsChart('main', flag)
 })
 
+// Hides the accelerometer chart.
 hideAceBtn.addEventListener('click', ()=>{
     var _accelerometerCharts = document.querySelectorAll('.main-graph-container .col-4 .subgraph')
     var flag;
@@ -1091,6 +1120,8 @@ hideAceBtn.addEventListener('click', ()=>{
     extendsChart('sub', flag)
 })
 
+
+// Hides the gyroscope chart.
 hideGyroBtn.addEventListener('click', ()=>{
     var _gyroCharts = document.querySelectorAll('.main-graph-container .col-4 .subgraph')
     var flag;
@@ -1118,7 +1149,7 @@ hideGyroBtn.addEventListener('click', ()=>{
 
 })
 
-
+// Resize charts.
 function extendsChart(chart, flag){
     var _charts;
 
