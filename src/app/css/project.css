@@ -452,31 +452,63 @@ html, body{
 
 .wave:nth-child(2) {
     animation-delay: 0.1s;
-  }
-  .wave:nth-child(3) {
-    animation-delay: 0.2s;
-  }
-  .wave:nth-child(4) {
-    animation-delay: 0.3s;
-  }
-  .wave:nth-child(5) {
-    animation-delay: 0.4s;
-  }
-  .wave:nth-child(6) {
-    animation-delay: 0.5s;
-  }
-  .wave:nth-child(7) {
-    animation-delay: 0.6s;
-  }
-  .wave:nth-child(8) {
-    animation-delay: 0.7s;
-  }
-  .wave:nth-child(9) {
-    animation-delay: 0.8s;
-  }
-  .wave:nth-child(10) {
-    animation-delay: 0.9s;
-  }
+}
+
+.wave:nth-child(3) {
+animation-delay: 0.2s;
+}
+
+.wave:nth-child(4) {
+animation-delay: 0.3s;
+}
+
+.wave:nth-child(5) {
+animation-delay: 0.4s;
+}
+
+.wave:nth-child(6) {
+animation-delay: 0.5s;
+}
+
+.wave:nth-child(7) {
+animation-delay: 0.6s;
+}
+
+.wave:nth-child(8) {
+animation-delay: 0.7s;
+}
+
+.wave:nth-child(9) {
+animation-delay: 0.8s;
+}
+
+.wave:nth-child(10) {
+animation-delay: 0.9s;
+}
+
+.toggle-menu{
+    width: 0px;
+    height: 99%;
+    background: #282828;
+    z-index: 1;
+    transition: 0.2s all ease-in-out;
+    user-select: none;
+}
+
+.toggle-menu .element{
+    width: 100%;
+    height: 50px;
+    padding: 1em;
+    cursor: pointer;
+    transition: 0.1s all ease-in-out;
+}
+
+.toggle-menu .element:hover{
+    color: #FF7B54;
+    border-style: none none solid none;
+    border-color: #FF7B54;
+    border-width: 1px;
+}
 
 @keyframes wave {
     0% {

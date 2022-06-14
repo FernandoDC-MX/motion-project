@@ -11,6 +11,7 @@ const ipc = ipcRenderer
 var _path, channels, _musclesTmp;
 
 let iterator = 0;
+let toggleMenuFlag = 0;
 
 // Storage structures
 let _devices = [{'hola': '1'}];
@@ -1220,3 +1221,20 @@ function extendsChart(chart, flag){
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+// Show/Hide toggle menu.
+document.onkeyup = function () {
+    var e = e || window.event; // for IE to cover IEs window event-object
+    let toggleMenu = document.querySelector('.toggle-menu')
+
+    if(e.ctrlKey && e.which == 68) { //Press CTRL + D
+        if(!toggleMenuFlag){
+            toggleMenu.style.width = '0px'
+            toggleMenuFlag = 1
+        }else{
+            toggleMenu.style.width = '60px'
+            toggleMenuFlag = 0
+        }
+      return false;
+    }
+  }
