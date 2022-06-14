@@ -42,7 +42,7 @@
       <!-- Content area -->
       <div class="content-area">
         <div class="d-flex d-row h-100">
-          <div class="channels">
+          <div class="channels user-select-none">
             <div class="channel-title px-3 py-2">
                 Canales
             </div>
@@ -91,13 +91,13 @@
               </div>
             </div>
             <div class="d-charts py-2 d-flex justify-content-end">
-              <button class="mx-2" title="Ocultar la gráfica de ritmo" id="hideBeatBtn">
+              <button title="Ocultar la gráfica de ritmo" id="hideBeatBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-activity" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
                 </svg>
                 <p class="d-none"></p>
               </button>
-              <button class="mx-2" title="Ocultar la gráfica de acelerómetro" id="hideAceBtn">
+              <button title="Ocultar la gráfica de acelerómetro" id="hideAceBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 400 400">
                   <polygon class="cls-h" points="225.09 311.11 336.25 199.95 225.19 88.89 260.82 88.89 371.88 199.95 260.72 311.11 225.09 311.11"/>
                   <polygon class="cls-h" points="150 311.11 261.16 199.95 150.1 88.89 185.73 88.89 296.79 199.95 185.63 311.11 150 311.11"/>
@@ -106,7 +106,7 @@
                 </svg>
                 <p class="d-none"></p>
               </button>
-              <button class="mx-2" title="Ocultar la gráfica de giroscopio" id="hideGyroBtn">
+              <button title="Ocultar la gráfica de giroscopio" id="hideGyroBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 400 400">
                   <line class="cls-h" x1="317.43" y1="325.91" x2="338.82" y2="306.41"/>
                   <path class="cls-h" d="M16.52,204.71c0-43.35,82.15-78.49,183.48-78.49s183.48,35.14,183.48,78.49-82.15,78.5-183.48,78.5c-36.93,0-71.31-4.66-100.09-12.69a226,226,0,0,1-37.34-13.79c-13.67-6.61-24.78-14.21-32.66-22.52l3.16,28.46"/>
@@ -146,6 +146,7 @@
                       <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                       <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
                 </svg>
+                <p class="d-flex justify-content-end user-select-none"></p>
               </div>
               <div class="_charts">
 

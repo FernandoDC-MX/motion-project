@@ -85,14 +85,14 @@ function displayChannels(canales){
         _li.appendChild(_col);
 
         _col = document.createElement('div');
-        _col.classList.add('col-7','text-center');
+        _col.classList.add('col-7','col-lg-7','col-md-6','text-center');
         // _col.innerText = 'Músculo';
         _col.innerHTML = `<img src="icons/muscle.png" width="21" height="21" alt="Músculos" title="Músculos"/>`
 
         _li.appendChild(_col);
 
         _col = document.createElement('div');
-        _col.classList.add('col-3');
+        _col.classList.add('col-3','col-lg-3','col-md-4');
         // _col.innerText = 'Bat';
         _col.innerHTML = `<img src="icons/batery.png" width="21" height="21" alt="Nivel de batería" title="Nivel de batería"/>`
 
@@ -124,7 +124,7 @@ function displayChannels(canales){
             _li.appendChild(_div)
 
             var _div = document.createElement('div');
-            _div.classList.add('col-7', 'ellips');
+            _div.classList.add('col-7', 'col-lg-7', 'col-md-6', 'ellips');
             
             if(!_config._muscle_name){
                 _div.innerText = 'Seleccionar'
@@ -136,10 +136,10 @@ function displayChannels(canales){
             _li.appendChild(_div);
 
             _div = document.createElement('div');
-            _div.classList.add('col-3');
+            _div.classList.add('col-3','col-lg-3','col-md-4','mx-auto');
 
             var _sub = document.createElement('div');
-            _sub.classList.add('mx-auto','text-center', 'battery-container')
+            _sub.classList.add('text-center', 'battery-container')
             _sub.style.border= `1px solid ${_config._hex}`
 
             var _p = document.createElement('p');
@@ -260,7 +260,10 @@ function displayGraphs(canales){
 
 // Finish the test.
 stopBtn.addEventListener('click', () =>{
-   
+    var date = new Date () 
+    var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
+    var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
+    var meridian = date.getHours() > 12 ? 'P.M.' : 'A.M.'
 
     // Kill all the childs created.
     arrChilds.forEach((value, key) => {
@@ -284,6 +287,8 @@ stopBtn.addEventListener('click', () =>{
         reDrawChart(_chartsMap.get(`${device}-accelerometer`));                
         reDrawChart(_chartsMap.get(`${device}-gyroscope`));
     });
+
+    document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
 });
 
 // Start the test.
@@ -332,6 +337,7 @@ playBtn.addEventListener('click', () => {
                             pauseBtn.classList.add('d-none')
     
                             if(msg.iterator === msg.max){ 
+                                var date = new Date()
                                 // Redraw each chart with all the data generated.
                                 reDrawChart(_chartsMap.get(`${msg.device}-main`));                
                                 reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`));                
@@ -339,6 +345,12 @@ playBtn.addEventListener('click', () => {
     
                                 show('success','Monitoreo terminado.')
                                 process.kill(msg.id)
+
+                                var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
+                                var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
+                                var meridian = date.getHours() > 12 ? 'P.M.' : 'A.M.'
+
+                                document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
 
                                 playBtn.classList.remove('pressed')
                                 arrChilds.clear()
