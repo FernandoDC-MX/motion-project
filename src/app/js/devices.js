@@ -126,7 +126,7 @@ function createProject(){
       fs.mkdirSync(path, { recursive: true });
 
       // Devices folder
-      fs.mkdirSync(path + '\\Devices\\' , { recursive: true });
+      // fs.mkdirSync(path + '\\Devices\\' , { recursive: true });
 
       // Data folder
       fs.mkdirSync(path + '\\Data\\' , { recursive: true });

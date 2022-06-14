@@ -2,6 +2,7 @@
 const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
+const { writeFile } = require('fs');
 const fork = require("child_process").fork
 
 // Variables
@@ -35,6 +36,23 @@ class Device{
               "_id_muscle": this._id_muscle,
               "_hex": this._hex,
               "name": this.name
+          }
+    }
+}
+
+class FileTest{
+    constructor(name, created_at, data){
+      this.name = name;
+      this.created_at = created_at;
+      this.data = data;
+    }
+  
+    
+    get JSON(){
+      return {
+              "name": this.name,
+              "created_at": this.created_at,
+              "data": this.data,
           }
     }
 }
@@ -355,6 +373,7 @@ playBtn.addEventListener('click', () => {
 
                                 playBtn.classList.remove('pressed')
                                 arrChilds.clear()
+                                saveData()
                             }
                         break;
                     case 2: iterator = msg.iterator
@@ -1235,7 +1254,42 @@ document.onkeyup = function () {
             toggleMenu.style.width = '60px'
             toggleMenuFlag = 0
         }
-        
+
       return false;
     }
-  }
+}
+
+function saveData(){
+    var _graphs = document.querySelectorAll('.main-graph-container');
+    var map = new Map();
+    var data_main = {'labels': null, 'data': null}, data_gyro =  {'labels': null, 'data': null}, data_accelerometer =  {'labels': null, 'data': null};
+
+    _graphs.forEach(element => {
+        var _device = element.getAttribute('data-device')
+
+        var tmp = _chartsMap.get(`${_device}-main`)
+        data_main.labels = tmp.chart.data.labels
+        data_main.data = tmp.chart.data.datasets
+
+        tmp = _chartsMap.get(`${_device}-accelerometer`)
+        data_accelerometer.labels = tmp.chart.data.labels
+        data_accelerometer.data = tmp.chart.data.datasets
+        
+        tmp = _chartsMap.get(`${_device}-gyroscope`)
+        data_gyro.labels = tmp.chart.data.labels
+        data_gyro.data = tmp.chart.data.datasets
+
+        map.set(_device, {'main': data_main, 'accelerometer': data_accelerometer, 'gyroscope': data_gyro})
+    })
+
+    var date = new Date () 
+    var localDate = date.getFullYear() + '_' + ('0' + (date.getMonth()+1)).slice(-2) + '_' + ('0' + date.getDate()).slice(-2);
+    var localHour = date.getHours() + '_' + ('0' + date.getMinutes()).slice(-2)
+    var meridian = date.getHours() > 12 ? 'PM' : 'AM'
+    var name = localDate + localHour + meridian
+
+    var _fileTest = new FileTest(name, name, Object.fromEntries(map))   
+
+    console.log(_path + '\\Data\\' + name + '.json');
+    storeFile(_path + '\\Data\\' + name + '.json', _fileTest.JSON)
+}
