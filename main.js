@@ -122,6 +122,7 @@ const projectWindow = (evt, args) =>{
       devTools: true,
     },
     frame: false,
+    show: false,
     backgroundColor: '#383838'
   })
 
@@ -134,6 +135,7 @@ const projectWindow = (evt, args) =>{
   project.on('ready-to-show', () =>{
     // Send the data.
     project.webContents.send('enviar-nombre', args)
+    project.show()
   })
 
   // Close app
