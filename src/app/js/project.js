@@ -260,6 +260,8 @@ function displayGraphs(canales){
 
 // Finish the test.
 stopBtn.addEventListener('click', () =>{
+   
+
     // Kill all the childs created.
     arrChilds.forEach((value, key) => {
         process.kill(key)
@@ -274,6 +276,14 @@ stopBtn.addEventListener('click', () =>{
     // Display Play Button and Hide the Pause Button
     playBtn.classList.remove('d-none','pressed')
     pauseBtn.classList.add('d-none')
+
+    // Redraw the charts.
+    document.querySelectorAll('.main-graph-container').forEach(element => {
+        var device = element.getAttribute('data-device')
+        reDrawChart(_chartsMap.get(`${device}-main`));                
+        reDrawChart(_chartsMap.get(`${device}-accelerometer`));                
+        reDrawChart(_chartsMap.get(`${device}-gyroscope`));
+    });
 });
 
 // Start the test.
@@ -405,7 +415,7 @@ function createCharts(_divs){
         _subgraph.classList.add('subgraph');
 
         // Accelerometer chart
-        _res = drawAccelerometerGyroChart(_device._hex)
+        _res = drawAccelerometerGyroChart(_device._hex, 'Acelerometro')
         _subgraph.appendChild(_res[0]);
         _chartsMap.set(`${_device.id}-accelerometer`, {'chart':_res[1], 'values': [[],[],[]], 'labels': []})
 
@@ -415,7 +425,7 @@ function createCharts(_divs){
         _subgraph.classList.add('subgraph');
 
         // Gyroscope chart
-        _res = drawAccelerometerGyroChart(_device._hex)
+        _res = drawAccelerometerGyroChart(_device._hex, 'Giroscopio')
         _subgraph.appendChild(_res[0]);
         _chartsMap.set(`${_device.id}-gyroscope`, {'chart':_res[1], 'values': [[],[],[]], 'labels': []})
 
@@ -464,6 +474,10 @@ function drawMainChart(color){
                     },
                     limits: {
                         y: {min: 1, max: 100},}
+                },
+                title: {
+                    display: true,
+                    text: 'EMG'
                 }
             },
             transitions: {
@@ -483,7 +497,7 @@ function drawMainChart(color){
 }
 
 // Draw all the Accelerometers and Gyros Charts.
-function drawAccelerometerGyroChart(color){
+function drawAccelerometerGyroChart(color, title){
     const _canvas = document.createElement("canvas");
     const ctx = _canvas.getContext('2d');
 
@@ -539,6 +553,10 @@ function drawAccelerometerGyroChart(color){
                     },
                     limits: {
                         y: {min: 1, max: 100},}
+                },
+                title: {
+                    display: true,
+                    text: title
                 }
             },
             transitions: {
