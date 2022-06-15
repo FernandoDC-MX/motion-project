@@ -1248,10 +1248,10 @@ document.onkeyup = function () {
 
     if(e.ctrlKey && e.which == 68) { //Press CTRL + D
         if(!toggleMenuFlag){
-            toggleMenu.style.width = '0px'
+            toggleMenu.style.width = '60px'
             toggleMenuFlag = 1
         }else{
-            toggleMenu.style.width = '60px'
+            toggleMenu.style.width = '0px'
             toggleMenuFlag = 0
         }
 
@@ -1290,6 +1290,26 @@ function saveData(){
 
     var _fileTest = new FileTest(name, name, Object.fromEntries(map))   
 
-    console.log(_path + '\\Data\\' + name + '.json');
     storeFile(_path + '\\Data\\' + name + '.json', _fileTest.JSON)
+}
+
+document.querySelectorAll('.toggle-menu div').forEach(element => {
+    element.addEventListener('click', function(){
+        if(document.querySelector('.toggle-icon-pressed')){
+            // document.querySelector('.toggle-icon-pressed').classList.add('element')
+            document.querySelector('.toggle-icon-pressed').classList.remove('toggle-icon-pressed')
+        }
+        
+        this.classList.add('toggle-icon-pressed')
+        // this.classList.remove('element')
+
+    })
+})
+
+pdfModal.addEventListener('hidden.bs.modal', function(){
+    cleanToggle()
+})
+
+const cleanToggle = () =>{
+    document.querySelector('.toggle-icon-pressed').classList.remove('toggle-icon-pressed')
 }

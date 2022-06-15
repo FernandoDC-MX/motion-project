@@ -24,6 +24,10 @@
     margin: 0 auto;
 }
 
+.w-600{
+    width: 800px;
+}
+
 
 
 body.modal-open .contentArea{
