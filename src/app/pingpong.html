@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content=
+		"width=device-width, initial-scale=1.0">
+	<title>Ping Pong</title>
+
+	<link rel="stylesheet" href="css/pingpong.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    
+</head>
+
+<body>
+	<div class="board">
+		<div class='ball'>
+			<div class="ball_effect"></div>
+		</div>
+		<div class="paddle_1 paddle"></div>
+		<div class="paddle_2 paddle"></div>
+        <div class="text-center scoreboard">
+            <div>
+                <h1 class="player_1_score player_score">0</h1>
+            </div>
+
+            <div>
+                <h1 class="player_2_score player_score">0</h1>
+            </div>
+
+            <div>
+                <h1 class="message">
+                    Press Enter to Play Pong
+                </h1>
+            </div>
+        </div>
+        
+        <div id="goal-notification">
+            <span>¡</span>
+            <span>G</span>
+            <span>O</span>
+            <span>A</span>
+            <span>L</span>
+            <span>!</span>
+        </div>
+		
+	</div>
+    <div class="left-wall wall"></div>
+    <div class="right-wall wall"></div>
+	
+	<script src="js/pingpong.js"></script>
+</body>
+
+</html>

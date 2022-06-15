@@ -10,7 +10,7 @@ require('electron-reload')(__dirname, {ignored: /Proyectos|[\/\\]\./});
 
 // Master communication (This variable will receive the signals that ipcRenderer sends)
 const ipc = ipcMain
-let mainWindow, project;
+let mainWindow, project, game;
 
 // Splash screen.
 const splashScreen = () =>{
@@ -173,12 +173,31 @@ const projectWindow = (evt, args) =>{
   }) 
 }
 
+const pingpongWindow = () =>{
+  // Create the ping pong window.
+  game = new BrowserWindow({
+    Height:800,
+    Width: 1000,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      devTools: true,
+    },
+    frame: true,
+  })
+
+  game.maximize()
+
+  // and load the index.html of the app.
+  game.loadFile('src/app/pingpong.html')
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Algunas APIs pueden solamente ser usadas despues de que este evento ocurra.
 app.whenReady().then(() => {
-  // createWindow()
-  splashScreen()
+  // splashScreen()
+  pingpongWindow()
   
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

@@ -535,7 +535,7 @@ iframe{
     100% {
       transform: scale(0.2);
     }
-  }
+}
 
 @-webkit-keyframes rotating /* Safari and Chrome */ {
     from {
