@@ -5,20 +5,7 @@ const zoomPlugin = require('chartjs-plugin-zoom');
 const { writeFile } = require('fs');
 const fork = require("child_process").fork
 
-// Variables
-const maxResBtn = document.getElementById('maximizeBtn')
-const _hexColors = ['#F5BD85','#85F5AE','#85C8F5','#F585CC'];
-const ipc = ipcRenderer
-var _path, channels, _musclesTmp;
-
-let iterator = 0;
-let toggleMenuFlag = 0;
-
-// Storage structures
-let _devices = [{'hola': '1'}];
-var _chartsMap = new Map()
-let arrChilds = new Map()
-
+// Classes
 class Device{
     constructor(id, _id_muscle, _muscle_name, _hex, name){
       this.id = id;
@@ -68,6 +55,21 @@ class MasterDevice{
         this.#_slaveDevices.set(mac_address, {'color': color})
     }
 }
+
+// Variables
+const maxResBtn = document.getElementById('maximizeBtn')
+const _hexColors = ['#F5BD85','#85F5AE','#85C8F5','#F585CC'];
+const ipc = ipcRenderer
+var _path, channels, _musclesTmp;
+
+let iterator = 0;
+let toggleMenuFlag = 0;
+
+// Storage structures
+let _devices = [{'hola': '1'}];
+var _chartsMap = new Map()
+let arrChilds = new Map()
+let _master = new MasterDevice()
 
 // Set the window's title.
 ipc.on('enviar-nombre', (e, title) =>{ 
