@@ -4,6 +4,7 @@ let _flag_order_name = 0;
 let _proyectos = [];
 const maxResBtn = document.getElementById('maximizeBtn')
 var projects = document.querySelectorAll('.project')
+const exec = require("child_process").exec;
 const { ipcRenderer } = require('electron')
 const ipc = ipcRenderer
 
@@ -209,3 +210,7 @@ function changeMaximizeBtn(isMaximized){
 
 ipc.on('isMaximized', ()=>{ changeMaximizeBtn(true) })
 ipc.on('isRestored', ()=>{ changeMaximizeBtn(false) })
+
+// testBtn.addEventListener('click', () =>{
+// exec("C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\holi.exe", (error, stdout, stderr) => console.log(stdout));
+// })

@@ -57,6 +57,18 @@ class FileTest{
     }
 }
 
+class MasterDevice{
+    #_slaveDevices;
+
+    constructor(){
+        this.#_slaveDevices = new Map()
+    }
+
+    setNewDevice(mac_address, color){
+        this.#_slaveDevices.set(mac_address, {'color': color})
+    }
+}
+
 // Set the window's title.
 ipc.on('enviar-nombre', (e, title) =>{ 
     document.querySelector('title').innerHTML = title
@@ -648,7 +660,7 @@ function addData(map, label, data) {
 // We will read the files that contains all the data stored by each device.
 function readData(device, div){
     // Path: 
-    var _deviceFolder = _path + '\\Devices\\'+ device.id;
+    var _deviceFolder = _path + '\\Data\\';
 
     // Read the path
     if (fs.existsSync(_deviceFolder)){
@@ -1065,7 +1077,6 @@ linkBtn.addEventListener('click', async () => {
         map.set(_address, _device.JSON);
         _response.Contenido.devices = Object.fromEntries(map)
     }
-    fs.mkdirSync(_path + '\\Devices\\' + _address , { recursive: true });
     storeFile(_path + "\\info.json", _response.Contenido)
     _devices = _response.Contenido.devices
     displayChannels(_response.Contenido.devices)
@@ -1313,3 +1324,4 @@ pdfModal.addEventListener('hidden.bs.modal', function(){
 const cleanToggle = () =>{
     document.querySelector('.toggle-icon-pressed').classList.remove('toggle-icon-pressed')
 }
+
