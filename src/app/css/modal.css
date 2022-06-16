@@ -16,7 +16,7 @@
 }
 
 .h-300{
-    height: 300px;;
+    height: 380px;;
 }
 
 .w-400{
@@ -151,6 +151,10 @@ background: #555;
     color: #fff;
     background-color: #FF7B54;
     border-color: #FF7B54;
+}
+
+.btn-save svg{
+    margin-right: 0.5em;
 }
 
 .btn-clse{

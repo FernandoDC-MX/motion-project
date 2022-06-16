@@ -2,7 +2,6 @@
 const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
-const { writeFile } = require('fs');
 const fork = require("child_process").fork
 const exec = require("child_process").exec
 
@@ -1023,97 +1022,115 @@ document.querySelectorAll('.channel-clickable').forEach(element =>{
 })
 
 // Search devices.
-searchDevicesBtn.addEventListener('click', async () =>{
-    searchDevicesBtn.classList.add('d-none')
+// searchDevicesBtn.addEventListener('click', async () =>{
+//     searchDevicesBtn.classList.add('d-none')
 
-    var _searched = document.querySelector('.searched')
-    _searched.innerHTML = '';
+//     var _searched = document.querySelector('.searched')
+//     _searched.innerHTML = '';
 
-    var _founded = document.createElement('p');
-    _founded.classList.add('color-description','d-none', 'mx-3', 'mt-4','mb-0')
+//     var _founded = document.createElement('p');
+//     _founded.classList.add('color-description','d-none', 'mx-3', 'mt-4','mb-0')
 
-    _searched.appendChild(_founded)
+//     _searched.appendChild(_founded)
 
-    var _div = searchDevicesBtn.parentNode.parentNode.querySelector('.d-flex');
-    _div.classList.remove('d-none')
+//     var _div = searchDevicesBtn.parentNode.parentNode.querySelector('.d-flex');
+//     _div.classList.remove('d-none')
 
-    var _loading = searchDevicesBtn.parentNode.parentNode.querySelector('.loading');
-    _loading.style.animation = 'rotating 2s linear infinite';
+//     var _loading = searchDevicesBtn.parentNode.parentNode.querySelector('.loading');
+//     _loading.style.animation = 'rotating 2s linear infinite';
 
-    var _cont = 0;
+//     var _cont = 0;
 
-    for(let i = 0; i < 4; i++){
-        await sleep(500)
-        const _address = '192.212.100.' + i
+//     for(let i = 0; i < 4; i++){
+//         await sleep(500)
+//         const _address = '192.212.100.' + i
 
-        var _sub = document.createElement('div');
-        _sub.setAttribute('data-mac', _address)
-        _sub.setAttribute('data-bs-toggle',"modal")
-        _sub.setAttribute('data-bs-target',"#linkModal")
+//         var _sub = document.createElement('div');
+//         _sub.setAttribute('data-mac', _address)
+//         _sub.setAttribute('data-bs-toggle',"modal")
+//         _sub.setAttribute('data-bs-target',"#linkModal")
     
-        var _p = document.createElement('p');
-        _p.innerText = 'MAC Address: ' + _sub.getAttribute('data-mac')
-        _p.setAttribute('title', _p.innerText)
+//         var _p = document.createElement('p');
+//         _p.innerText = 'MAC Address: ' + _sub.getAttribute('data-mac')
+//         _p.setAttribute('title', _p.innerText)
 
-        _sub.appendChild(_p)
-        // Display the element in founded zone.
-        if(!_devices || !(_address in _devices)){
-            _sub.classList.add('founded')
-            _searched.appendChild(_sub)
-            setAddress()
-            _cont++;
-            displayLinked(_devices)
-        }
-    }
+//         _sub.appendChild(_p)
+//         // Display the element in founded zone.
+//         if(!_devices || !(_address in _devices)){
+//             _sub.classList.add('founded')
+//             _searched.appendChild(_sub)
+//             setAddress()
+//             _cont++;
+//             displayLinked(_devices)
+//         }
+//     }
 
-    _div.classList.add('d-none')
-    _founded.classList.remove('d-none')
-    _founded.innerText = 'Encontrados: ' + _cont;
-    searchDevicesBtn.classList.remove('d-none')
-    _loading.style.animation = '';
+//     _div.classList.add('d-none')
+//     _founded.classList.remove('d-none')
+//     _founded.innerText = 'Encontrados: ' + _cont;
+//     searchDevicesBtn.classList.remove('d-none')
+//     _loading.style.animation = '';
 
-});
+// });
 
 // Link event.
 linkBtn.addEventListener('click', async () => {
-    linkBtn.parentNode.classList.add('d-none')
-    linkBtn.parentNode.nextElementSibling.classList.remove('d-none')
-    linkBtn.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Espera a que el dispositivo se vincule con el proyecto.';
+    var _address = document.querySelector('#_deviceMac').value;
+    var _name = document.querySelector('#_deviceName').value;
 
-    var _address = document.querySelector('#linkModal .modal-title').innerText.replace('Vincular dispositivo ', '')
-    var _device = new Device(_address, null, null, _hexColors[pickColor()], _address)
+    if(_name && _address){
+        linkBtn.parentNode.parentNode.parentNode.classList.add('d-none')
+        linkBtn.parentNode.parentNode.parentNode.nextElementSibling.classList.remove('d-none')
+        linkBtn.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Espera a que el dispositivo se vincule con el proyecto.';
 
-    await sleep(1500)
-
-    _master.setNewDevice(_address,_device)
-    var _response = readFile(_path + "\\info.json")
-    
-    if(_response.Contenido.devices){
-        var _tmp = _response.Contenido.devices;
-        _tmp[_address] = _device.JSON;
-        _response.Contenido.devices = _tmp
         
+
+        var _device = new Device(_address, null, null, _hexColors[pickColor()], _name)
+
+        await sleep(1500)
+
+        _master.setNewDevice(_address,_device)
+
+        var _response = readFile(_path + "\\info.json")
+        
+        if(_response.Contenido.devices){
+            var _tmp = _response.Contenido.devices;
+            _tmp[_address] = _device.JSON;
+            _response.Contenido.devices = _tmp
+            
+        }else{
+            var map = new Map()
+            map.set(_address, _device.JSON);
+            _response.Contenido.devices = Object.fromEntries(map)
+        }
+
+        storeFile(_path + "\\info.json", _response.Contenido)
+        _devices = _response.Contenido.devices
+        displayChannels(_response.Contenido.devices)
+        displayGraphs(_response.Contenido.devices);
+        displayLinked(_devices)
+        show('success', 'Dispositivo vinculado correctamente.')
+
+        linkClose.click()
+
+        // Restore animation modal
+        linkBtn.parentNode.parentNode.parentNode.classList.remove('d-none')
+        linkBtn.parentNode.parentNode.parentNode.nextElementSibling.classList.add('d-none')
+        linkBtn.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Presiona el botón para empezar la vinculación del dispositivo.';
+        console.log(_master)
     }else{
-        var map = new Map()
-        map.set(_address, _device.JSON);
-        _response.Contenido.devices = Object.fromEntries(map)
+        if(!_name){
+            document.querySelector('#errorName').innerText = 'Este campo es obligatorio';
+        }else{
+            document.querySelector('#errorName').innerText = '';
+        }
+
+        if(!_address){
+            document.querySelector('#errorMac').innerText = 'Este campo es obligatorio';
+        }else{
+            document.querySelector('#errorMac').innerText = '';
+        }
     }
-
-    storeFile(_path + "\\info.json", _response.Contenido)
-    _devices = _response.Contenido.devices
-    displayChannels(_response.Contenido.devices)
-    displayGraphs(_response.Contenido.devices);
-    displayLinked(_devices)
-    show('success', 'Dispositivo vinculado correctamente.')
-    document.querySelector(`[data-mac="${_address}"]`).remove()
-
-    linkClose.click()
-
-    // Restore animation modal
-    linkBtn.parentNode.classList.remove('d-none')
-    linkBtn.parentNode.nextElementSibling.classList.add('d-none')
-    linkBtn.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Presiona el botón para empezar la vinculación del dispositivo.';
-    console.log(_master)
 })
 
 // Return a color that has not been selected yet.
@@ -1341,6 +1358,14 @@ function saveData(){
 
 pdfModal.addEventListener('hidden.bs.modal', function(){
     cleanToggle()
+})
+
+linkModal.addEventListener('hidden.bs.modal', function(){
+    document.querySelector('#_deviceMac').value = '';
+    document.querySelector('#_deviceName').value = '';
+
+    document.querySelector('#errorName').innerText = '';
+    document.querySelector('#errorMac').innerText = '';
 })
 
 const cleanToggle = () =>{

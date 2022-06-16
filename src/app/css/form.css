@@ -6,6 +6,13 @@
     font-family: 'Rubik';
 }
 
+.form-group-sm{
+    width: 100%;
+    margin: 1.2em 0;
+    background: transparent;
+    font-family: 'Rubik';
+}
+
 .form-group .form-input{
     width: 100%;
     height: 100%;
@@ -18,8 +25,32 @@
     color: #FF7B54;
 }
 
+.form-group-sm .form-input{
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    background: none;
+    border-style: none none solid none;
+    border-color: #cecece;
+    transition: all 0.5s;
+    padding: 5px;
+    color: #FF7B54;
+}
+
+
+
 .form-group .form-label{
     font-size: 1em;
+    display: block;
+    opacity: 1;
+    transform: translate(0.2em, -2em);
+    transform-origin: 0 0;
+    transition: all 0.3s;
+    user-select: none;
+}
+
+.form-group-sm .form-label{
+    font-size: 0.9em;
     display: block;
     opacity: 1;
     transform: translate(0.2em, -2em);
@@ -32,7 +63,17 @@
     color: transparent;
 }
 
+.form-group-sm .form-input::placeholder{
+    color: transparent;
+}
+
 .form-group .form-input:focus{
+    box-shadow: none;
+    outline: none;
+    border-color: #ffffff;
+}
+
+.form-group-sm .form-input:focus{
     box-shadow: none;
     outline: none;
     border-color: #ffffff;
