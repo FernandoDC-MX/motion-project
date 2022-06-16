@@ -205,7 +205,6 @@ body {
     }
 }
 
-
 @keyframes wave {
     0% {
       transform: scale(0.5) rotate(16deg);

@@ -501,7 +501,9 @@ animation-delay: 0.9s;
     padding: 1em;
     cursor: pointer;
     transition: 0.1s all ease-in-out;
-    border: 0px solid transparent
+    border-style: none none none solid;
+    border-color: transparent;
+    border-width: 1px;
 }
 
 .toggle-menu .element:hover{
