@@ -158,6 +158,10 @@ const projectWindow = (evt, args) =>{
       ipc.removeAllListeners('maximizeRestoreProject');
   })
 
+  ipc.on('startPong', () =>{
+    pingpongWindow()
+  })
+
   // Maximize app
   ipc.on('maximizeRestoreProject', ()=>{
     if(project.isMaximized()){

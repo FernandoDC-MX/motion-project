@@ -1372,3 +1372,6 @@ const cleanToggle = () =>{
     document.querySelector('.toggle-icon-pressed').classList.remove('toggle-icon-pressed')
 }
 
+pongBtn.addEventListener('click', () =>{
+    ipc.send('startPong');
+})
