@@ -4,6 +4,7 @@ const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
 const { writeFile } = require('fs');
 const fork = require("child_process").fork
+const exec = require("child_process").exec
 
 // Classes
 class Device{
@@ -51,8 +52,24 @@ class MasterDevice{
         this.#_slaveDevices = new Map()
     }
 
-    setNewDevice(mac_address, color){
-        this.#_slaveDevices.set(mac_address, {'color': color})
+    setNewDevice(mac_address, Device){
+        this.#_slaveDevices.set(mac_address, Device)
+        this.setSettingsDevice(this.#_slaveDevices.get(mac_address))
+    }
+
+    setSettingsDevice(_slaveDevice){
+        if(_slaveDevice){
+            exec(`C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\hello.exe ${_slaveDevice._hex}` , (error, stdout, stderr) =>{
+                if(!error){
+                    return 0;
+                }else{
+                    return 1;
+                }
+            });
+            
+        }else{
+            return {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}
+        }
     }
 }
 
@@ -1067,6 +1084,8 @@ linkBtn.addEventListener('click', async () => {
     var _device = new Device(_address, null, null, _hexColors[pickColor()], _address)
 
     await sleep(1500)
+
+    _master.setNewDevice(_address,_device)
     var _response = readFile(_path + "\\info.json")
     
     if(_response.Contenido.devices){
@@ -1079,6 +1098,7 @@ linkBtn.addEventListener('click', async () => {
         map.set(_address, _device.JSON);
         _response.Contenido.devices = Object.fromEntries(map)
     }
+
     storeFile(_path + "\\info.json", _response.Contenido)
     _devices = _response.Contenido.devices
     displayChannels(_response.Contenido.devices)
@@ -1093,7 +1113,7 @@ linkBtn.addEventListener('click', async () => {
     linkBtn.parentNode.classList.remove('d-none')
     linkBtn.parentNode.nextElementSibling.classList.add('d-none')
     linkBtn.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Presiona el botón para empezar la vinculación del dispositivo.';
-
+    console.log(_master)
 })
 
 // Return a color that has not been selected yet.
@@ -1306,18 +1326,18 @@ function saveData(){
     storeFile(_path + '\\Data\\' + name + '.json', _fileTest.JSON)
 }
 
-document.querySelectorAll('.toggle-menu div').forEach(element => {
-    element.addEventListener('click', function(){
-        if(document.querySelector('.toggle-icon-pressed')){
-            // document.querySelector('.toggle-icon-pressed').classList.add('element')
-            document.querySelector('.toggle-icon-pressed').classList.remove('toggle-icon-pressed')
-        }
+// document.querySelectorAll('.toggle-menu div').forEach(element => {
+//     element.addEventListener('click', function(){
+//         if(document.querySelector('.toggle-icon-pressed')){
+//             // document.querySelector('.toggle-icon-pressed').classList.add('element')
+//             document.querySelector('.toggle-icon-pressed').classList.remove('toggle-icon-pressed')
+//         }
         
-        this.classList.add('toggle-icon-pressed')
-        // this.classList.remove('element')
+//         this.classList.add('toggle-icon-pressed')
+//         // this.classList.remove('element')
 
-    })
-})
+//     })
+// })
 
 pdfModal.addEventListener('hidden.bs.modal', function(){
     cleanToggle()
