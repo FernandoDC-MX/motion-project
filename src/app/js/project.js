@@ -730,6 +730,10 @@ closeBtn.addEventListener('click', () =>{
 })
 
 outBtn.addEventListener('click', () =>{
+    // Kill all the childs created.
+    arrChilds.forEach((value, key) => {
+        process.kill(key)
+    });
     ipc.send('closeProject')
 })
 
