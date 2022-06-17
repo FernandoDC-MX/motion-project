@@ -1326,6 +1326,21 @@ document.onkeyup = function () {
     }
 }
 
+// Toggle menu button
+_toggleMenu.addEventListener('click', () =>{
+    let toggleMenu = document.querySelector('.toggle-menu')
+
+    if(!toggleMenuFlag){
+        toggleMenu.style.width = '60px'
+        toggleMenuFlag = 1
+    }else{
+        toggleMenu.style.width = '0px'
+        toggleMenuFlag = 0
+    }
+
+    return false;
+})
+
 function saveData(){
     var _graphs = document.querySelectorAll('.main-graph-container');
     var map = new Map();
