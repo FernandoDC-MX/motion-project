@@ -138,9 +138,11 @@ const projectWindow = (evt, args) =>{
   })
 
   // Close app
-  ipc.on('closeProject', ()=>{
-    mainWindow.show()
+  ipc.on('closeProject', (evt, msg)=>{
     project.close()
+    
+    msg ? app.quit() : mainWindow.show()
+
   })
 
    // Minimize app
@@ -200,7 +202,6 @@ const pingpongWindow = () =>{
 // Algunas APIs pueden solamente ser usadas despues de que este evento ocurra.
 app.whenReady().then(() => {
   splashScreen()
-  // pingpongWindow()
   
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

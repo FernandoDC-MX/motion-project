@@ -722,7 +722,7 @@ function reDrawChart(map){
 // Close the window.
 closeBtn.addEventListener('click', () =>{
     if(!playBtn.classList.contains('d-none')){
-        ipc.send('closeProject')
+        ipc.send('closeProject', 1)
     }    
     else{
         document.querySelector('.hd-close').click()
@@ -735,6 +735,10 @@ outBtn.addEventListener('click', () =>{
         process.kill(key)
     });
     ipc.send('closeProject')
+})
+
+homeBtn.addEventListener('click', () =>{
+    ipc.send('closeProject',0)
 })
 
 // Minimize the window.
