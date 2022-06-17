@@ -60,7 +60,7 @@ class MasterDevice{
 
     setSettingsDevice(_slaveDevice){
         if(_slaveDevice){
-            exec(`C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\hello.exe COL ${_slaveDevice._index}` , (error, stdout, stderr) =>{
+            exec(`C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\colorScript.exe COL ${_slaveDevice._index}` , (error, stdout, stderr) =>{
                 if(!error){
                     return 0;
                 }else{
