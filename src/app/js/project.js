@@ -191,11 +191,11 @@ function displayChannels(canales){
 
             var _sub = document.createElement('div');
             _sub.classList.add('text-center', 'battery-container')
-            _sub.style.border= `1px solid ${_config._hex}`
 
             var _p = document.createElement('p');
+            _p.classList.add('text-center')
             _p.style.color = _config._hex;
-            _p.innerHTML = '94'
+            _p.innerHTML = '94 %'
 
             _sub.appendChild(_p)
 
@@ -228,26 +228,23 @@ function displayLinked(devices){
             const [key, value] = entry;
 
             var _div = document.createElement('div');
-            _div.classList.add('col-8')
+            _div.classList.add('px-3','py-2')
 
             var _p = document.createElement('p');
+            _p.classList.add('m-0')
             _p.style.color = devices[key]._hex;
             _p.innerText = devices[key].name;
 
             _div.appendChild(_p);
 
-            _linked.appendChild(_div)
 
-            var _div = document.createElement('div');
-            _div.classList.add('col-4')
-
-            var _p = document.createElement('button');
-            _p.classList.add('btn-circle-xs')
+            var _p = document.createElement('p');
+            _p.classList.add('m-0')
+            _p.innerText = 'Conectado';
 
             _div.appendChild(_p);
 
             _linked.appendChild(_div)
-
         });
     }
 }
@@ -1394,4 +1391,10 @@ const cleanToggle = () =>{
 
 pongBtn.addEventListener('click', () =>{
     ipc.send('startPong');
+})
+
+devicesBtn.addEventListener('click', () =>{
+    var tmp = document.querySelector('.vinculados');
+
+    tmp.classList.contains('d-none') ? tmp.classList.remove('d-none') : tmp.classList.add('d-none')
 })

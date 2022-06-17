@@ -11,4 +11,16 @@
 @font-face {
     font-family: 'Rubik';
     src: url('../fonts/Rubik/Rubik-Regular.woff') /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
-}  
+}
+
+.font-size-2{
+    font-size: 1.1em;
+}
+
+.font-rubik{
+    font-family: 'Rubik';
+}
+
+.font-roboto{
+    font-family: 'Roboto';
+}

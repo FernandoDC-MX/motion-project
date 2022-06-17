@@ -347,7 +347,7 @@ html, body{
     font-family: 'Rubik';
 }
 
-.searched div p, .linked div p{
+.searched div p{
     width: 85%;
     margin: 0 auto;
     overflow:hidden;
@@ -357,6 +357,18 @@ html, body{
     transition: 0.2s all ease-in-out;
     padding: 0.75em 0;
 }
+
+.linked div p{
+    width: 85%;
+    margin: 0 auto;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+    transition: 0.2s all ease-in-out;
+    padding: 0;
+    font-family: 'Rubik';
+}
+
 
 .searched div:hover{
     background: rgb(48, 48, 48);
@@ -493,6 +505,7 @@ animation-delay: 0.9s;
     z-index: 1;
     transition: 0.2s all ease-in-out;
     user-select: none;
+    overflow: hidden;
 }
 
 .toggle-menu .element{

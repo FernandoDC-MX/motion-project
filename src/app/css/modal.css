@@ -143,6 +143,10 @@ background: #555;
     color: #808080;
 }
 
+.color-text{
+    color: #f8f8f8;
+}
+
 .text-end{
     text-align: end;
 }
