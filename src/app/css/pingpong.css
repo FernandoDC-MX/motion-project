@@ -3,6 +3,7 @@
 	padding: 0;
 	box-sizing: border-box;
     overflow: hidden;
+    font-family: 'Rubik';
 }
 
 body {
@@ -67,13 +68,12 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 0.25em;
-    animation: score 4s forwards;
 }
 
 .player_1_score {
 	height: 50px;
 	width: 50px;
-	left: 30vw;
+	left: 28vw;
     background: white;
 }
 
@@ -90,7 +90,7 @@ body {
 	height: 10vh;
 	width: 30vw;
 	color: #c9cbff;
-	left: 38vw;
+	left: 44vw;
 	margin: 30px auto auto auto;
 }
 
