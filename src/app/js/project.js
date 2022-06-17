@@ -7,11 +7,12 @@ const exec = require("child_process").exec
 
 // Classes
 class Device{
-    constructor(id, _id_muscle, _muscle_name, _hex, name){
+    constructor(id, _id_muscle, _muscle_name, _hex, _index, name){
       this.id = id;
       this._id_muscle = _id_muscle;
       this._muscle_name = _muscle_name;
       this._hex = _hex;
+      this._index = _index
       this.name = name
     }
   
@@ -22,6 +23,7 @@ class Device{
               "_muscle_name": this._muscle_name,
               "_id_muscle": this._id_muscle,
               "_hex": this._hex,
+              "_index": this._index,
               "name": this.name
           }
     }
@@ -58,7 +60,7 @@ class MasterDevice{
 
     setSettingsDevice(_slaveDevice){
         if(_slaveDevice){
-            exec(`C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\hello.exe ${_slaveDevice._hex}` , (error, stdout, stderr) =>{
+            exec(`C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\hello.exe COL ${_slaveDevice._index}` , (error, stdout, stderr) =>{
                 if(!error){
                     return 0;
                 }else{
@@ -719,6 +721,15 @@ function reDrawChart(map){
 
 // Close the window.
 closeBtn.addEventListener('click', () =>{
+    if(!playBtn.classList.contains('d-none')){
+        ipc.send('closeProject')
+    }    
+    else{
+        document.querySelector('.hd-close').click()
+    }
+})
+
+outBtn.addEventListener('click', () =>{
     ipc.send('closeProject')
 })
 
@@ -1074,6 +1085,7 @@ document.querySelectorAll('.channel-clickable').forEach(element =>{
 // });
 
 // Link event.
+
 linkBtn.addEventListener('click', async () => {
     var _address = document.querySelector('#_deviceMac').value;
     var _name = document.querySelector('#_deviceName').value;
@@ -1083,9 +1095,9 @@ linkBtn.addEventListener('click', async () => {
         linkBtn.parentNode.parentNode.parentNode.nextElementSibling.classList.remove('d-none')
         linkBtn.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Espera a que el dispositivo se vincule con el proyecto.';
 
-        
+        var color = pickColor()
 
-        var _device = new Device(_address, null, null, _hexColors[pickColor()], _name)
+        var _device = new Device(_address, null, null, _hexColors[color], color + 1, _name)
 
         await sleep(1500)
 

@@ -3,7 +3,6 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
-let flag_reopen = 0;
 
 // Enable live reload for all the files inside your project directory
 require('electron-reload')(__dirname, {ignored: /Proyectos|[\/\\]\./});
@@ -200,8 +199,8 @@ const pingpongWindow = () =>{
 // initialization and is ready to create browser windows.
 // Algunas APIs pueden solamente ser usadas despues de que este evento ocurra.
 app.whenReady().then(() => {
-  // splashScreen()
-  pingpongWindow()
+  splashScreen()
+  // pingpongWindow()
   
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

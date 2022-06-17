@@ -163,6 +163,13 @@ background: #555;
     border-color: #808080;
 }
 
+#main-notification .modal-content{
+    width: 50%;
+    height: 315px;
+    margin: 0 auto;
+    font-family: 'Rubik';
+}
+
 @media (min-width: 576px){
     .modal-dialog {
         max-width: 900px;
