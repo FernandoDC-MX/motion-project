@@ -80,7 +80,7 @@ async function moveBall(dx, dy, dxd, dyd) {
 		dy = Math.floor(Math.random() * 4) + 3;
 	}
 
-	// If the ball touch one of the sides...
+	// Goal
 	if ( ball_coord.left <= board_coord.left || ball_coord.right >= board_coord.right){
 
 		// Increase the score.
@@ -91,15 +91,8 @@ async function moveBall(dx, dy, dxd, dyd) {
 		}
 
 		// Animation enter
-		document.querySelector('.left-wall').style.animation = 'left-animation-enter 0.2s linear forwards'
-		document.querySelector('.right-wall').style.animation = 'right-animation-enter 0.2s linear forwards'
 		document.querySelector('#goal-notification').style.animation = 'pop-enter 1.7s linear';
 		await sleep(1700)
-
-		// Animation leave
-		document.querySelector('.left-wall').style.animation = 'left-animation-leave 0.5s linear forwards'
-		document.querySelector('.right-wall').style.animation = 'right-animation-leave 0.5s linear forwards'
-		await sleep(501)
 
 		// Change flag state.
 		gameState = 'start';
@@ -110,7 +103,6 @@ async function moveBall(dx, dy, dxd, dyd) {
 
 		// Change message displayed on the top border.
 		message.innerHTML = 'Presiona Enter';
-		message.style.left = 38 + 'vw';
 
 		return;
 	}

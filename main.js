@@ -200,8 +200,8 @@ const pingpongWindow = () =>{
 // initialization and is ready to create browser windows.
 // Algunas APIs pueden solamente ser usadas despues de que este evento ocurra.
 app.whenReady().then(() => {
-  splashScreen()
-  // pingpongWindow()
+  // splashScreen()
+  pingpongWindow()
   
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

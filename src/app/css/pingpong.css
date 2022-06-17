@@ -4,6 +4,7 @@
 	box-sizing: border-box;
     overflow: hidden;
     font-family: 'Rubik';
+    user-select: none;
 }
 
 body {
@@ -18,8 +19,8 @@ body {
 .board {
 	height: 95%;
 	width: 95%;
-    border: 3px solid#3b6c28;
-	background-image: linear-gradient(to right, #567d4627, #3b6c2830);
+    border: 3px solid#F8F8F8;
+	background-image: linear-gradient(to right, #80808046, #80808026);
 	border-radius: 14px;
 }
 
@@ -45,18 +46,17 @@ body {
 	width: 18px;
     border-radius: 0.35em;
 	position: fixed;
+    background: #F8F8F8;
 }
 
 .paddle_1 {
 	top: calc(7.5vh + 55px);
 	left: calc(3vw);
-    background: #F5BD85;
 }
 
 .paddle_2 {
 	top: calc(85vh + 7.5vh - 100px - 55px);
 	right: calc(3vw);
-	background: #85F5AE;
 }
 
 .player_score{
@@ -89,7 +89,7 @@ body {
 	/* color: #48426d; */
 	height: 10vh;
 	width: 30vw;
-	color: #c9cbff;
+	color: #f8f8f8;
 	left: 44vw;
 	margin: 30px auto auto auto;
 }
@@ -153,57 +153,6 @@ body {
     animation-delay: 0.5s;
 }
 
-.wall{
-    position: absolute;
-    width: 50%;
-    height: 100%;
-}
-
-.left-wall{
-    left: -50%;
-    background: red;
-}
-
-.right-wall{
-    left: 100%;
-    background: blue;
-}
-
-@keyframes left-animation-enter{
-    0%{
-        left: -50%;   
-    }
-    100%{
-        left: 0%;
-    }
-}
-
-@keyframes left-animation-leave{
-    0%{
-        left: 0%;   
-    }
-    100%{
-        left: -50%;
-    }
-}
-
-@keyframes right-animation-enter{
-    0%{
-        left: 100%;   
-    }
-    100%{
-        left: 50%;
-    }
-}
-
-@keyframes right-animation-leave {
-    0%{
-        left: 50%;   
-    }
-    100%{
-        left: 100%;
-    }
-}
 
 @keyframes wave {
     0% {
