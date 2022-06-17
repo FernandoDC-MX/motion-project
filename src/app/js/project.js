@@ -1376,9 +1376,17 @@ function saveData(){
 }
 
 document.querySelectorAll('.toggle-menu div').forEach(element => {
-    element.addEventListener('click', function(){
+    element.addEventListener('click', function(){        
         if(document.querySelector('.toggle-icon-pressed')){
             // document.querySelector('.toggle-icon-pressed').classList.add('element')
+
+            if(document.querySelector('.toggle-icon-pressed').getAttribute('id') === 'devicesBtn'){
+               
+                document.querySelector('.vinculados').click()
+                document.querySelector('.vinculados').nextElementSibling.classList.add('d-none')
+                document.querySelector('.vinculados').classList.add('d-none')
+            }
+
             document.querySelector('.toggle-icon-pressed').classList.remove('toggle-icon-pressed')
         }
         
