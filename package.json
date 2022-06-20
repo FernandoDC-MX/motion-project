@@ -1,7 +1,7 @@
 {
-  "name": "motion",
+  "name": "e-moon",
   "version": "1.0.0",
-  "description": "Motion project",
+  "description": "E-Moon",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

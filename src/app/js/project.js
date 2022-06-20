@@ -1021,17 +1021,16 @@ btnCloseSettings.addEventListener('click', async () =>{
 // CSS event: Displays a zone.
 document.querySelectorAll('.channel-clickable').forEach(element =>{
     element.addEventListener('click', () =>{
+
         var svg = element.querySelector('.arrow-svg');
         var _sibling = element.nextElementSibling;
 
-
         if(_sibling.classList.contains('d-none')){
             _sibling.classList.remove('d-none')
-            svg.style.transform = 'rotate(180deg)'
+            svg.style.transform = 'rotate(0deg)'
         }else{
             _sibling.classList.add('d-none')
-            _sibling.style.height = '100px'
-            svg.style.transform = 'rotate(0deg)'
+            svg.style.transform = 'rotate(180deg)'
         }
 
     })
@@ -1378,11 +1377,12 @@ function saveData(){
 document.querySelectorAll('.toggle-menu div').forEach(element => {
     element.addEventListener('click', function(){        
         if(document.querySelector('.toggle-icon-pressed')){
-            // document.querySelector('.toggle-icon-pressed').classList.add('element')
 
             if(document.querySelector('.toggle-icon-pressed').getAttribute('id') === 'devicesBtn'){
-               
-                document.querySelector('.vinculados').click()
+                
+                // document.querySelector('.vinculados').click()
+
+                document.querySelector('.vinculados .arrow-svg').style.transform = 'rotate(0deg)'
                 document.querySelector('.vinculados').nextElementSibling.classList.add('d-none')
                 document.querySelector('.vinculados').classList.add('d-none')
             }
@@ -1391,8 +1391,6 @@ document.querySelectorAll('.toggle-menu div').forEach(element => {
         }
         
         this.classList.add('toggle-icon-pressed')
-        // this.classList.remove('element')
-
     })
 })
 
@@ -1418,6 +1416,6 @@ pongBtn.addEventListener('click', () =>{
 
 devicesBtn.addEventListener('click', () =>{
     var tmp = document.querySelector('.vinculados');
-
+    tmp.nextElementSibling.classList.remove('d-none')
     tmp.classList.contains('d-none') ? tmp.classList.remove('d-none') : tmp.classList.add('d-none')
 })

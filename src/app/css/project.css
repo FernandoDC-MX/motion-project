@@ -120,6 +120,8 @@ html, body{
 
 .cls-h{fill:none;stroke:rgb(255, 255, 255);stroke-linecap:round;stroke-linejoin:round;stroke-width:10px;}
 
+.cls-w{fill: gray;}
+
 .cls-2{
     fill:#f8f8f8;
     cursor: pointer;
