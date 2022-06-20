@@ -19,8 +19,14 @@ let dy = Math.floor(Math.random() * 4) + 3;
 let dxd = Math.floor(Math.random() * 2);
 let dyd = Math.floor(Math.random() * 2);
 
+const meta = '1';
+
 document.addEventListener('keydown', (e) => {
 	if (e.key == 'Enter') {
+		if(score_1.innerHTML === meta || score_2.innerHTML === meta){
+			score_1.innerHTML = 0;
+			score_2.innerHTML = 0;
+		}
 		gameState = gameState == 'start' ? 'play' : 'start';
 		if (gameState == 'play') {
 			document.querySelector('#goal-notification').style.animation = '';
@@ -82,6 +88,11 @@ async function moveBall(dx, dy, dxd, dyd) {
 
 	// Goal
 	if ( ball_coord.left <= board_coord.left || ball_coord.right >= board_coord.right){
+		
+
+		// Reset the ball's coords.
+		ball_coord = initial_ball_coord;
+		ball.style = initial_ball.style;
 
 		// Increase the score.
 		if (ball_coord.left <= board_coord.left) {
@@ -94,15 +105,23 @@ async function moveBall(dx, dy, dxd, dyd) {
 		document.querySelector('#goal-notification').style.animation = 'pop-enter 1.7s linear';
 		await sleep(1700)
 
+		if(score_1.innerHTML === meta){
+			alert('Ganó jugador 1')
+			score_1.innerHTML = 0;
+			score_2.innerHTML = 0;
+		}
+		else if(score_2.innerHTML === meta){
+			alert('Ganó jugador 2')
+			score_1.innerHTML = 0;
+			score_2.innerHTML = 0;
+		}
+
 		// Change flag state.
 		gameState = 'start';
-
-		// Reset the ball's coords.
-		ball_coord = initial_ball_coord;
-		ball.style = initial_ball.style;
-
+		
 		// Change message displayed on the top border.
 		message.innerHTML = 'Presiona Enter';
+
 
 		return;
 	}

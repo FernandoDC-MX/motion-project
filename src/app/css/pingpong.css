@@ -99,7 +99,7 @@ body {
 }
 
 #goal-notification{
-    background: none;
+    background: transparent;
     width: 50%;
     height: 25vh;
     color: white;
