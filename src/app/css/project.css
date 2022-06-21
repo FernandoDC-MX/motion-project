@@ -6,6 +6,7 @@ html, body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #949AA7;
     background-color: #383839;
+    
 }
 
 .main-container{
@@ -585,7 +586,6 @@ iframe{
         width: 70px;
     }
 
-    
     .d-charts button{
         margin: 0.25em;
     }
@@ -608,6 +608,19 @@ iframe{
 
     .d-charts button{
         margin: 0.5em;
+    }
+    
+    .d-charts{
+        width: 13%;
+        height: 55px;
+        position: absolute;
+        bottom: 0;
+        margin-left: 1em;
+    }
+
+    .content-area .channels{
+        width: 18%;
+        background: #383838;
     }
 
 }

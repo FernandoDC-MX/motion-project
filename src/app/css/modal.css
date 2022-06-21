@@ -167,22 +167,76 @@ background: #555;
     border-color: #808080;
 }
 
-#fileExplorer .col-2{
+#fileExplorer{
+    user-select: none;
+}
+
+#fileExplorer .files{
+    height: 96%;
+    width: 100%;
+    background: #282828 ;
+}
+
+#fileExplorer .files .col-2{
+    border-style: none solid none none;
+    border-color: #2c2c2c;
+    border-width: 1px;
+    background: #2c2c2c;
+    font-family: 'Roboto';
+    color: #F8F8F8;
+}
+
+#fileExplorer .files .col-2 .row{
+    cursor: pointer;
+    transition: 0.1s all ease-in-out;
+    border-style: none solid none none;
+    border-color: transparent;
+    border-width: 1px;
+}
+
+#fileExplorer .files .col-2 .row span{
+    position: relative;
+    top: 2px;
+    font-size: 1rem;
+}
+
+
+#fileExplorer .files .col-2 .row:hover{
+    background: #64646428;
+    border-color: #FF7B54;
+}
+
+
+#fileExplorer .info{
+    height: 4%;
+    width: 100%;
+    background: #383838;
+    padding: 0.75em;
+}
+
+#fileExplorer .info svg:hover{
+    fill: #FF7B54;
+    cursor: pointer;
+}
+#fileExplorer table{
+    color: #F8F8F8;
+}
+
+#fileExplorer table thead tr th{
     border-style: none solid none none;
     border-width: 1px;
-    border-color: #474343;
+    border-color: whitesmoke;
 }
 
-#fileExplorer .col-2 div{
-    font-family: 'Roboto';
-    padding: 0.75em;
-    font-size: 1.1rem;
+#fileExplorer table tbody tr:hover{
+    background: #31313139;
+    color: #FF7B54;
     cursor: pointer;
-    background: none;
 }
 
-#fileExplorer .col-2 div:hover{
-    background: rgba(0, 0, 0, 0.173);
+#fileExplorer table tbody tr:hover{
+    background: #31313139;
+    cursor: pointer;
 }
 
 #main-notification .modal-content{

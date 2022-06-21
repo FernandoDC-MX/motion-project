@@ -1398,6 +1398,10 @@ pdfModal.addEventListener('hidden.bs.modal', function(){
     cleanToggle()
 })
 
+fileExplorer.addEventListener('hidden.bs.modal', function(){
+    cleanToggle()
+})
+
 linkModal.addEventListener('hidden.bs.modal', function(){
     document.querySelector('#_deviceMac').value = '';
     document.querySelector('#_deviceName').value = '';
