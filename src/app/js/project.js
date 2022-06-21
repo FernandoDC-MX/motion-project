@@ -1405,6 +1405,7 @@ fileExplorer.addEventListener('hidden.bs.modal', function(){
 
 fileExplorer.addEventListener('shown.bs.modal', function(){
     const response =  readDataFolder(_path + '\\Data');
+
     if(response.length){
         let tbody = document.querySelector('#fileExplorer table tbody')
         tbody.innerHTML = '';
@@ -1443,6 +1444,22 @@ fileExplorer.addEventListener('shown.bs.modal', function(){
     }
 
     document.querySelector('.waiting').classList.add('d-none');
+})
+
+document.querySelectorAll('#fileExplorer .files .col-2 div').forEach(element => {
+    console.log(element)
+})
+
+
+listFiles.addEventListener('click', function(){
+    this.nextElementSibling.classList.remove('selected-svg')
+    this.classList.add('selected-svg')
+
+})
+
+imgFiles.addEventListener('click', function(){
+    this.previousElementSibling.classList.remove('selected-svg')
+    this.classList.add('selected-svg')
 })
 
 function readDataFolder(){

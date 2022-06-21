@@ -41,7 +41,6 @@ function readDataFolder(_path){
     if(fs.readdirSync(_path).length){
         fs.readdirSync(_path).forEach(file => {
             var data =  infoFile(_path + '\\' + file)
-            console.log(data)
             let _json = {'name': file, 'updated_time':data.birthtime, 'type': path.extname(file), 'size': data.size}
             _archivos.push(_json)
         });
