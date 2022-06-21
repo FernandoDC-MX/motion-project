@@ -1435,6 +1435,8 @@ fileExplorer.addEventListener('shown.bs.modal', function(){
             tbody.appendChild(_tr)
        })
 
+    
+       document.querySelector('.info .elements').innerHTML = response.length + ' elementos';
        document.querySelector('#fileExplorer .table-responsive').classList.remove('d-none')
     }else{
         alert('Error')

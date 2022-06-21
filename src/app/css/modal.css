@@ -201,7 +201,7 @@ background: #555;
 }
 
 
-#fileExplorer .files .col-2 .row:hover{
+#fileExplorer .files .col-2 .row:hover, #fileExplorer .files .col-2 .selected-option{
     background: #64646428;
     border-color: #FF7B54;
 }
@@ -214,10 +214,11 @@ background: #555;
     padding: 0.75em;
 }
 
-#fileExplorer .info svg:hover{
+#fileExplorer .info svg:hover, #fileExplorer .info .selected-svg{
     fill: #FF7B54;
     cursor: pointer;
 }
+
 #fileExplorer table{
     color: #F8F8F8;
 }
