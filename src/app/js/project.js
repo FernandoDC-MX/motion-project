@@ -1399,8 +1399,53 @@ pdfModal.addEventListener('hidden.bs.modal', function(){
 })
 
 fileExplorer.addEventListener('hidden.bs.modal', function(){
-    cleanToggle()
+    document.querySelector('.waiting').classList.remove('d-none');
+    cleanToggle();
 })
+
+fileExplorer.addEventListener('shown.bs.modal', function(){
+    const response =  readDataFolder(_path + '\\Data');
+    if(response.length){
+        let tbody = document.querySelector('#fileExplorer table tbody')
+        tbody.innerHTML = '';
+
+        response.forEach(_file =>{
+            var _tr = document.createElement('tr');
+
+            var _td = document.createElement('td');
+            _td.innerText = _file.name
+
+            _tr.appendChild(_td)
+
+            _td = document.createElement('td');
+            _td.innerText = _file.updated_time;
+
+            _tr.appendChild(_td)
+
+            _td = document.createElement('td');
+            _td.innerText = 'Archivo ' + _file.type;
+
+            _tr.appendChild(_td)
+
+            _td = document.createElement('td');
+            _td.innerText = _file.size + ' KB'
+
+            _tr.appendChild(_td)
+
+            tbody.appendChild(_tr)
+       })
+
+       document.querySelector('#fileExplorer .table-responsive').classList.remove('d-none')
+    }else{
+        alert('Error')
+    }
+
+    document.querySelector('.waiting').classList.add('d-none');
+})
+
+function readDataFolder(){
+
+};
 
 linkModal.addEventListener('hidden.bs.modal', function(){
     document.querySelector('#_deviceMac').value = '';
