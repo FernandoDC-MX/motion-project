@@ -1,4 +1,4 @@
-const _nTimes = 100; //Times to iterate the loop.
+const _nTimes = 10; //Times to iterate the loop.
 const max = 100; // Max value
 const min = 1; // Min value
 let iterator;

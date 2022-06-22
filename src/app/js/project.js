@@ -337,6 +337,7 @@ stopBtn.addEventListener('click', () =>{
         reDrawChart(_chartsMap.get(`${device}-gyroscope`));
     });
 
+    saveData()
     document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
 });
 
@@ -1237,7 +1238,6 @@ hideAceBtn.addEventListener('click', ()=>{
     extendsChart('sub', flag)
 })
 
-
 // Hides the gyroscope chart.
 hideGyroBtn.addEventListener('click', ()=>{
     var _gyroCharts = document.querySelectorAll('.main-graph-container .col-4 .subgraph')
@@ -1403,6 +1403,7 @@ fileExplorer.addEventListener('hidden.bs.modal', function(){
     document.querySelector('.waiting').classList.remove('d-none');
     document.querySelector('.table-responsive').classList.add('d-none');
     document.querySelector('.images-responsive').classList.add('d-none');
+    document.querySelector('.non-result').classList.add('d-none');
 
     cleanToggle();
 })
@@ -1415,6 +1416,8 @@ fileExplorer.addEventListener('shown.bs.modal', function(){
 
        document.querySelector('.info .elements').innerHTML = _filesData.length + ' elementos';
        document.querySelector('#fileExplorer .table-responsive').classList.remove('d-none')
+
+       updateReadables()
     }else{
         document.querySelector('#fileExplorer .non-result').classList.remove('d-none')
         document.querySelector('.info .elements').innerHTML = 0 + ' elementos';
@@ -1454,6 +1457,8 @@ document.querySelectorAll('#fileExplorer .info svg').forEach(element => {
                     displayImageFiles()
                 break;
         }
+
+        updateReadables()
     });
 })
 
@@ -1463,6 +1468,8 @@ function displayListFiles(){
 
     _filesData.forEach(_file =>{
         var _tr = document.createElement('tr');
+        _tr.classList.add('readable')
+        _tr.setAttribute('title', _file.name)
 
         var _td = document.createElement('td');
         _td.innerText = _file.name
@@ -1498,7 +1505,7 @@ function displayImageFiles(){
 
     _filesData.forEach(file => {
         let div = document.createElement('div')
-        div.classList.add('card-file', 'd-flex-column', 'align-items-center', 'justify-content-center')
+        div.classList.add('card-file', 'd-flex-column', 'align-items-center', 'justify-content-center','readable')
         div.setAttribute('title', file.name)
 
         div.innerHTML+= svg
@@ -1512,6 +1519,59 @@ function displayImageFiles(){
         body.appendChild(div)
     });
 
+}
+
+function updateReadables(){
+    var _readables = document.querySelectorAll('.readable');
+
+    _readables.forEach(element =>{
+        element.addEventListener('click', function(){
+            const _nameFile = this.getAttribute('title');
+
+            const _response = readFile(_path + '\\Data\\' + _nameFile)
+
+            if(_response.Estado === 'OK'){
+                var _content = _response.Contenido.data;
+
+                // Gets all the main charts.
+                var _mainCharts = document.querySelectorAll('.main-graph-container');
+                createCharts(_mainCharts)
+
+                var keys = Object.keys(_content)
+
+                keys.forEach(key =>{
+                    var main = _chartsMap.get(`${key}-main`);
+                    var accelerometer = _chartsMap.get(`${key}-accelerometer`);
+                    var gyroscope = _chartsMap.get(`${key}-gyroscope`);
+
+                    main.values[0] = _content[key].main.data[0].data;
+                    main.labels = _content[key].main.labels;
+
+                    accelerometer.values[0] = _content[key].accelerometer.data[0].data
+                    accelerometer.values[1] = _content[key].accelerometer.data[1].data
+                    accelerometer.values[2] = _content[key].accelerometer.data[2].data
+                    accelerometer.labels = _content[key].accelerometer.labels;
+
+                    gyroscope.values[0] = _content[key].gyroscope.data[0].data
+                    gyroscope.values[1] = _content[key].gyroscope.data[1].data
+                    gyroscope.values[2] = _content[key].gyroscope.data[2].data
+                    gyroscope.labels = _content[key].gyroscope.labels;
+
+
+                    reDrawChart(main)
+                    reDrawChart(accelerometer)
+                    reDrawChart(gyroscope)
+                    
+                })
+
+                document.querySelector('#fileExplorer .modal-header button').click()
+                show('success', 'Archivo extraído correctamente.');
+
+            }else{
+                show('error','Hubo un problema al abrir el archivo.');
+            }
+        })
+    })
 }
 
 linkModal.addEventListener('hidden.bs.modal', function(){
