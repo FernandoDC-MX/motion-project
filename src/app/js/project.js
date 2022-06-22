@@ -1401,6 +1401,9 @@ pdfModal.addEventListener('hidden.bs.modal', function(){
 
 fileExplorer.addEventListener('hidden.bs.modal', function(){
     document.querySelector('.waiting').classList.remove('d-none');
+    document.querySelector('.table-responsive').classList.add('d-none');
+    document.querySelector('.images-responsive').classList.add('d-none');
+
     cleanToggle();
 })
 
@@ -1413,7 +1416,8 @@ fileExplorer.addEventListener('shown.bs.modal', function(){
        document.querySelector('.info .elements').innerHTML = _filesData.length + ' elementos';
        document.querySelector('#fileExplorer .table-responsive').classList.remove('d-none')
     }else{
-        alert('Error')
+        document.querySelector('#fileExplorer .non-result').classList.remove('d-none')
+        document.querySelector('.info .elements').innerHTML = 0 + ' elementos';
     }
 
     document.querySelector('.waiting').classList.add('d-none');

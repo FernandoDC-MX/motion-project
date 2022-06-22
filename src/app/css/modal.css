@@ -290,6 +290,17 @@ background: #555;
     color: red;
     width: 95%;
 }
+
+#fileExplorer .non-result{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    user-select: none;
+    padding: 1em;
+}
 #fileExplorer .images-responsive .card-file:hover{
     cursor: pointer;
     background: rgba(0, 0, 0, 0.126);
