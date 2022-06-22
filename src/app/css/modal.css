@@ -250,6 +250,56 @@ background: #555;
     max-height: 50%;
 }
 
+#fileExplorer .images-responsive{
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: flex-start; /* NEW */
+}
+
+#fileExplorer .images-responsive .card-file{
+    width: 7em;
+    height: 9em;
+    background: transparent;
+    padding: 1em;
+    font-family: 'Rubik';
+    margin: 1em;
+}
+
+#fileExplorer .images-responsive .card-file svg{
+    max-width: 100%;
+    max-height: 100%;
+    transition: 0.2s all ease-in-out;
+}
+
+#fileExplorer .images-responsive .card-file p{
+    margin-top: 0.5em;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+    transition: 0.2s all ease-in-out;
+}
+
+#fileExplorer hr{
+    background: red;
+    border-color: red;
+    color: red;
+    width: 95%;
+}
+#fileExplorer .images-responsive .card-file:hover{
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.126);
+}
+
+#fileExplorer .images-responsive .card-file:hover > *{
+    fill: #FF7B54;
+    color: #FF7B54;
+}
+
 #main-notification .modal-content{
     width: 50%;
     height: 315px;
