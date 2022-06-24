@@ -1433,6 +1433,10 @@ fileExplorer.addEventListener('shown.bs.modal', function(){
 
        document.querySelector('.info .elements').innerHTML = _filesData.length + ' elementos';
        document.querySelector('#fileExplorer .table-responsive').classList.remove('d-none')
+       document.querySelectorAll('#fileExplorer .info svg').forEach(svg =>{
+        svg.classList.remove('invisible')
+       })
+
        updateReadables()
     }else{
         document.querySelector('#fileExplorer .non-result').classList.remove('d-none')
