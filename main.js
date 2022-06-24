@@ -184,17 +184,23 @@ const pingpongWindow = () =>{
     Height:800,
     Width: 1000,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
       devTools: true,
     },
     frame: true,
+    show: false,
+    backgroundColor: '#383838'
   })
 
   game.maximize()
 
   // and load the index.html of the app.
   game.loadFile('src/app/pingpong.html')
+
+  // Event 
+  game.on('ready-to-show', () =>{
+    game.show()
+  })
+
 }
 
 // This method will be called when Electron has finished

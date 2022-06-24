@@ -413,7 +413,7 @@ playBtn.addEventListener('click', () => {
                             // Display Pause Button and Hide the Play Button
                             playBtn.classList.remove('d-none')
                             pauseBtn.classList.add('d-none')
-                          break;
+                        break;
                 }
             })
         }
@@ -841,7 +841,7 @@ function cleanHover(){
 }
 
 staticBackdrop.addEventListener('hidden.bs.modal', () =>{
-    
+
    // Remove all false selected
     if(document.querySelectorAll('.cls-selected')){
         Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
@@ -1357,14 +1357,17 @@ _toggleMenu.addEventListener('click', () =>{
 function saveData(){
     var _graphs = document.querySelectorAll('.main-graph-container');
     var map = new Map();
-    var data_main = {'labels': null, 'data': null}, data_gyro =  {'labels': null, 'data': null}, data_accelerometer =  {'labels': null, 'data': null};
+    // var data_main = {'labels': null, 'data': null}, data_gyro =  {'labels': null, 'data': null}, data_accelerometer =  {'labels': null, 'data': null};
 
     _graphs.forEach(element => {
+        var data_main = {'labels': null, 'data': null}, data_gyro =  {'labels': null, 'data': null}, data_accelerometer =  {'labels': null, 'data': null};
+
         var _device = element.getAttribute('data-device')
 
         var tmp = _chartsMap.get(`${_device}-main`)
         data_main.labels = tmp.chart.data.labels
         data_main.data = tmp.chart.data.datasets
+
 
         tmp = _chartsMap.get(`${_device}-accelerometer`)
         data_accelerometer.labels = tmp.chart.data.labels

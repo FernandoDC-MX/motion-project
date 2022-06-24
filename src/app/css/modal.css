@@ -301,6 +301,10 @@ background: #555;
     user-select: none;
     padding: 1em;
 }
+
+#fileExplorer .table-responsive{
+    max-height: 630px;
+}
 #fileExplorer .images-responsive .card-file:hover{
     cursor: pointer;
     background: rgba(0, 0, 0, 0.126);
