@@ -836,9 +836,22 @@ function cleanHover(){
         _musclesTmp.forEach(element =>{
             element.style.fill = 'white';
         })
+    
+    
 }
 
-cancelBtn.addEventListener('click', () =>{
+staticBackdrop.addEventListener('hidden.bs.modal', () =>{
+    
+   // Remove all false selected
+    if(document.querySelectorAll('.cls-selected')){
+        Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
+            element.classList.add('cls-2')
+            element.classList.remove('cls-selected')
+            element.style.fill="#F8F8F8"
+        })
+    }
+
+    selectMuscle()
     cleanHover()
 })
 
@@ -1595,4 +1608,3 @@ devicesBtn.addEventListener('click', () =>{
     tmp.nextElementSibling.classList.remove('d-none')
     tmp.classList.contains('d-none') ? tmp.classList.remove('d-none') : tmp.classList.add('d-none')
 })
-
