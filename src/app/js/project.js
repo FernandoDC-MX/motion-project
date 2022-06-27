@@ -60,10 +60,12 @@ class MasterDevice{
 
     setSettingsDevice(_slaveDevice){
         if(_slaveDevice){
-            exec(`C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\colorScript.exe COL ${_slaveDevice._index}` , (error, stdout, stderr) =>{
+            exec(`C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\main.exe ADD ${_slaveDevice.id} COM5 ${_slaveDevice.name} 2 0 ` , (error, stdout, stderr) =>{
                 if(!error){
+                    console.log(error)
                     return 0;
                 }else{
+                    console.log(stdout)
                     return 1;
                 }
             });
