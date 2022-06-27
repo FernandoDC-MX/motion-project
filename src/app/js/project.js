@@ -2,6 +2,7 @@
 const { ipcRenderer } = require('electron')
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
+const { execSync } = require('child_process');
 const fork = require("child_process").fork
 const exec = require("child_process").exec
 
@@ -55,24 +56,20 @@ class MasterDevice{
 
     setNewDevice(mac_address, Device){
         this.#_slaveDevices.set(mac_address, Device)
-        this.setSettingsDevice(this.#_slaveDevices.get(mac_address))
+        let _linkres = this.setSettingsDevice(this.#_slaveDevices.get(mac_address))
+
+        return _linkres.toString();
     }
 
     setSettingsDevice(_slaveDevice){
+        let response;
         if(_slaveDevice){
-            exec(`C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\main.exe ADD ${_slaveDevice.id} COM5 ${_slaveDevice.name} 2 0 ` , (error, stdout, stderr) =>{
-                if(!error){
-                    console.log(error)
-                    return 0;
-                }else{
-                    console.log(stdout)
-                    return 1;
-                }
-            });
-            
+            response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe ADD ${_slaveDevice.id} COM5 ${_slaveDevice.name} ${_slaveDevice._index} 0 `);
         }else{
-            return {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}
+          response = {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}
         }
+
+        return response;
     }
 }
 
@@ -85,6 +82,7 @@ var _path, channels, _musclesTmp;
 let iterator = 0;
 let toggleMenuFlag = 0;
 let recentsValue = -10;
+let _portCOM;
 
 // Storage structures
 let _devices = [{'hola': '1'}];
@@ -1123,27 +1121,32 @@ linkBtn.addEventListener('click', async () => {
 
         await sleep(1500)
 
-        _master.setNewDevice(_address,_device)
+        const _linkResponse = _master.setNewDevice(_address,_device)
 
-        var _response = readFile(_path + "\\info.json")
+        if(_linkResponse.includes('Se agrego correctamente')){
+            var _response = readFile(_path + "\\info.json")
         
-        if(_response.Contenido.devices){
-            var _tmp = _response.Contenido.devices;
-            _tmp[_address] = _device.JSON;
-            _response.Contenido.devices = _tmp
-            
+            if(_response.Contenido.devices){
+                var _tmp = _response.Contenido.devices;
+                _tmp[_address] = _device.JSON;
+                _response.Contenido.devices = _tmp
+                
+            }else{
+                var map = new Map()
+                map.set(_address, _device.JSON);
+                _response.Contenido.devices = Object.fromEntries(map)
+            }
+    
+            storeFile(_path + "\\info.json", _response.Contenido)
+            _devices = _response.Contenido.devices
+            displayChannels(_response.Contenido.devices)
+            displayGraphs(_response.Contenido.devices);
+            displayLinked(_devices)
+            show('success', 'Dispositivo vinculado correctamente.')
         }else{
-            var map = new Map()
-            map.set(_address, _device.JSON);
-            _response.Contenido.devices = Object.fromEntries(map)
+            show('error', 'Hubo un error en la vinculación.')
         }
-
-        storeFile(_path + "\\info.json", _response.Contenido)
-        _devices = _response.Contenido.devices
-        displayChannels(_response.Contenido.devices)
-        displayGraphs(_response.Contenido.devices);
-        displayLinked(_devices)
-        show('success', 'Dispositivo vinculado correctamente.')
+       
 
         linkClose.click()
 
