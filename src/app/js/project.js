@@ -1,13 +1,21 @@
-// Packages
+/* --------------------------  Packages ------------------------------- */
+
+// Render
 const { ipcRenderer } = require('electron')
+
+// Charts
 const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
+
+// Process
 const { execSync } = require('child_process');
 const fork = require("child_process").fork
-const exec = require("child_process").exec
-const { SerialPort } = require('serialport')
 
-// Classes
+// Serial
+const { SerialPort } = require('serialport')
+// const usbDetect = require('usb-detection');
+
+/* ---------------------------- Classes ------------------------------ */
 class Device{
     constructor(id, _id_muscle, _muscle_name, _hex, _index, name){
       this.id = id;
@@ -75,7 +83,7 @@ class MasterDevice{
     }
 }
 
-// Variables
+/* -----------------------  Variables ------------------------------ */
 const maxResBtn = document.getElementById('maximizeBtn')
 const _hexColors = ['#F5BD85','#85F5AE','#85C8F5','#F585CC'];
 const ipc = ipcRenderer
@@ -93,6 +101,8 @@ let arrChilds = new Map()
 let _master = new MasterDevice()
 let _filesData = null;
 
+/* ------------------------------------ Functions ---------------------------- */
+
 // Function to read all the Serial Ports
 async function listSerialPorts() {
     await SerialPort.list().then((ports, err) => {
@@ -103,12 +113,11 @@ async function listSerialPorts() {
             console.log('No hay cerebro.')
         }
     })
-
-
 }
 
 // Set the window's title.
 ipc.on('enviar-nombre', (e, title) =>{
+    // usbDetect.startMonitoring();
     listSerialPorts()
     document.querySelector('title').innerHTML = title
     document.querySelector('.title').innerHTML = title
