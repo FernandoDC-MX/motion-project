@@ -2,6 +2,7 @@
 
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
+const usbDetect = require('usb-detection');
 const path = require('path')
 
 // Enable live reload for all the files inside your project directory
@@ -43,7 +44,7 @@ const splashScreen = () =>{
     setTimeout(function () {
       splash_screen.close();
       createWindow()
-    }, 4000);
+    }, 100);
   })
 }
 
@@ -137,12 +138,26 @@ const projectWindow = (evt, args) =>{
     project.show()
   })
 
+  // Start process to listen any usb event on the computer.
+  usbDetect.startMonitoring();
+
+  // USB Connected.
+  usbDetect.on('add', function(device){ 
+    project.webContents.send('usb-event', {'device' : device, 'action': 'connected'}) 
+  });
+
+  // USB Disconnected
+  usbDetect.on('remove', function(device){ 
+    project.webContents.send('usb-event', {'device' : device, 'action': 'removed'}) 
+  });
+
   // Close app
   ipc.on('closeProject', (evt, msg)=>{
     project.close()
-    
-    msg ? app.quit() : mainWindow.show()
 
+    // Stop the USB process.
+    usbDetect.stopMonitoring();
+    msg ? app.quit() : mainWindow.show()
   })
 
    // Minimize app

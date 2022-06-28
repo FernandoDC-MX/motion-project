@@ -13,7 +13,6 @@ const fork = require("child_process").fork
 
 // Serial
 const { SerialPort } = require('serialport')
-// const usbDetect = require('usb-detection');
 
 /* ---------------------------- Classes ------------------------------ */
 class Device{
@@ -114,18 +113,12 @@ async function listSerialPorts() {
 
 // Set the window's title.
 ipc.on('enviar-nombre', async (e, title) =>{
-    // usbDetect.startMonitoring();
     await listSerialPorts()
-    
-    if(_portCOM){
-        document.querySelector('title').innerHTML = title
-        document.querySelector('.title').innerHTML = title
-        _title = title;
-        
-        readInfo(title)
-    }else{
-        document.querySelector('.hd-close').click()
-    }
+    _title = title;
+    document.querySelector('title').innerHTML = title
+    document.querySelector('.title').innerHTML = title
+
+    _portCOM ? readInfo(title) : document.querySelector('.hd-close').click()
 })
 
 // Read the info.json inside the Project's folder.
@@ -336,13 +329,8 @@ function displayGraphs(canales){
     }
 }
 
-// Finish the test.
-stopBtn.addEventListener('click', () =>{
-    var date = new Date () 
-    var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
-    var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
-    var meridian = date.getHours() > 12 ? 'P.M.' : 'A.M.'
-
+function stopAll(e, status = 0){
+    console.log(status)
     // Kill all the childs created.
     arrChilds.forEach((value, key) => {
         process.kill(key)
@@ -351,25 +339,38 @@ stopBtn.addEventListener('click', () =>{
     // Clear the map.
     arrChilds.clear()
 
-    // Message
-    show('info','La prueba ha sido terminada por el usuario.')
-
     // Display Play Button and Hide the Pause Button
     playBtn.classList.remove('d-none','pressed')
     playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
     pauseBtn.classList.add('d-none')
 
-    // Redraw the charts.
-    document.querySelectorAll('.main-graph-container').forEach(element => {
-        var device = element.getAttribute('data-device')
-        reDrawChart(_chartsMap.get(`${device}-main`));                
-        reDrawChart(_chartsMap.get(`${device}-accelerometer`));                
-        reDrawChart(_chartsMap.get(`${device}-gyroscope`));
-    });
+    if(!status){
+        var date = new Date () 
+        var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
+        var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
+        var meridian = date.getHours() > 12 ? 'P.M.' : 'A.M.'
 
-    saveData()
-    document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
-});
+        // Message
+        show('info','La prueba ha sido terminada por el usuario.')
+
+        // Redraw the charts.
+        document.querySelectorAll('.main-graph-container').forEach(element => {
+            var device = element.getAttribute('data-device')
+            reDrawChart(_chartsMap.get(`${device}-main`));                
+            reDrawChart(_chartsMap.get(`${device}-accelerometer`));                
+            reDrawChart(_chartsMap.get(`${device}-gyroscope`));
+        });
+
+        saveData()
+        document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;
+    }else{
+        // Message
+        show('error','Cerebro desconectado.')
+    }    
+}
+
+// Finish the test.
+stopBtn.addEventListener('click',stopAll);
 
 // Start the test.
 playBtn.addEventListener('click', () => {
@@ -1667,4 +1668,14 @@ devicesBtn.addEventListener('click', () =>{
     var tmp = document.querySelector('.vinculados');
     tmp.nextElementSibling.classList.remove('d-none')
     tmp.classList.contains('d-none') ? tmp.classList.remove('d-none') : tmp.classList.add('d-none')
+})
+
+ipc.on('usb-event', (e, msg)=>{ 
+    if(msg.action === 'connected'){
+        document.querySelector('#main-notification .btn-clse').click()
+        readInfo(_title)
+    }else{
+        document.querySelector('.hd-close').click()
+        stopAll('click',1)
+    }
 })
