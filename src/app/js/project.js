@@ -11,8 +11,6 @@ const zoomPlugin = require('chartjs-plugin-zoom');
 const { execSync } = require('child_process');
 const fork = require("child_process").fork
 
-// Serial
-const { SerialPort } = require('serialport')
 
 /* ---------------------------- Classes ------------------------------ */
 class Device{
@@ -80,6 +78,20 @@ class MasterDevice{
 
         return response;
     }
+
+    makeBinding(devices){        
+        if(devices){
+            this.#_slaveDevices = devices;
+            
+            Object.values(this.#_slaveDevices).forEach(element =>{
+                let response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${element.id} ${_portCOM}`);
+                console.log(response.toString());
+            })
+            
+        }else{
+            return 1;
+        }
+    }
 }
 
 /* -----------------------  Variables ------------------------------ */
@@ -102,33 +114,28 @@ let _filesData = null;
 
 /* ------------------------------------ Functions ---------------------------- */
 
-// Function to read all the Serial Ports
-async function listSerialPorts() {
-    await SerialPort.list().then((ports, err) => {
-        if(ports.length){
-            _portCOM = ports[0].path
-        }
-    })
-}
-
 // Set the window's title.
-ipc.on('enviar-nombre', async (e, title) =>{
-    await listSerialPorts()
-    _title = title;
-    document.querySelector('title').innerHTML = title
-    document.querySelector('.title').innerHTML = title
+ipc.on('enviar-nombre', async (e, args) =>{
+    _title = args.title;
+    document.querySelector('title').innerHTML = _title
+    document.querySelector('.title').innerHTML = _title
 
-    _portCOM ? readInfo(title) : document.querySelector('.hd-close').click()
+    _portCOM = args.port
+
+    if(_portCOM){
+        readInfo(_title)
+    }else{
+        document.querySelector('.hd-close').click()
+    } 
 })
 
 // Read the info.json inside the Project's folder.
 function readInfo(_nameFolder){
     _path = `${__dirname}\\Proyectos\\${_nameFolder}`;
-    
     var _response = readFile(_path + "\\info.json")
-
     if(_response.Estado == 'OK'){
         _devices = _response.Contenido.devices;
+        _master.makeBinding(_devices)
         displayChannels(_response.Contenido.devices)
         displayGraphs(_response.Contenido.devices);
         displayLinked(_response.Contenido.devices)
@@ -137,6 +144,7 @@ function readInfo(_nameFolder){
         closeBtn.click()
     }
 
+    statusElement.previousElementSibling.classList.remove('rotating')
     settings()
 }
 
@@ -259,7 +267,6 @@ function displayLinked(devices){
             _p.innerText = devices[key].name;
 
             _div.appendChild(_p);
-
 
             var _p = document.createElement('p');
             _p.classList.add('m-0')

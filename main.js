@@ -5,6 +5,9 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 const usbDetect = require('usb-detection');
 const path = require('path')
 
+// Serial
+const { SerialPort } = require('serialport')
+
 // Enable live reload for all the files inside your project directory
 require('electron-reload')(__dirname, {ignored: /Proyectos|[\/\\]\./});
 
@@ -109,6 +112,7 @@ const createWindow = () => {
 }
 
 const projectWindow = (evt, args) =>{
+  let _portCOM = null;
 
   // Create the browser window.
   project = new BrowserWindow({
@@ -132,9 +136,11 @@ const projectWindow = (evt, args) =>{
   project.loadFile('src/app/project.html')
 
   // Event 
-  project.on('ready-to-show', () =>{
+  project.on('ready-to-show', async () =>{
+    await listSerialPorts();
+
     // Send the data.
-    project.webContents.send('enviar-nombre', args)
+    project.webContents.send('enviar-nombre', {'title': args, 'port': _portCOM})
     project.show()
   })
 
@@ -191,6 +197,16 @@ const projectWindow = (evt, args) =>{
   project.on('unmaximize', () =>{
     project.webContents.send('isRestored_2')
   }) 
+
+
+  // Function to read all the Serial Ports
+  async function listSerialPorts() {
+    await SerialPort.list().then((ports, err) => {
+        if(ports.length){
+            _portCOM = ports[0].path
+        }
+    })
+  }
 }
 
 const pingpongWindow = () =>{
