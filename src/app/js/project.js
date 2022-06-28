@@ -339,6 +339,7 @@ stopBtn.addEventListener('click', () =>{
 
     // Display Play Button and Hide the Pause Button
     playBtn.classList.remove('d-none','pressed')
+    playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
     pauseBtn.classList.add('d-none')
 
     // Redraw the charts.
@@ -363,6 +364,8 @@ playBtn.addEventListener('click', () => {
         // Display Pause Button and Hide the Play Button
         playBtn.classList.add('d-none')
         pauseBtn.classList.remove('d-none')
+        playBtn.querySelector('title').innerHTML = "Reanudar prueba"
+
 
         createCharts(_mainCharts)
         playBtn.classList.add('pressed')
@@ -415,6 +418,8 @@ playBtn.addEventListener('click', () => {
                                 document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
 
                                 playBtn.classList.remove('pressed')
+                                playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
+
                                 arrChilds.clear()
                                 saveData()
                             }
@@ -849,8 +854,6 @@ function cleanHover(){
         _musclesTmp.forEach(element =>{
             element.style.fill = 'white';
         })
-    
-    
 }
 
 staticBackdrop.addEventListener('hidden.bs.modal', () =>{
