@@ -732,7 +732,7 @@ function reDrawChart(map){
 
 // Close the window.
 closeBtn.addEventListener('click', () =>{
-    if(!playBtn.classList.contains('d-none')){
+    if(!playBtn.classList.contains('d-none') && !playBtn.classList.contains('pressed')){
         ipc.send('closeProject', 1)
     }    
     else{
@@ -1142,7 +1142,6 @@ linkBtn.addEventListener('click', async () => {
                 var _tmp = _response.Contenido.devices;
                 _tmp[_address] = _device.JSON;
                 _response.Contenido.devices = _tmp
-                
             }else{
                 var map = new Map()
                 map.set(_address, _device.JSON);
