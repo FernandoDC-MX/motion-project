@@ -5,6 +5,7 @@ const zoomPlugin = require('chartjs-plugin-zoom');
 const { execSync } = require('child_process');
 const fork = require("child_process").fork
 const exec = require("child_process").exec
+const { SerialPort } = require('serialport')
 
 // Classes
 class Device{
@@ -63,8 +64,9 @@ class MasterDevice{
 
     setSettingsDevice(_slaveDevice){
         let response;
+
         if(_slaveDevice){
-            response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe ADD ${_slaveDevice.id} COM5 ${_slaveDevice.name} ${_slaveDevice._index} 0 `);
+            response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} ${_slaveDevice._index} 0 `);
         }else{
           response = {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}
         }
@@ -91,8 +93,17 @@ let arrChilds = new Map()
 let _master = new MasterDevice()
 let _filesData = null;
 
+
+// Function to read all the Serial Ports
+async function listSerialPorts() {
+    await SerialPort.list().then((ports, err) => {
+        _portCOM = ports[0].path
+    })
+}
+
 // Set the window's title.
-ipc.on('enviar-nombre', (e, title) =>{ 
+ipc.on('enviar-nombre', (e, title) =>{
+    listSerialPorts()
     document.querySelector('title').innerHTML = title
     document.querySelector('.title').innerHTML = title
     _title = title;
@@ -726,6 +737,7 @@ closeBtn.addEventListener('click', () =>{
     }    
     else{
         document.querySelector('.hd-close').click()
+        document.querySelector('#emergentWindow').classList.remove('d-none')
     }
 })
 
