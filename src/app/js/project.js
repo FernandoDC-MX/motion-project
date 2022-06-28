@@ -92,7 +92,7 @@ var _path, channels, _musclesTmp;
 let iterator = 0;
 let toggleMenuFlag = 0;
 let recentsValue = -10;
-let _portCOM;
+let _portCOM = null;
 
 // Storage structures
 let _devices = [{'hola': '1'}];
@@ -109,21 +109,23 @@ async function listSerialPorts() {
         if(ports.length){
             _portCOM = ports[0].path
         }
-        else{
-            console.log('No hay cerebro.')
-        }
     })
 }
 
 // Set the window's title.
-ipc.on('enviar-nombre', (e, title) =>{
+ipc.on('enviar-nombre', async (e, title) =>{
     // usbDetect.startMonitoring();
-    listSerialPorts()
-    document.querySelector('title').innerHTML = title
-    document.querySelector('.title').innerHTML = title
-    _title = title;
+    await listSerialPorts()
     
-    readInfo(title)
+    if(_portCOM){
+        document.querySelector('title').innerHTML = title
+        document.querySelector('.title').innerHTML = title
+        _title = title;
+        
+        readInfo(title)
+    }else{
+        document.querySelector('.hd-close').click()
+    }
 })
 
 // Read the info.json inside the Project's folder.
@@ -767,6 +769,10 @@ outBtn.addEventListener('click', () =>{
         process.kill(key)
     });
     ipc.send('closeProject')
+})
+
+comOut.addEventListener('click', () =>{
+    ipc.send('closeProject',0)
 })
 
 homeBtn.addEventListener('click', () =>{
