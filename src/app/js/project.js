@@ -93,12 +93,18 @@ let arrChilds = new Map()
 let _master = new MasterDevice()
 let _filesData = null;
 
-
 // Function to read all the Serial Ports
 async function listSerialPorts() {
     await SerialPort.list().then((ports, err) => {
-        _portCOM = ports[0].path
+        if(ports.length){
+            _portCOM = ports[0].path
+        }
+        else{
+            console.log('No hay cerebro.')
+        }
     })
+
+
 }
 
 // Set the window's title.
@@ -1046,7 +1052,6 @@ btnSaveSettings.addEventListener('click', () => {
 
 // Close modal settings.
 btnCloseSettings.addEventListener('click', async () =>{
-
 })
 
 // CSS event: Displays a zone.
