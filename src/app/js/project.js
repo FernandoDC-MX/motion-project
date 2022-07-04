@@ -79,18 +79,20 @@ class MasterDevice{
         return response;
     }
 
-    makeBinding(devices){        
+    makeBinding(devices){   
         if(devices){
-            this.#_slaveDevices = devices;
-            
-            Object.values(this.#_slaveDevices).forEach(element =>{
-                let response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${element.id} ${_portCOM}`);
-                console.log(response.toString());
-            })
-            
-        }else{
-            return 1;
+            this.#_slaveDevices = new Map(Object.entries(devices));
+
+            this.#_slaveDevices.forEach((value, key) => {
+                let response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${value.id} ${_portCOM}`);
+                response.toString().includes('0') ? value['connected'] = 0 :  value['connected'] = 1
+                this.#_slaveDevices.set(key, value)
+            });
         }
+    }
+
+    get JSON(){
+        return this.#_slaveDevices;
     }
 }
 
@@ -126,7 +128,9 @@ ipc.on('enviar-nombre', async (e, args) =>{
         readInfo(_title)
     }else{
         document.querySelector('.hd-close').click()
-    } 
+    }
+    
+    statusElement.previousElementSibling.classList.add('d-none')
 })
 
 // Read the info.json inside the Project's folder.
@@ -139,6 +143,7 @@ function readInfo(_nameFolder){
         displayChannels(_response.Contenido.devices)
         displayGraphs(_response.Contenido.devices);
         displayLinked(_response.Contenido.devices)
+        statusElement.innerText = 'Listo'
     }else{
         alert('Hubo algún error al tratar de abrir el archivo.')
         closeBtn.click()
@@ -254,10 +259,8 @@ function displayLinked(devices){
     var _linked = document.querySelector('.linked');
     _linked.innerHTML = '';
 
-    if(devices){
-        Object.entries(devices).forEach((entry) => {
-            const [key, value] = entry;
-
+    if( _master.JSON){
+        _master.JSON.forEach((value, key) => {
             var _div = document.createElement('div');
             _div.classList.add('px-3','py-2')
 
@@ -270,7 +273,12 @@ function displayLinked(devices){
 
             var _p = document.createElement('p');
             _p.classList.add('m-0')
-            _p.innerText = 'Conectado';
+
+            if(value.connected){
+                _p.innerText = 'Conectado';
+            }else{
+                _p.innerText = 'No conectado';
+            }
 
             _div.appendChild(_p);
 
@@ -336,6 +344,7 @@ function displayGraphs(canales){
     }
 }
 
+// 
 function stopAll(e, status = 0){
     console.log(status)
     // Kill all the childs created.
