@@ -9,7 +9,6 @@ const zoomPlugin = require('chartjs-plugin-zoom');
 
 // Process
 const { execSync, exec } = require('child_process');
-const { ModuleWalker } = require('electron-rebuild/lib/src/module-walker');
 const fork = require("child_process").fork
 
 
@@ -83,6 +82,12 @@ class MasterDevice{
     connectDevice(_id){
         let res = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${_id} ${_portCOM}`);
 
+        if(parseInt(res.toString())){
+            this.#_slaveDevices.get(_id)['connected'] = 1;
+        }else{
+            this.#_slaveDevices.get(_id)['connected'] = 0;
+        }
+
         return parseInt(res.toString());
     }
 
@@ -107,6 +112,8 @@ class MasterDevice{
                 this.#_slaveDevices.set(key, value)
             });
         }
+
+        console.log(this.#_slaveDevices);
     }
 
     get JSON(){
@@ -135,13 +142,12 @@ let _filesData = null;
 /* ------------------------------------ Functions ---------------------------- */
 
 // Set the window's title.
-ipc.on('enviar-nombre', async (e, args) =>{
+ipc.on('enviar-nombre', (e, args) =>{
     _title = args.title;
     document.querySelector('title').innerHTML = _title
     document.querySelector('.title').innerHTML = _title
 
     _portCOM = args.port
-
     if(_portCOM){
         document.querySelector('#_namePort').innerHTML = _portCOM.toString()
         readInfo(_title)
@@ -156,12 +162,13 @@ ipc.on('enviar-nombre', async (e, args) =>{
 function readInfo(_nameFolder){
     _path = `${__dirname}\\Proyectos\\${_nameFolder}`;
     var _response = readFile(_path + "\\info.json")
+
     if(_response.Estado == 'OK'){
         _devices = _response.Contenido.devices;
         _master.makeBinding(_devices)
         displayChannels(_response.Contenido.devices)
         displayGraphs(_response.Contenido.devices);
-        displayLinked(_response.Contenido.devices)
+        displayLinked()
         statusElement.innerText = 'Listo'
     }else{
         alert('Hubo algún error al tratar de abrir el archivo.')
@@ -274,7 +281,7 @@ function displayChannels(canales){
 }
 
 // Display the linked devices.
-function displayLinked(devices){
+function displayLinked(){
     var _linked = document.querySelector('.linked');
     _linked.innerHTML = '';
 
@@ -288,8 +295,8 @@ function displayLinked(devices){
 
             var _p = document.createElement('p');
             _p.classList.add('m-0')
-            _p.style.color = devices[key]._hex;
-            _p.innerText = devices[key].name;
+            _p.style.color = _devices[key]._hex;
+            _p.innerText = _devices[key].name;
 
             _div.appendChild(_p);
 
@@ -338,6 +345,7 @@ connect.addEventListener('click', async function(){
     await sleep(100)
     if(_master.connectDevice(_id)){
         show('success','Dispositivo conectado correctamente')
+        displayLinked()
     }else{
         show('error', 'No se pudo conectar.')
     }
