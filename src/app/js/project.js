@@ -311,10 +311,23 @@ function editableDevices(){
     for(let i = 0; i < _devices.length; i++){
         _devices[i].addEventListener('click', function(){
             var _modal = document.querySelector('#editableDevice');
-            _modal.querySelector('.modal-title').innerHTML = 'Editar dispositivo: ' + this.getAttribute('edit-device')
+            
+            if(!this.querySelectorAll('p')[1].innerText.includes('No conectado')) {
+                _modal.querySelector('#_editName').setAttribute('disabled', false)
+
+                _modal.querySelector('.update').classList.remove('d-none');
+            }else{  
+                _modal.querySelector('.connect').classList.remove('d-none')
+            }
+            _modal.querySelector('.modal-title').innerHTML = `Editar dispositivo: ${this.getAttribute('edit-device')} (${this.querySelectorAll('p')[1].innerText})`; 
+
         })
     }
 }
+
+connect.addEventListener('click', function(){
+    alert('clcik')
+})
 
 // Return if at least one device has linked with a muscle.
 function existsMuscle(canales){
