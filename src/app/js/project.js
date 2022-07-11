@@ -85,7 +85,15 @@ class MasterDevice{
 
             this.#_slaveDevices.forEach((value, key) => {
                 let response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${value.id} ${_portCOM}`);
-                response.toString().includes('0') ? value['connected'] = 0 :  value['connected'] = 1
+                if(response.toString().includes('0'))
+                 value['connected'] = 0
+                else{  
+                    value['connected'] = 1;
+
+                    execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe COL ${value.id} ${_portCOM} ${value._index}`);
+                    execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe NOM ${value.id} ${_portCOM} ${value.name}`);
+                }
+                
                 this.#_slaveDevices.set(key, value)
             });
         }
@@ -346,7 +354,6 @@ function displayGraphs(canales){
 
 // 
 function stopAll(e, status = 0){
-    console.log(status)
     // Kill all the childs created.
     arrChilds.forEach((value, key) => {
         process.kill(key)

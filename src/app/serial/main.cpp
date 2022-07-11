@@ -146,26 +146,44 @@ typedef struct __attribute__((packed)) {
 	uint8_t bateria;
 }packet_t;
 
+typedef struct __attribute__((packed)) {
+  uint8_t cmd; //Comando sensor to central
+  uint8_t tam_paqte;     //Longitud de los datos
+}espnow_data_cab_t;
 
+typedef struct __attribute__((packed)) { 
+  uint8_t val_myoware;
+  uint8_t val_ax;
+  uint8_t val_ay;
+  uint8_t val_az;
+  uint8_t val_gx;
+  uint8_t val_gy;
+  uint8_t val_gz;
+}data_t;
+
+espnow_data_cab_t cab;
 packet_t pack_to_brain;
 char* buffer;
+char* buffer_data;
+data_t *datos_myoware;
+
+#define CAB_SIZE sizeof(espnow_data_cab_t)
 
 void delay(int secs) {
   for(int i = (time(NULL) + secs); time(NULL) != i; time(NULL));
 }
 
-void send_cmd_to_brain(string p_cmd, string p_string_info, uint8_t p_uint8_info, uint8_t p_uint8_info2){
-	cout<<"Comando: "<<p_cmd<<endl;
+void send_cmd_to_brain(string p_cmd, string p_name, uint8_t p_tiempo, uint8_t p_id){
+	//cout<<"Comando: "<<p_cmd<<endl;
 	memset(&pack_to_brain, 0, sizeof(packet_t));
 	memset(pack_to_brain.cmd, '\0', CMD_SIZE);
 	memset(pack_to_brain.mac, '\0', 6);
 	memset(pack_to_brain.friendly_name, '\0', FNAME_SIZE);
 	memcpy(pack_to_brain.cmd,p_cmd.c_str(),CMD_SIZE);
 	memcpy(pack_to_brain.mac,mac_addrs,6);
-	memcpy(pack_to_brain.friendly_name,p_string_info.c_str(),FNAME_SIZE);
-	if(p_cmd == "COL" || p_cmd == "ADD") pack_to_brain.color = p_uint8_info;
-	if(p_cmd == "TIM") pack_to_brain.tiempo = p_uint8_info;
-	if(p_cmd == "ADD") pack_to_brain.tiempo = p_uint8_info2;
+	memcpy(pack_to_brain.friendly_name,p_name.c_str(),FNAME_SIZE);
+	pack_to_brain.color = p_id;
+	pack_to_brain.tiempo = p_tiempo;
 	buffer = (char*)malloc(sizeof(packet_t));
 	memcpy(buffer,&pack_to_brain,sizeof(packet_t));
 	//arduino.writeSerialPort(buffer, sizeof(packet_t));
@@ -204,6 +222,10 @@ void recv_cmd_debug(){
 	memset(output, 0, sizeof(output));
 }
 
+void recv_data(){
+    
+}
+
 int main(int argc, char* argv[]){
 	//cout << "Have " << argc << " arguments" << endl;
 	
@@ -240,7 +262,7 @@ int main(int argc, char* argv[]){
 			parametro_2 = argv[5];
 			//cout << parametro_2 <<endl;
 			parametro_3 = argv[6];
-			//cout << parametro_2 <<endl;
+			//cout << parametro_3 <<endl;
 			if(parametro == "0")
 				parametro = "";
 			strcpy(name_snsr, parametro.c_str());
@@ -265,7 +287,9 @@ int main(int argc, char* argv[]){
 			recv_cmd_debug();}
 		
 		else if((string)cmd_to_brain == "STR"){
-			send_cmd_to_brain(cmd_to_brain, "",0,0);
+			parametro = argv[4];
+			parametro_2 = argv[5];
+			send_cmd_to_brain(cmd_to_brain, "",stoi(parametro),stoi(parametro_2));
 			arduino.writeSerialPort(buffer, sizeof(packet_t));}
 
 		else if((string)cmd_to_brain == "STP"){
@@ -284,7 +308,8 @@ int main(int argc, char* argv[]){
 			arduino.writeSerialPort(buffer, sizeof(packet_t));
 			delay(2);
 			arduino.readSerialPort(buffer, sizeof(packet_t));
-			recv_cmd_of_brain();}
+			recv_cmd_of_brain();
+			}
 		
 		else if((string)cmd_to_brain == "INF"){
 			send_cmd_to_brain(cmd_to_brain, "",0,0);
@@ -319,14 +344,44 @@ int main(int argc, char* argv[]){
 		else if((string)cmd_to_brain == "COL"){
 			parametro = argv[4];
 			//cout << parametro <<endl;
-			send_cmd_to_brain(cmd_to_brain, "",stoi(parametro),0);
+			send_cmd_to_brain(cmd_to_brain, "",0,stoi(parametro));
 			arduino.writeSerialPort(buffer, sizeof(packet_t));
 			if(stoi(parametro) == 0){
 				delay(2);
 				arduino.readSerialPort(buffer, sizeof(packet_t));
 				recv_cmd_of_brain();}}
 		
-		
+		else if((string)cmd_to_brain == "DAT"){
+			send_cmd_to_brain(cmd_to_brain, "",0,0);
+			arduino.writeSerialPort(buffer, sizeof(packet_t));
+			delay(4);
+			buffer_data = (char*)malloc(CAB_SIZE);
+			arduino.readSerialPort(buffer_data, CAB_SIZE);
+			cout << "Se recibio Cabeza" <<endl;
+			memset(&cab,0,CAB_SIZE);
+    		memcpy(&cab, buffer_data, CAB_SIZE);
+			printf("%c\n", cab.cmd);
+    		printf("%d\n", cab.tam_paqte);
+			free(buffer_data);
+			buffer_data = (char*)malloc(cab.tam_paqte*sizeof(data_t));
+			arduino.readSerialPort(buffer_data, cab.tam_paqte*sizeof(data_t));
+			cout << "Se recibieron datos" <<endl;
+			datos_myoware = NULL;
+			datos_myoware = (data_t*)malloc(sizeof(data_t) * cab.tam_paqte);
+			memset(datos_myoware,0,cab.tam_paqte);
+    		memcpy(datos_myoware, buffer_data, sizeof(data_t) * cab.tam_paqte);
+			for(int i=0;i<cab.tam_paqte;i++){
+				cout << "----------------" << i << "----------------" <<endl;
+				printf("%d\n", datos_myoware[i].val_myoware);
+				printf("%d\n", datos_myoware[i].val_ax);
+				printf("%d\n", datos_myoware[i].val_ay);
+				printf("%d\n", datos_myoware[i].val_az);
+				printf("%d\n", datos_myoware[i].val_gx);
+				printf("%d\n", datos_myoware[i].val_gy);
+				printf("%d\n", datos_myoware[i].val_gz);
+			}
+			free(buffer_data);
+			free(datos_myoware);}
 	}
 
 	else cout<<"Error in port name"<<endl<<endl;
