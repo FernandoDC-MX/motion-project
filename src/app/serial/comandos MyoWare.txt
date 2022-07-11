@@ -1,8 +1,8 @@
 Comando          Parametro                     Retorno 
-  ADD    MAC/COM/NOM/COL/TIEMPO
+  ADD    MAC/COM/NOM/TIEMPO/COL
   DEL    MAC/COM
   LSS    MAC/COM
-  STR    MAC/COM              
+  STR    MAC/COM/TIEMPO/N_MUESTRAS              
   STP    MAC/COM
   TST    MAC/COM       
   BAT    MAC/COM
@@ -10,7 +10,6 @@ Comando          Parametro                     Retorno
   NOM    MAC/COM/NOM     
   COL    MAC/COM/COL
   TIM    MAC/NOM/TIEMPO
-
 ADD -> Vincula un nuevo sensor.
 DEL -> Elimina sensor seleccionado.
 LSS -> Lista los comandos en cerebro.
@@ -22,7 +21,6 @@ INF -> Devuelve información del sensor(edo de conexion, nivel de bateria, Nombr
 NOM -> Asigna nombre o devuelve valor actual en el snsr.
 COL -> Asigna color o devuelve   valor actual en el snsr.
 TIM -> Asigna tiempo o devuelve valor actual en el snsr.
-
 Colores
  0 - Devuelve color actual en Sensor
  1 - naranja
@@ -30,11 +28,10 @@ Colores
  3 - azul
  4 - rosa
  EJ. .\name_executable COL 4C:75:25:DE:8B:60 COM4 2
-
 Tiempo
  La unidad de tiempo se encuentra en milisegundos
  EJ. .\name_executable TIM 4C:75:25:DE:8B:60 COM4 5 (Se tomara una muestra cada 5 milisegundos)
-
+ 
  EJ.
  .\name_executable ADD 4C:75:25:DE:8B:60 COM4 Pierna 3 2
  .\name_executable DEL 4C:75:25:DE:8B:60 COM4
@@ -47,3 +44,6 @@ Tiempo
  .\name_executable NOM 4C:75:25:DE:8B:60 COM4 Brazo (Nombre Limitado a 15 caracteres)
  .\name_executable COL 4C:75:25:DE:8B:60 COM4 0 (Devuelve Color actual en el sensor)
  .\name_executable TIM 4C:75:25:DE:8B:60 COM4 0 (Devuelve Tiempo actual en el sensor)
+
+
+

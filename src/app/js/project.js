@@ -8,7 +8,7 @@ const Chart = require('chart.js');
 const zoomPlugin = require('chartjs-plugin-zoom');
 
 // Process
-const { execSync } = require('child_process');
+const { execSync, exec } = require('child_process');
 const { ModuleWalker } = require('electron-rebuild/lib/src/module-walker');
 const fork = require("child_process").fork
 
@@ -64,7 +64,7 @@ class MasterDevice{
     setNewDevice(mac_address, Device){
         this.#_slaveDevices.set(mac_address, Device)
         let _linkres = this.setSettingsDevice(this.#_slaveDevices.get(mac_address))
-
+        this.#_slaveDevices.get(mac_address)['connected'] = 1;
         return _linkres.toString();
     }
 
@@ -72,12 +72,22 @@ class MasterDevice{
         let response;
 
         if(_slaveDevice){
-            response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} ${_slaveDevice._index} 0 `);
+            response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} 100 ${_slaveDevice._index}`);
         }else{
           response = {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}
         }
 
         return response;
+    }
+
+    connectDevice(_id){
+        exec(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${_id} ${_portCOM}`, (error, stdout, stderr) => {
+            if(stdout === '1'){
+                show('success','Dispositivo conectado')
+            }else{
+                show('error',' No se pudo conectar el dispositivo.')
+            }
+        });
     }
 
     makeBinding(devices){   
@@ -320,13 +330,20 @@ function editableDevices(){
                 _modal.querySelector('.connect').classList.remove('d-none')
             }
             _modal.querySelector('.modal-title').innerHTML = `Editar dispositivo: ${this.getAttribute('edit-device')} (${this.querySelectorAll('p')[1].innerText})`; 
-
+            _modal.querySelector('.modal-title').setAttribute('temporal-id', this.getAttribute('edit-device'))
         })
     }
 }
 
 connect.addEventListener('click', function(){
-    alert('clcik')
+    let _id = document.querySelector('#editableDevice .modal-title').getAttribute('temporal-id');
+
+    document.querySelector('#editableDevice .waves').classList.remove('d-none')
+
+    _master.connectDevice(_id)
+
+    document.querySelector('#editableDevice .waves').classList.add('d-none')
+
 })
 
 // Return if at least one device has linked with a muscle.
@@ -1216,7 +1233,7 @@ linkBtn.addEventListener('click', async () => {
 
         const _linkResponse = _master.setNewDevice(_address,_device)
 
-        if(_linkResponse.includes('Se agrego correctamente')){
+        if(!_linkResponse.includes('Se agrego correctamente')){
             var _response = readFile(_path + "\\info.json")
         
             if(_response.Contenido.devices){
