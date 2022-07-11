@@ -91,6 +91,26 @@ class MasterDevice{
         return parseInt(res.toString());
     }
 
+    updateDevice(_id, nom){
+        let res = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe NOM ${_id} ${_portCOM} ${nom}`);
+        
+        if(!res.toString()){
+            this.#_slaveDevices.get(_id).name = nom;
+        }
+
+        return parseInt(res.toString());
+    }
+
+    deleteDevice(_id){
+        let res = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe DEL ${_id} ${_portCOM}`);
+
+        if(!res.toString()){
+            this.#_slaveDevices.delete(_id)
+        }
+
+        return parseInt(res.toString());
+    }
+
     makeBinding(devices){   
         if(devices){
             this.#_slaveDevices = new Map(Object.entries(devices));
@@ -113,7 +133,6 @@ class MasterDevice{
             });
         }
 
-        console.log(this.#_slaveDevices);
     }
 
     get JSON(){
@@ -287,6 +306,7 @@ function displayLinked(){
 
     if( _master.JSON){
         _master.JSON.forEach((value, key) => {
+
             var _div = document.createElement('div');
             _div.classList.add('px-3','py-2','modal-editable')
             _div.setAttribute('edit-device', key)
@@ -326,7 +346,9 @@ function editableDevices(){
             var _modal = document.querySelector('#editableDevice');
             
             if(!this.querySelectorAll('p')[1].innerText.includes('No conectado')) {
-                _modal.querySelector('#_editName').setAttribute('disabled', false)
+                _modal.querySelector('#_editName').disabled = false;
+                _modal.querySelector('#_editName').parentNode.classList.remove('d-none')
+
 
                 _modal.querySelector('.update').classList.remove('d-none');
             }else{  
@@ -345,9 +367,76 @@ connect.addEventListener('click', async function(){
     await sleep(100)
     if(_master.connectDevice(_id)){
         show('success','Dispositivo conectado correctamente')
+        document.querySelector('#editableDevice #connect').classList.add('d-none')
         displayLinked()
     }else{
         show('error', 'No se pudo conectar.')
+    }
+
+
+    document.querySelector('#editableDevice .waves').classList.add('d-none')
+
+})
+
+update.addEventListener('click', async function(){
+    let _id = document.querySelector('#editableDevice .modal-title').getAttribute('temporal-id');
+    let nom = document.querySelector('#editableDevice #_editName').value
+
+    document.querySelector('#editableDevice .waves').classList.remove('d-none')
+    await sleep(100)
+    if(!_master.updateDevice(_id, nom)){
+        show('success','Dispositivo actualizado correctamente')
+        document.querySelector('#editableDevice #connect').classList.add('d-none')
+
+        var _response = readFile(_path + "\\info.json")
+        
+        if(_response.Contenido.devices){
+                _response.Contenido.devices[_id].name = nom;
+        }
+    
+        storeFile(_path + "\\info.json", _response.Contenido)
+        _devices = _response.Contenido.devices
+        displayChannels(_response.Contenido.devices)
+        displayGraphs(_response.Contenido.devices);
+        displayLinked()
+    }else{
+        show('error', 'No se pudo actualizar.')
+    }
+
+
+    document.querySelector('#editableDevice .waves').classList.add('d-none')
+
+})
+
+deleteB.addEventListener('click', async function(){
+    let _id = document.querySelector('#editableDevice .modal-title').getAttribute('temporal-id');
+
+    document.querySelector('#editableDevice .waves').classList.remove('d-none')
+    await sleep(10)
+
+    if(!_master.deleteDevice(_id)){
+        show('success','Dispositivo eliminado correctamente')
+
+        var _response = readFile(_path + "\\info.json")
+        
+        if(_response.Contenido.devices){
+            var tmp = new Map(Object.entries(_response.Contenido.devices))
+            tmp.delete(_id);
+            if(tmp.size === 0)
+                tmp = null;
+
+            _response.Contenido.devices = tmp;
+
+            storeFile(_path + "\\info.json", _response.Contenido)
+            _devices = _response.Contenido.devices
+            displayChannels(_response.Contenido.devices)
+            displayGraphs(_response.Contenido.devices);
+            displayLinked()
+        }
+    
+        
+    }else{
+        show('error', 'No se pudo actualizar.')
     }
 
 
@@ -1259,7 +1348,7 @@ linkBtn.addEventListener('click', async () => {
             _devices = _response.Contenido.devices
             displayChannels(_response.Contenido.devices)
             displayGraphs(_response.Contenido.devices);
-            displayLinked(_devices)
+            displayLinked()
             show('success', 'Dispositivo vinculado correctamente.')
         }else{
             show('error', 'Hubo un error en la vinculación.')
