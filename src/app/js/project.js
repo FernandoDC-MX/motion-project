@@ -82,14 +82,15 @@ class MasterDevice{
     makeBinding(devices){   
         if(devices){
             this.#_slaveDevices = new Map(Object.entries(devices));
-
+            let count = 0;
             this.#_slaveDevices.forEach((value, key) => {
                 let response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${value.id} ${_portCOM}`);
                 if(response.toString().includes('0'))
                  value['connected'] = 0
                 else{  
                     value['connected'] = 1;
-
+                    count++;
+                    document.querySelector('#_numDevices').innerHTML = count;
                     execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe COL ${value.id} ${_portCOM} ${value._index}`);
                     execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe NOM ${value.id} ${_portCOM} ${value.name}`);
                 }
@@ -133,6 +134,7 @@ ipc.on('enviar-nombre', async (e, args) =>{
     _portCOM = args.port
 
     if(_portCOM){
+        document.querySelector('#_namePort').innerHTML = _portCOM.toString()
         readInfo(_title)
     }else{
         document.querySelector('.hd-close').click()
