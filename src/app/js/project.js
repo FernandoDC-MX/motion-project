@@ -201,6 +201,8 @@ function readInfo(_nameFolder){
 // Display the channels on the left side.
 function displayChannels(canales){
     var _lista = document.querySelector('.list');
+    _lista.innerHTML = '';
+
     if(canales){
         channels = new Map(Object.entries(canales));
 
@@ -304,7 +306,8 @@ function displayLinked(){
     var _linked = document.querySelector('.linked');
     _linked.innerHTML = '';
 
-    if( _master.JSON){
+    console.log(_master.JSON);
+    if( _master.JSON.size > 0){
         _master.JSON.forEach((value, key) => {
 
             var _div = document.createElement('div');
