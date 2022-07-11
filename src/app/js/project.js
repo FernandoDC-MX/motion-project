@@ -81,13 +81,9 @@ class MasterDevice{
     }
 
     connectDevice(_id){
-        exec(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${_id} ${_portCOM}`, (error, stdout, stderr) => {
-            if(stdout === '1'){
-                show('success','Dispositivo conectado')
-            }else{
-                show('error',' No se pudo conectar el dispositivo.')
-            }
-        });
+        let res = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${_id} ${_portCOM}`);
+
+        return parseInt(res.toString());
     }
 
     makeBinding(devices){   
@@ -335,12 +331,17 @@ function editableDevices(){
     }
 }
 
-connect.addEventListener('click', function(){
+connect.addEventListener('click', async function(){
     let _id = document.querySelector('#editableDevice .modal-title').getAttribute('temporal-id');
 
     document.querySelector('#editableDevice .waves').classList.remove('d-none')
+    await sleep(100)
+    if(_master.connectDevice(_id)){
+        show('success','Dispositivo conectado correctamente')
+    }else{
+        show('error', 'No se pudo conectar.')
+    }
 
-    _master.connectDevice(_id)
 
     document.querySelector('#editableDevice .waves').classList.add('d-none')
 
