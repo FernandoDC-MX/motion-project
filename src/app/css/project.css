@@ -57,6 +57,14 @@ html, body{
     width: 100%;
 }
 
+.modal-editable{
+    cursor: pointer;
+}
+
+.modal-editable:hover{
+    background: #22222226;
+}
+
 @keyframes rotating {
     from {
         -ms-transform: rotate(0deg);

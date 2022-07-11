@@ -9,6 +9,7 @@ const zoomPlugin = require('chartjs-plugin-zoom');
 
 // Process
 const { execSync } = require('child_process');
+const { ModuleWalker } = require('electron-rebuild/lib/src/module-walker');
 const fork = require("child_process").fork
 
 
@@ -83,6 +84,8 @@ class MasterDevice{
         if(devices){
             this.#_slaveDevices = new Map(Object.entries(devices));
             let count = 0;
+            document.querySelector('#_numDevices').innerHTML = count;
+
             this.#_slaveDevices.forEach((value, key) => {
                 let response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${value.id} ${_portCOM}`);
                 if(response.toString().includes('0'))
@@ -272,7 +275,10 @@ function displayLinked(devices){
     if( _master.JSON){
         _master.JSON.forEach((value, key) => {
             var _div = document.createElement('div');
-            _div.classList.add('px-3','py-2')
+            _div.classList.add('px-3','py-2','modal-editable')
+            _div.setAttribute('edit-device', key)
+            _div.setAttribute('data-bs-toggle',"modal")
+            _div.setAttribute('data-bs-target',"#editableDevice")
 
             var _p = document.createElement('p');
             _p.classList.add('m-0')
@@ -294,6 +300,19 @@ function displayLinked(devices){
 
             _linked.appendChild(_div)
         });
+
+        editableDevices()
+    }
+}
+
+function editableDevices(){
+    var _devices = document.querySelectorAll('.modal-editable')
+
+    for(let i = 0; i < _devices.length; i++){
+        _devices[i].addEventListener('click', function(){
+            var _modal = document.querySelector('#editableDevice');
+            _modal.querySelector('.modal-title').innerHTML = 'Editar dispositivo: ' + this.getAttribute('edit-device')
+        })
     }
 }
 

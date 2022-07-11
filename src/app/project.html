@@ -619,7 +619,7 @@
         <button class="hd-close" data-bs-toggle="modal" data-bs-target="#main-notification"></button>
       </div>
 
-       <!-- Modal to display the PDF -->
+       <!-- Modal to display the file explorer -->
        <div class="modal fade t-15" id="fileExplorer" aria-modal="true" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content h-630 w-800">
@@ -715,6 +715,24 @@
         </div>
       </div>
 
+      <!-- Modal to display the PDF -->
+      <div class="modal fade t-15" id="editableDevice" aria-modal="true" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content h-630 w-800">
+            <div class="modal-header">
+              <p class="modal-title"></p>
+              <button class="d-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" aria-label="Close" width="24" height="24" fill="currentColor" class="bi bi-x cursor" viewBox="0 0 16 16">
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </div>
+            <div class="modal-body p-0 bg-gray-modal">
+               
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <div class="indicator-actions justify-content-between px-3 user-select-none">
       <div class="d-flex">
@@ -725,7 +743,7 @@
           <span>Puerto: <b id="_namePort"></b></span>
         </div>
         <div class="mx-2">
-          <span>Dispositivos vinculados: <b id="_numDevices"></b></span>
+          <span>Dispositivos conectados: <b id="_numDevices"></b></span>
         </div>
       </div>
       <div class="d-flex">
