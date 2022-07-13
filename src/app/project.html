@@ -446,52 +446,50 @@
                         esse enim laboris. Quis fugiat magna consequat esse exercitation.
                       </p>
                       <div class="row  h-150">
-                        <div class="col-3">
-                          <div class="form-group">
-                            <p class="font-mono">V. de muestreo (Hz)</p>
-                            <select class="form-selected" name="sample-rate" id="sample-rate" disabled>
-                              <option value="0" default>6000</option>
-                              <option value="1" default>8000</option>
-                              <option value="2" default>11025</option>
-                              <option value="3" default>16000</option>
-                              <option value="4" default>22050</option>
-                            </select>
+                        <div class="col-4 d-flex align-items-center">
+                          <div class="row">
+                            <div class="col-7">
+                              <div class="form-group">
+                                <input type="number" class="form-input" name="sampleRate" id="sampleRate" min="1" placeholder="" value="1" disabled>
+                                <label for="sample_rate" class="form-label">Tiempo de prueba</label>
+                              </div> 
+                            </div>
+                            <div class="col-4">
+                              <div class="form-group">
+                                  <select class="form-selected" name="sampleRateMeasure" id="sampleRateMeasure" disabled>
+                                    <option value="0" selected>Min.</option>
+                                    <option value="1">Hrs.</option>
+                                  </select>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div class="col-3">
-                          <div class="form-group">
-                            <p class="font-mono">Número de datos</p>
-                            <select class="form-selected" name="number-rate" id="number-rate" disabled>
-                              <option value="0" default>6000</option>
-                              <option value="1" default>8000</option>
-                              <option value="2" default>11025</option>
-                              <option value="3" default>16000</option>
-                              <option value="4" default>22050</option>
-                            </select>
+                        <div class="col-4 d-flex align-items-center">
+                          <div class="row">
+                            <div class="col-7">
+                              <div class="form-group">
+                                <input type="number" class="form-input" name="numberRate" id="numberRate" min="1" placeholder="" value="1" disabled>
+                                <label for="numberRate" class="form-label">Vel. de prueba</label>
+                              </div> 
+                            </div>
+                            <div class="col-4">
+                              <div class="form-group">
+                                  <select class="form-selected" name="numberRateMeasure" id="numberRateMeasure" disabled>
+                                    <option value="0">Ms.</option>
+                                    <option value="1" selected>Seg.</option>
+                                  </select>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div class="col-3">
-                          <div class="form-group">
-                            <p class="font-mono">Número de datos (IMU)</p>
-                            <select class="form-selected" name="imu-rate" id="imu-rate" disabled>
-                              <option value="0" default>6000</option>
-                              <option value="1" default>8000</option>
-                              <option value="2" default>11025</option>
-                              <option value="3" default>16000</option>
-                              <option value="4" default>22050</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-3">
-                          <div class="form-group">
-                            <p class="font-mono">Número de datos (IMU)</p>
-                            <select class="form-selected" name="example-rate" id="example-rate">
-                              <option value="0" default>6000</option>
-                              <option value="1" default>8000</option>
-                              <option value="2" default>11025</option>
-                              <option value="3" default>16000</option>
-                              <option value="4" default>22050</option>
-                            </select>
+                        <div class="col-4  d-flex align-items-center">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="form-group">
+                                <input type="number" class="form-input" name="imuRate" id="imuRate" min="60" placeholder="" value="1" disabled>
+                                <label for="imuRate" class="form-label">Número de datos</label>
+                              </div> 
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -715,7 +713,7 @@
         </div>
       </div>
 
-      <!-- Modal to display the PDF -->
+      <!-- Modal to display the edit modal -->
       <div class="modal fade t-100" id="editableDevice" aria-modal="true" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content h-150 w-200">

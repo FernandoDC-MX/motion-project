@@ -167,12 +167,12 @@ ipc.on('enviar-nombre', (e, args) =>{
     document.querySelector('.title').innerHTML = _title
 
     _portCOM = args.port
-    if(_portCOM){
-        document.querySelector('#_namePort').innerHTML = _portCOM.toString()
+    // if(_portCOM){
+        // document.querySelector('#_namePort').innerHTML = _portCOM.toString()
         readInfo(_title)
-    }else{
-        document.querySelector('.hd-close').click()
-    }
+    // }else{
+    //     document.querySelector('.hd-close').click()
+    // }
     
     statusElement.previousElementSibling.classList.add('d-none')
 })
@@ -1184,19 +1184,19 @@ function settings(){
             switch(this.getAttribute('data-option')){
                 case 'basic':   title.innerHTML = 'Modalidad 1';
                                 description.innerHTML = 'La configuración básica sirve para...'
-                                setSettingsValues(0,0,0,0, true)                                
+                                setSettingsValues(0,0,0, true)                                
                     break;
                 case 'medium':  title.innerHTML = 'Modalidad 2';
                                 description.innerHTML = 'La configuración media sirve para...'
-                                setSettingsValues(1,1,1,1, true)
+                                setSettingsValues(1,1,1, true)
                     break;
                 case 'hard':    title.innerHTML = 'Modalidad 3';
                                 description.innerHTML = 'La configuración experta sirve para...'
-                                setSettingsValues(2,2,2,2, true)                                
+                                setSettingsValues(2,2,2, true)                                
                     break;
                 case 'advanced':title.innerHTML = 'Configuración avanzada';
                                 description.innerHTML = 'La configuración avanzada sirve para...'
-                                setSettingsValues(0,0,0,0, false)                                
+                                setSettingsValues(1,1,60, false)                                
                     break;
             }
 
@@ -1207,20 +1207,46 @@ function settings(){
 // Sets the values in the modal settings inputs.
 const setSettingsValues = (_valueSample, _valueNumber, _valueImu, _valueExample, flag) =>{
     // Inputs
-    let sample_rate = document.querySelector('#sample-rate');
-    let number_rate = document.querySelector('#number-rate');
-    let imu_rate = document.querySelector('#imu-rate');
-    let example_rate = document.querySelector('#example-rate');
+    let sample_rate = document.querySelector('#sampleRate');
+    let number_rate = document.querySelector('#numberRate');
+    let imu_rate = document.querySelector('#imuRate');
 
     sample_rate.value = _valueSample;
     number_rate.value = _valueNumber;
     imu_rate.value = _valueImu;
-    example_rate.value = _valueExample;
+
+    for(let i = 0; i < document.querySelectorAll('.form-group input').length; i++){
+        document.querySelectorAll('.form-group input')[i].disabled = flag
+    }
 
     for(let i = 0; i < document.querySelectorAll('.form-group select').length; i++){
         document.querySelectorAll('.form-group select')[i].disabled = flag
     }
 }
+
+sampleRate.addEventListener('change', function(){
+    if(this.value < 1 || this.value === undefined)
+        this.value = 1
+
+    if(numberRate.value <= 1 && imuRate.value > 1){
+        var _formule = Math.ceil(this.value/imuRate.value);
+        console.log(_formule)
+    }else if (numberRate.value > 1 && imuRate.value <= 1){
+        var _formule = Math.ceil(this.value/numberRate.value);
+        console.log(_formule)
+    }
+})
+
+imuRate.addEventListener('change', function(){
+    if(this.value < 1 || this.value === undefined)
+        this.value = 1
+    
+    const _time = numberRateMeasure.value ? 1000 : 1;
+
+    var _formule = imuRate.value * ((_time * numberRate.value)/ 60000);
+    
+    sampleRate.value = _formule % 1 === 0 ? _formule :_formule.toFixed(2);
+})
 
 // Save settings.
 btnSaveSettings.addEventListener('click', () => {
@@ -1846,11 +1872,11 @@ devicesBtn.addEventListener('click', () =>{
 })
 
 ipc.on('usb-event', (e, msg)=>{ 
-    if(msg.action === 'connected'){
-        document.querySelector('#main-notification .btn-clse').click()
-        readInfo(_title)
-    }else{
-        document.querySelector('.hd-close').click()
-        stopAll('click',1)
-    }
+    // if(msg.action === 'connected'){
+    //     document.querySelector('#main-notification .btn-clse').click()
+    //     readInfo(_title)
+    // }else{
+    //     document.querySelector('.hd-close').click()
+    //     stopAll('click',1)
+    // }
 })
