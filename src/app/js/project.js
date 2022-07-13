@@ -1184,15 +1184,15 @@ function settings(){
             switch(this.getAttribute('data-option')){
                 case 'basic':   title.innerHTML = 'Modalidad 1';
                                 description.innerHTML = 'La configuración básica sirve para...'
-                                setSettingsValues(0,0,0, true)                                
+                                setSettingsValues(0,0,60, true)                                
                     break;
                 case 'medium':  title.innerHTML = 'Modalidad 2';
                                 description.innerHTML = 'La configuración media sirve para...'
-                                setSettingsValues(1,1,1, true)
+                                setSettingsValues(1,1,60, true)
                     break;
                 case 'hard':    title.innerHTML = 'Modalidad 3';
                                 description.innerHTML = 'La configuración experta sirve para...'
-                                setSettingsValues(2,2,2, true)                                
+                                setSettingsValues(2,2,60, true)                                
                     break;
                 case 'advanced':title.innerHTML = 'Configuración avanzada';
                                 description.innerHTML = 'La configuración avanzada sirve para...'
@@ -1225,33 +1225,56 @@ const setSettingsValues = (_valueSample, _valueNumber, _valueImu, _valueExample,
 }
 
 sampleRate.addEventListener('change', function(){
-    if(this.value < 1 || this.value === undefined)
-        this.value = 1
 
-    if(numberRate.value <= 1 && imuRate.value > 1){
-        var _formule = Math.ceil(this.value/imuRate.value);
-        console.log(_formule)
-    }else if (numberRate.value > 1 && imuRate.value <= 1){
-        var _formule = Math.ceil(this.value/numberRate.value);
-        console.log(_formule)
+    if(this.value < 1 || this.value === undefined){
+        this.value = 1
     }
+
+    var _minData = 60;
+    var _formule = this.value * _minData;
+
+    imuRate.value = Math.round(_formule)
 })
 
 imuRate.addEventListener('change', function(){
-    if(this.value < 1 || this.value === undefined)
-        this.value = 1
+    if(this.value < 60 || this.value === undefined)
+        this.value = 60
     
-    const _time = numberRateMeasure.value ? 1000 : 1;
+    const _time = parseInt(numberRateMeasure.value) ? 1 : 1000;
 
-    var _formule = imuRate.value * ((_time * numberRate.value)/ 60000);
+    var _formule = (imuRate.value * (numberRate.value/_time)) / 60;
     
-    sampleRate.value = _formule % 1 === 0 ? _formule :_formule.toFixed(2);
+    sampleRate.value = _formule % 1 === 0 ? _formule :_formule.toFixed(1);
+})
+
+numberRate.addEventListener('change', function(){
+    var _min = numberRateMeasure.value ? 1 : 100
+
+    if(this.value < _min || this.value === undefined)
+        this.value = _min
+
+    const _time = parseInt(numberRateMeasure.value) ? 1 : 1000;
+
+    var _formule = (imuRate.value * (numberRate.value/_time)) / 60;
+        
+    sampleRate.value = _formule % 1 === 0 ? _formule :_formule.toFixed(1);
+})
+
+numberRateMeasure.addEventListener('change', function(){
+
+    numberRate.value = parseInt(this.value) ? 1 : 100
+    numberRate.setAttribute('min',numberRate.value);
+    
+    const e = new Event("change");
+    imuRate.dispatchEvent(e);
 })
 
 // Save settings.
-btnSaveSettings.addEventListener('click', () => {
-    var _values = document.querySelectorAll('.form-group select');
-    var _json = {sample_rate: _values[0].value, number_rate: _values[1].value, imu_rate: _values[2].value, example_rate: _values[3].value}
+btnSaveSettings.addEventListener('click', () => {    
+    var sample = parseInt(sampleRateMeasure.value) ? (sampleRate.value * 60) * 60000 : sampleRate.value * 60000;
+    var number = parseInt(numberRateMeasure.value) ? numberRate.value * 1000 : numberRate.value
+
+    var _json = {sample_rate: sample, number_rate: number, imu_rate: parseInt(imuRate.value)}
 
     var _response = readFile(_path + "\\info.json")
 
