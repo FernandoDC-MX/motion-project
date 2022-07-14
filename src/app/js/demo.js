@@ -1,4 +1,4 @@
-const _nTimes = 100; //Times to iterate the loop.
+const _nTimes = 1; //Times to iterate the loop.
 const max = 100; // Max value
 const min = 1; // Min value
 let iterator;
@@ -51,9 +51,7 @@ process.on('message', async (msg)=>{
     }else{
         process.send({id: msg.pid, flag: 2, device: msg.id_zone, iterator: iterator, max: _nTimes})
         iterator = _nTimes;
-    }
-
-    
+    }    
 })
 
 // Delay functions

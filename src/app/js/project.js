@@ -138,6 +138,12 @@ class MasterDevice{
 
     }
 
+    startTest(settings){
+        this.#_slaveDevices.forEach((value, key) => {
+            exec(`${__dirname}\\serial\\main.exe STR ${key} ${_portCOM} ${settings.number_rate} ${settings.imu_rate}`)
+        });
+    }
+
     get JSON(){
         return this.#_slaveDevices;
     }
@@ -160,6 +166,7 @@ var _chartsMap = new Map()
 let arrChilds = new Map()
 let _master = new MasterDevice()
 let _filesData = null;
+let _settings = null;
 
 /* ------------------------------------ Functions ---------------------------- */
 
@@ -187,6 +194,7 @@ function readInfo(_nameFolder){
 
     if(_response.Estado == 'OK'){
         _devices = _response.Contenido.devices;
+        _settings = _response.Contenido.settings;
         _master.makeBinding(_devices)
         displayChannels(_response.Contenido.devices)
         displayGraphs(_response.Contenido.devices);
@@ -561,7 +569,7 @@ playBtn.addEventListener('click', () => {
     // Gets all the main charts.
     var _mainCharts = document.querySelectorAll('.main-graph-container');
 
-    if(!playBtn.classList.contains('pressed')){
+    if(!playBtn.classList.contains('pressed') && _settings != null){
         // Display Pause Button and Hide the Play Button
         playBtn.classList.add('d-none')
         pauseBtn.classList.remove('d-none')
@@ -572,14 +580,19 @@ playBtn.addEventListener('click', () => {
         playBtn.classList.add('pressed')
         iterator = 0;
 
+        _master.startTest(_settings)
+
         for(let i = 0; i < _mainCharts.length; i++){
-            var _child = fork(__dirname + "\\js\\demo.js")
+
+            var _child = fork(__dirname + "\\js\\test.js")
     
             arrChilds.set(_child.pid, _child)
            
             // Execute the test.
             _child.send({ 
                 msg: 'do work',
+                nTimes: _settings.imu_rate,
+                _portCOM: _portCOM,
                 pid : _child.pid, // passing pid to child
                 id_zone: _mainCharts[i].getAttribute('data-device'),
                 play: 1,
@@ -638,6 +651,8 @@ playBtn.addEventListener('click', () => {
         
         show('info','La prueba ha empezado.')
 
+    }else if(_settings == null){
+        show('error', 'Primero debes de seleccionar una configuración.')
     }else{
         // Display Play Button and Hide the Pause Button
         playBtn.classList.add('d-none')
@@ -1282,13 +1297,13 @@ btnSaveSettings.addEventListener('click', () => {
     var sample = parseInt(sampleRateMeasure.value) ? (sampleRate.value * 60) * 60000 : sampleRate.value * 60000;
     var number = parseInt(numberRateMeasure.value) ? numberRate.value * 1000 : numberRate.value
 
-    var _json = {sample_rate: sample, number_rate: number, imu_rate: parseInt(imuRate.value)}
 
     var _response = readFile(_path + "\\info.json")
 
     switch(_response.Estado){
-        case 'OK': var _content = _response.Contenido;
-                    _content['settings'] = _json;
+        case 'OK':  _settings = {sample_rate: sample, number_rate: parseInt(number), imu_rate: parseInt(imuRate.value)}
+                    var _content = _response.Contenido;
+                    _content['settings'] = _settings;
                     storeFile(_path + "\\info.json", _content)
                     show('success', 'Configuración guardada correctamente.')
                     btnCloseSettings.click()
