@@ -64,6 +64,7 @@ class MasterDevice{
         this.#_slaveDevices.set(mac_address, Device)
         let _linkres = this.setSettingsDevice(this.#_slaveDevices.get(mac_address))
         this.#_slaveDevices.get(mac_address)['connected'] = 1;
+        console.log(_linkres.toString())
         return _linkres.toString();
     }
 
@@ -71,7 +72,7 @@ class MasterDevice{
         let response;
 
         if(_slaveDevice){
-            response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} 100 ${_slaveDevice._index}`);
+            response = execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} 100 ${_slaveDevice._index}`);
         }else{
           response = {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}
         }
@@ -80,10 +81,12 @@ class MasterDevice{
     }
 
     connectDevice(_id){
-        let res = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${_id} ${_portCOM}`);
+        let res = execSync(`${__dirname}\\serial\\main.exe TST ${_id} ${_portCOM}`);
 
         if(parseInt(res.toString())){
             this.#_slaveDevices.get(_id)['connected'] = 1;
+            execSync(`${__dirname}\\serial\\main.exe COL ${_id} ${_portCOM} ${this.#_slaveDevices.get(_id)['_index']}`);
+
         }else{
             this.#_slaveDevices.get(_id)['connected'] = 0;
         }
@@ -92,7 +95,7 @@ class MasterDevice{
     }
 
     updateDevice(_id, nom){
-        let res = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe NOM ${_id} ${_portCOM} ${nom}`);
+        let res = execSync(`${__dirname}\\serial\\main.exe NOM ${_id} ${_portCOM} ${nom}`);
         
         if(!res.toString()){
             this.#_slaveDevices.get(_id).name = nom;
@@ -102,8 +105,8 @@ class MasterDevice{
     }
 
     deleteDevice(_id){
-        let res = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe DEL ${_id} ${_portCOM}`);
-
+        let res = execSync(`${__dirname}\\serial\\main.exe DEL ${_id} ${_portCOM}`);
+        console.log(res.toString());
         if(!res.toString()){
             this.#_slaveDevices.delete(_id)
         }
@@ -118,15 +121,15 @@ class MasterDevice{
             document.querySelector('#_numDevices').innerHTML = count;
 
             this.#_slaveDevices.forEach((value, key) => {
-                let response = execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe TST ${value.id} ${_portCOM}`);
+                let response = execSync(`${__dirname}\\serial\\main.exe TST ${value.id} ${_portCOM}`);
                 if(response.toString().includes('0'))
                  value['connected'] = 0
                 else{  
                     value['connected'] = 1;
                     count++;
                     document.querySelector('#_numDevices').innerHTML = count;
-                    execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe COL ${value.id} ${_portCOM} ${value._index}`);
-                    execSync(`C:\\Users\\ferbar\\Desktop\\motion-project\\src\\app\\serial\\main.exe NOM ${value.id} ${_portCOM} ${value.name}`);
+                    execSync(`${__dirname}\\serial\\main.exe COL ${value.id} ${_portCOM} ${value._index}`);
+                    execSync(`${__dirname}\\serial\\main.exe NOM ${value.id} ${_portCOM} ${value.name}`);
                 }
                 
                 this.#_slaveDevices.set(key, value)
@@ -167,12 +170,12 @@ ipc.on('enviar-nombre', (e, args) =>{
     document.querySelector('.title').innerHTML = _title
 
     _portCOM = args.port
-    // if(_portCOM){
-        // document.querySelector('#_namePort').innerHTML = _portCOM.toString()
+    if(_portCOM){
+        document.querySelector('#_namePort').innerHTML = _portCOM.toString()
         readInfo(_title)
-    // }else{
-    //     document.querySelector('.hd-close').click()
-    // }
+    }else{
+        document.querySelector('.hd-close').click()
+    }
     
     statusElement.previousElementSibling.classList.add('d-none')
 })
@@ -470,6 +473,7 @@ function displayGraphs(canales){
             document.querySelector('.container-message').classList.add('d-none');
 
             document.querySelector('.menu').classList.remove('d-none')
+            document.querySelector('._charts').classList.remove('d-none')
             _canales.forEach(element =>{
                 if(element._id_muscle){
 
@@ -497,10 +501,14 @@ function displayGraphs(canales){
             })
         }else{
             document.querySelector('.container-message').classList.remove('d-none');
+            document.querySelector('.menu').classList.add('d-none')
+            document.querySelector('._charts').classList.add('d-none')
         }
         
     }else{
         document.querySelector('.container-message').classList.remove('d-none')
+        document.querySelector('.menu').classList.add('d-none')
+        document.querySelector('._charts').classList.add('d-none')
     }
 }
 
@@ -1895,11 +1903,11 @@ devicesBtn.addEventListener('click', () =>{
 })
 
 ipc.on('usb-event', (e, msg)=>{ 
-    // if(msg.action === 'connected'){
-    //     document.querySelector('#main-notification .btn-clse').click()
-    //     readInfo(_title)
-    // }else{
-    //     document.querySelector('.hd-close').click()
-    //     stopAll('click',1)
-    // }
+    if(msg.action === 'connected'){
+        document.querySelector('#main-notification .btn-clse').click()
+        readInfo(_title)
+    }else{
+        document.querySelector('.hd-close').click()
+        stopAll('click',1)
+    }
 })

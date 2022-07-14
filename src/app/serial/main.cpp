@@ -357,29 +357,48 @@ int main(int argc, char* argv[]){
 			delay(4);
 			buffer_data = (char*)malloc(CAB_SIZE);
 			arduino.readSerialPort(buffer_data, CAB_SIZE);
-			cout << "Se recibio Cabeza" <<endl;
+			//cout << "Se recibio Cabeza" <<endl;
 			memset(&cab,0,CAB_SIZE);
     		memcpy(&cab, buffer_data, CAB_SIZE);
-			printf("%c\n", cab.cmd);
-    		printf("%d\n", cab.tam_paqte);
+			//printf("%c\n", cab.cmd);
+    		//printf("%d\n", cab.tam_paqte);
 			free(buffer_data);
 			buffer_data = (char*)malloc(cab.tam_paqte*sizeof(data_t));
 			arduino.readSerialPort(buffer_data, cab.tam_paqte*sizeof(data_t));
-			cout << "Se recibieron datos" <<endl;
+			//cout << "Se recibieron datos" <<endl;
 			datos_myoware = NULL;
 			datos_myoware = (data_t*)malloc(sizeof(data_t) * cab.tam_paqte);
 			memset(datos_myoware,0,cab.tam_paqte);
     		memcpy(datos_myoware, buffer_data, sizeof(data_t) * cab.tam_paqte);
+			cout << "[";
 			for(int i=0;i<cab.tam_paqte;i++){
-				cout << "----------------" << i << "----------------" <<endl;
-				printf("%d\n", datos_myoware[i].val_myoware);
-				printf("%d\n", datos_myoware[i].val_ax);
-				printf("%d\n", datos_myoware[i].val_ay);
-				printf("%d\n", datos_myoware[i].val_az);
-				printf("%d\n", datos_myoware[i].val_gx);
-				printf("%d\n", datos_myoware[i].val_gy);
-				printf("%d\n", datos_myoware[i].val_gz);
+				cout << "{";
+				cout << "id:" << i << ",";
+				cout << "myo:";
+				printf("%d", datos_myoware[i].val_myoware);
+				cout << ",";
+				cout << "ax:";
+				printf("%d", datos_myoware[i].val_ax);
+				cout << ",";
+				cout << "ay:";
+				printf("%d", datos_myoware[i].val_ay);
+				cout << ",";
+				cout << "az:";
+				printf("%d", datos_myoware[i].val_az);
+				cout << ",";
+				cout << "gx:";
+				printf("%d", datos_myoware[i].val_gx);
+				cout << ",";
+				cout << "gy:";
+				printf("%d", datos_myoware[i].val_gy);
+				cout << ",";
+				cout << "gz:";
+				printf("%d", datos_myoware[i].val_gz);
+				cout << "}";
+				if(i!=cab.tam_paqte-1)
+					cout << ",";
 			}
+			cout << "]" <<endl;
 			free(buffer_data);
 			free(datos_myoware);}
 	}
