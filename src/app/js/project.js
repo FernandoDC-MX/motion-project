@@ -66,6 +66,10 @@ class MasterDevice{
 
             let _linkres = this.setSettingsDevice(this.#_slaveDevices.get(mac_address))
             this.#_slaveDevices.get(mac_address)['connected'] = 1;
+
+            let count = parseInt(_numDevices.innerText)
+            count++;
+            _numDevices.innerText = count
             
             return _linkres.toString();
         }else{
@@ -87,7 +91,7 @@ class MasterDevice{
 
     connectDevice(_id){
         let res = execSync(`${__dirname}\\serial\\main.exe TST ${_id} ${_portCOM}`);
-
+        
         if(parseInt(res.toString())){
             this.#_slaveDevices.get(_id)['connected'] = 1;
             execSync(`${__dirname}\\serial\\main.exe COL ${_id} ${_portCOM} ${this.#_slaveDevices.get(_id)['_index']}`);
@@ -111,34 +115,40 @@ class MasterDevice{
 
     deleteDevice(_id){
         let res = execSync(`${__dirname}\\serial\\main.exe DEL ${_id} ${_portCOM}`);
-        console.log(res.toString());
-        if(!res.toString()){
+
+        if(res.toString()){
             this.#_slaveDevices.delete(_id)
         }
+
+        let count = parseInt(_numDevices.innerText)
+        count = count - 1 < 0 ? 0 : count--;
+        _numDevices.innerText = count
 
         return parseInt(res.toString());
     }
 
     makeBinding(devices){   
+        let count = 0;
+
         if(devices){
             this.#_slaveDevices = new Map(Object.entries(devices));
-            let count = 0;
             document.querySelector('#_numDevices').innerHTML = count;
 
             this.#_slaveDevices.forEach((value, key) => {
                 let response = execSync(`${__dirname}\\serial\\main.exe TST ${value.id} ${_portCOM}`);
-                if(response.toString().includes('ERROR'))
+                if(response.toString().includes('ERROR') || response.toString().includes('0'))
                  value['connected'] = 0
                 else{  
                     value['connected'] = 1;
                     count++;
-                    document.querySelector('#_numDevices').innerHTML = count;
                     execSync(`${__dirname}\\serial\\main.exe COL ${value.id} ${_portCOM} ${value._index}`);
                     execSync(`${__dirname}\\serial\\main.exe NOM ${value.id} ${_portCOM} ${value.name}`);
                 }
                 this.#_slaveDevices.set(key, value)
             });
         }
+        
+        document.querySelector('#_numDevices').innerHTML = count;
 
     }
 
@@ -363,13 +373,13 @@ function editableDevices(){
     for(let i = 0; i < _devices.length; i++){
         _devices[i].addEventListener('click', function(){
             var _modal = document.querySelector('#editableDevice');
-            
             if(!this.querySelectorAll('p')[1].innerText.includes('No conectado')) {
                 _modal.querySelector('#_editName').disabled = false;
                 _modal.querySelector('#_editName').parentNode.classList.remove('d-none')
-
+                
 
                 _modal.querySelector('.update').classList.remove('d-none');
+                _modal.querySelector('.connect').classList.add('d-none')
             }else{  
                 _modal.querySelector('.connect').classList.remove('d-none')
             }
@@ -383,7 +393,7 @@ connect.addEventListener('click', async function(){
     let _id = document.querySelector('#editableDevice .modal-title').getAttribute('temporal-id');
 
     document.querySelector('#editableDevice .waves').classList.remove('d-none')
-    await sleep(100)
+    await sleep(10)
     if(_master.connectDevice(_id)){
         show('success','Dispositivo conectado correctamente')
         document.querySelector('#editableDevice #connect').classList.add('d-none')
@@ -435,6 +445,7 @@ deleteB.addEventListener('click', async function(){
 
     if(!_master.deleteDevice(_id)){
         show('success','Dispositivo eliminado correctamente')
+        bootstrap.Modal.getInstance(editableDevice).hide()
 
         var _response = readFile(_path + "\\info.json")
         

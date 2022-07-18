@@ -17,7 +17,7 @@ STR -> Comienza prueba snsr.
 STP -> Detiene prueba snsr.
 TST -> Prueba de comunicación con el snsr. (1-OK, 0-FAIL)
 BAT -> Devuelve porcentaje de bateria snsr.
-INF -> Devuelve información del sensor(edo de conexion, nivel de bateria, Nombre, color, tiempo).
+INF -> Devuelve información del sensor (edo de conexion, nivel de bateria, Nombre, color, tiempo).
 NOM -> Asigna nombre o devuelve valor actual en el snsr.
 COL -> Asigna color o devuelve   valor actual en el snsr.
 TIM -> Asigna tiempo o devuelve valor actual en el snsr.

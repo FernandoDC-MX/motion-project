@@ -640,7 +640,7 @@ input::-webkit-inner-spin-button {
     }
 }
 
-@media screen and (min-width: 1260px) {
+@media screen and (min-width: 1160px) {
     .ellips{
         width: 100px;
     }
