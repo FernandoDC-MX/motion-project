@@ -88,16 +88,14 @@ async function moveBall(dx, dy, dxd, dyd) {
 
 	// Goal
 	if ( ball_coord.left <= board_coord.left || ball_coord.right >= board_coord.right){
-		
-
 		// Reset the ball's coords.
 		ball_coord = initial_ball_coord;
 		ball.style = initial_ball.style;
 
 		// Increase the score.
-		if (ball_coord.left <= board_coord.left) {
+		if(ball_coord.left <= board_coord.left) {
 			score_2.innerHTML = +score_2.innerHTML + 1;
-		} else {
+		}else{
 			score_1.innerHTML = +score_1.innerHTML + 1;
 		}
 

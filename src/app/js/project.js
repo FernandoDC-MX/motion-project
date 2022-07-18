@@ -11,7 +11,6 @@ const zoomPlugin = require('chartjs-plugin-zoom');
 const { execSync, exec } = require('child_process');
 const fork = require("child_process").fork
 
-
 /* ---------------------------- Classes ------------------------------ */
 class Device{
     constructor(id, _id_muscle, _muscle_name, _hex, _index, name){
@@ -61,11 +60,17 @@ class MasterDevice{
     }
 
     setNewDevice(mac_address, Device){
-        this.#_slaveDevices.set(mac_address, Device)
-        let _linkres = this.setSettingsDevice(this.#_slaveDevices.get(mac_address))
-        this.#_slaveDevices.get(mac_address)['connected'] = 1;
-        console.log(_linkres.toString())
-        return _linkres.toString();
+        if(!this.#_slaveDevices.has(mac_address)){
+
+            this.#_slaveDevices.set(mac_address, Device)
+
+            let _linkres = this.setSettingsDevice(this.#_slaveDevices.get(mac_address))
+            this.#_slaveDevices.get(mac_address)['connected'] = 1;
+            
+            return _linkres.toString();
+        }else{
+            return 'ERROR';
+        }
     }
 
     setSettingsDevice(_slaveDevice){
@@ -122,7 +127,7 @@ class MasterDevice{
 
             this.#_slaveDevices.forEach((value, key) => {
                 let response = execSync(`${__dirname}\\serial\\main.exe TST ${value.id} ${_portCOM}`);
-                if(response.toString().includes('0'))
+                if(response.toString().includes('ERROR'))
                  value['connected'] = 0
                 else{  
                     value['connected'] = 1;
@@ -131,7 +136,6 @@ class MasterDevice{
                     execSync(`${__dirname}\\serial\\main.exe COL ${value.id} ${_portCOM} ${value._index}`);
                     execSync(`${__dirname}\\serial\\main.exe NOM ${value.id} ${_portCOM} ${value.name}`);
                 }
-                
                 this.#_slaveDevices.set(key, value)
             });
         }
@@ -176,13 +180,14 @@ ipc.on('enviar-nombre', (e, args) =>{
     document.querySelector('title').innerHTML = _title
     document.querySelector('.title').innerHTML = _title
 
-    _portCOM = args.port
-    if(_portCOM){
-        document.querySelector('#_namePort').innerHTML = _portCOM.toString()
+    _portCOM = args.port;
+
+    // if(_portCOM){
+    //     document.querySelector('#_namePort').innerHTML = _portCOM.toString()
         readInfo(_title)
-    }else{
-        document.querySelector('.hd-close').click()
-    }
+    // }else{
+    //     document.querySelector('.hd-close').click()
+    // }
     
     statusElement.previousElementSibling.classList.add('d-none')
 })
@@ -1392,6 +1397,7 @@ document.querySelectorAll('.channel-clickable').forEach(element =>{
 linkBtn.addEventListener('click', async () => {
     var _address = document.querySelector('#_deviceMac').value;
     var _name = document.querySelector('#_deviceName').value;
+    document.querySelector('#errorMac').innerText = '';
 
     if(_name && _address){
         linkBtn.parentNode.parentNode.parentNode.classList.add('d-none')
@@ -1406,7 +1412,7 @@ linkBtn.addEventListener('click', async () => {
 
         const _linkResponse = _master.setNewDevice(_address,_device)
 
-        if(!_linkResponse.includes('Se agrego correctamente')){
+        if(!_linkResponse.includes('ERROR')){
             var _response = readFile(_path + "\\info.json")
         
             if(_response.Contenido.devices){
@@ -1425,18 +1431,18 @@ linkBtn.addEventListener('click', async () => {
             displayGraphs(_response.Contenido.devices);
             displayLinked()
             show('success', 'Dispositivo vinculado correctamente.')
+
+            linkClose.click()
         }else{
-            show('error', 'Hubo un error en la vinculación.')
+            show('error', 'Hubo un error en la vinculación.');
+            document.querySelector('#errorMac').innerText = 'Este dispositivo ya existe en el proyecto.';
         }
        
-
-        linkClose.click()
-
         // Restore animation modal
         linkBtn.parentNode.parentNode.parentNode.classList.remove('d-none')
         linkBtn.parentNode.parentNode.parentNode.nextElementSibling.classList.add('d-none')
         linkBtn.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('p').innerText = 'Presiona el botón para empezar la vinculación del dispositivo.';
-        console.log(_master)
+
     }else{
         if(!_name){
             document.querySelector('#errorName').innerText = 'Este campo es obligatorio';
