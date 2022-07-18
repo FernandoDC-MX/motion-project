@@ -112,8 +112,9 @@ const createWindow = () => {
 }
 
 const projectWindow = (evt, args) =>{
-  let _portCOM = null;
-  console.log(BrowserWindow.getAllWindows());
+  if(!project){
+    let _portCOM = null;
+
   // Create the browser window.
   project = new BrowserWindow({
     minHeight:600,
@@ -178,6 +179,7 @@ const projectWindow = (evt, args) =>{
 
   project.on('closed',()=>{
       ipc.removeAllListeners('maximizeRestoreProject');
+      project = null;
   })
 
   ipc.on('startPong', () =>{
@@ -207,6 +209,8 @@ const projectWindow = (evt, args) =>{
         }
     })
   }
+  }
+
 }
 
 const pingpongWindow = () =>{
