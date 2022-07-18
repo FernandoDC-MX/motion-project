@@ -25,7 +25,6 @@ html, body{
     flex-direction: row;
     width: 100%;
     height: 40px;
-    border-bottom: 3px solid #343B48;
     background-color: #1B1D23;
     -webkit-user-select: none;
     user-select: none;
@@ -338,4 +337,43 @@ html, body{
     left: -2px;
     top: 4px;
     border-radius: 0 0.25em 0.25em 0;
+}
+
+#fileExplorer .modal-body{
+    max-height: 100%;
+    overflow: auto;
+    width: 100%;
+}
+
+.project-element{
+    width: 100%;
+    min-height: 5em;
+    border-left: 0.5em solid transparent;
+    border-bottom: 1px solid rgb(108, 108, 108);
+    cursor: pointer;
+}
+
+.project-element:hover{
+    border-left: 0.5em solid #FF7B54;
+    transition: 0.2s all ease-in-out;
+}
+
+.project-element div{
+    color: #F8F8F8;
+}
+
+.project-element div h5{
+    font-family: 'Roboto';
+    margin: 0;
+    padding: 0;
+}
+
+.project-element:hover div span, .project-element:hover div svg {
+    color: #FF7B54;
+    transition: 0.2s all ease-in-out;
+}
+
+.project-element div span{
+    position: relative;
+    top: 1px;
 }

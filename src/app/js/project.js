@@ -182,12 +182,12 @@ ipc.on('enviar-nombre', (e, args) =>{
 
     _portCOM = args.port;
 
-    // if(_portCOM){
-    //     document.querySelector('#_namePort').innerHTML = _portCOM.toString()
+    if(_portCOM){
+        document.querySelector('#_namePort').innerHTML = _portCOM.toString()
         readInfo(_title)
-    // }else{
-    //     document.querySelector('.hd-close').click()
-    // }
+    }else{
+        document.querySelector('.hd-close').click()
+    }
     
     statusElement.previousElementSibling.classList.add('d-none')
 })

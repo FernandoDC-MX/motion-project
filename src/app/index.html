@@ -53,14 +53,14 @@
           <!-- Buttons -->
           <div class="mt-4">
             <button class="_btn_custom" id="_new_project" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Nuevo proyecto</button>
-            <button class="_btn_custom">Abrir</button> 
+            <button class="_btn_custom d-none" id="_openProject" data-bs-toggle="modal" data-bs-target="#fileExplorer">Abrir</button> 
           </div>
 
           <!-- Contenedor de proyectos -->
           <div class="_container_projects">
             <h5>Recientes</h5>
             <div class="mt-4 _scroll_enabled" id="_container_table">
-              <table class="table">
+              <table class="table d-none">
                 <thead>
                   <tr>
                     <th scope="col"
@@ -81,6 +81,13 @@
                   
                 </tbody>
               </table>
+              <div class="d-flex flex-column justify-content-center align-items-center w-100">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="100" height="100" viewBox="0 0 576 512">
+                  <!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                  <path d="M572.6 270.3l-96 192C471.2 473.2 460.1 480 447.1 480H64c-35.35 0-64-28.66-64-64V96c0-35.34 28.65-64 64-64h117.5c16.97 0 33.25 6.742 45.26 18.75L275.9 96H416c35.35 0 64 28.66 64 64v32h-48V160c0-8.824-7.178-16-16-16H256L192.8 84.69C189.8 81.66 185.8 80 181.5 80H64C55.18 80 48 87.18 48 96v288l71.16-142.3C124.6 230.8 135.7 224 147.8 224h396.2C567.7 224 583.2 249 572.6 270.3z"/>
+                </svg>
+                <p class="color-description">No hay ningún archivo.</p>
+              </div>
             </div>
           </div>
 
@@ -167,6 +174,25 @@
                 <button class="btn bg-crear d-none" id="prevBtn">Anterior</button>
                 <button class="btn bg-crear" id="nextBtn">Siguiente</button>
               </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade t-15" id="fileExplorer" aria-modal="true" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content h-630 w-800">
+            <div class="modal-header">
+              <p class="modal-title">Selecciona un proyecto</p>
+              <button class="d-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" aria-label="Close" width="24" height="24" fill="currentColor" class="bi bi-x cursor" viewBox="0 0 16 16">
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </div>
+            <div class="modal-body p-0 bg-gray-modal">
+              <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+                <img src="icons/linking.gif" class="img-fluid" alt="">
+              </div>
+            </div>
           </div>
         </div>
       </div>

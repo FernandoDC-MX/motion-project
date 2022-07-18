@@ -113,7 +113,7 @@ const createWindow = () => {
 
 const projectWindow = (evt, args) =>{
   let _portCOM = null;
-
+  console.log(BrowserWindow.getAllWindows());
   // Create the browser window.
   project = new BrowserWindow({
     minHeight:600,

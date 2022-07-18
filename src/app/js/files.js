@@ -52,7 +52,6 @@ function readDataFolder(_path){
 
 }
 
-
 function infoFile(file){
     return  fs.statSync(file)
 }

@@ -58,6 +58,11 @@ function readProjects(){
              var x = readFile(__dirname + `\\Proyectos\\${file}\\info.json`)
              _proyectos.push(x.Contenido)
           }
+          if(_proyectos.length > 1){
+            _openProject.classList.remove('d-none')
+            document.querySelector('#_container_table .table').classList.remove('d-none')
+            document.querySelector('#_container_table div').classList.add('d-none')
+          }
           displayProyectos(0)
           update_projects();
         }
@@ -152,7 +157,6 @@ function displayProyectos(filter){
         _body.appendChild(_tr)
     });
 
-    
 }
 
 _order_date.addEventListener('click', ()=>{
@@ -191,6 +195,59 @@ function update_projects(){
     }
 }
 
+fileExplorer.addEventListener('shown.bs.modal', readAllProjects)
+
+function readAllProjects(){
+    var _pathProjects = path.resolve("src","app","Proyectos");
+
+    const arrFiles = readFiles(_pathProjects);
+
+    if(arrFiles.length){
+        let elementZone = document.querySelector('#fileExplorer .modal-body')
+        elementZone.innerHTML = '';
+
+        arrFiles.forEach(element =>{
+            const information = readFile(`${_pathProjects}\\${element}\\info.json`)
+            
+            if(information.Estado === 'OK'){
+                const _div = document.createElement('div');
+                _div.classList.add('project-element', 'py-3', 'px-4','project')
+                _div.setAttribute('data-id', element)
+
+                const _flex = document.createElement('div');
+                _flex.classList.add('d-flex','justify-content-between');
+
+                const h5 = document.createElement('h5');
+                h5.innerText = element;
+
+                _flex.appendChild(h5);
+
+                const _time = document.createElement('div');
+
+                const _dataTime = document.createElement('span')
+                _dataTime.innerText = information.Contenido.created_at;
+
+                _time.appendChild(_dataTime)
+
+                _flex.append(_time)
+
+                _div.appendChild(_flex)
+
+                const _p = document.createElement('p');
+                _p.classList.add('my-2', 'font-rubik');
+
+                _p.innerText = information.Contenido.comments ?  information.Contenido.comments : '[Sin comentarios]'
+
+                _div.appendChild(_p)
+
+                elementZone.appendChild(_div)
+            }
+        })
+
+        update_projects()
+    }
+}
+
 // Maximize App
 maximizeBtn.addEventListener('click', () =>{
     ipc.send('maximizeRestoreApp')
@@ -210,7 +267,3 @@ function changeMaximizeBtn(isMaximized){
 
 ipc.on('isMaximized', ()=>{ changeMaximizeBtn(true) })
 ipc.on('isRestored', ()=>{ changeMaximizeBtn(false) })
-
-// testBtn.addEventListener('click', () =>{
-// exec("C:\\Users\\ferba\\OneDrive\\Escritorio\\MotionProject\\src\\app\\serial\\holi.exe", (error, stdout, stderr) => console.log(stdout));
-// })
