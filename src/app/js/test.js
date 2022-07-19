@@ -2,19 +2,18 @@ const { exec } = require('child_process');
 const path = require('path');
 
 let _nTimes = 1; //Times to iterate the loop.
-const max = 100; // Max value
-const min = 1; // Min valuess
 let iterator;
 let local_arr = []
-let prev_pos = 0;
+let path1 = path.resolve("src/app/serial", "main.exe");
+
 
 process.on('message', async (msg)=>{
     if(msg.play){
         _nTimes = msg.nTimes;
-        let path1 = path.resolve("src/app/serial", "main.exe");
 
         for (iterator = msg.iterator; iterator < _nTimes; iterator++) {
-            exec(`${path1} DAT 4C:75:25:DE:8B:60 COM3`, (error, stdout, stderr) =>{
+
+            exec(`${path1} DAT ${msg._device} ${msg._portCOM}`, (error, stdout, stderr) =>{
                 if(!stdout.includes('ERROR')){
                     let res = stdout.replaceAll('\\r\\n','').split('-');
 
@@ -51,7 +50,7 @@ process.on('message', async (msg)=>{
                     flag: 0
                 })
             }
-            await sleep(150)
+            await sleep(40)
         }
 
 

@@ -205,10 +205,10 @@ const projectWindow = (evt, args) =>{
   async function listSerialPorts() {
     await SerialPort.list().then((ports, err) => {
         if(ports.length){
-            _portCOM = ports[0].path
+            _portCOM = ports[1].path
         }
-    })
-  }
+      })
+    }
   }
 
 }

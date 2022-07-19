@@ -133,7 +133,7 @@ html, body{
     background: #282828;
     height: 100%;
     margin: 0 auto;
-    overflow-y: auto;
+    overflow-y: none;
     overflow-x: none;
 }
 

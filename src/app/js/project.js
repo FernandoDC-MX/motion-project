@@ -81,7 +81,7 @@ class MasterDevice{
         let response;
 
         if(_slaveDevice){
-            response = execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} 100 ${_slaveDevice._index}`);
+            response = execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} ${_slaveDevice._index}`);
         }else{
           response = {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}
         }
@@ -95,6 +95,11 @@ class MasterDevice{
         if(parseInt(res.toString())){
             this.#_slaveDevices.get(_id)['connected'] = 1;
             execSync(`${__dirname}\\serial\\main.exe COL ${_id} ${_portCOM} ${this.#_slaveDevices.get(_id)['_index']}`);
+            let battery = execSync(`${__dirname}\\serial\\main.exe BAT ${_id} ${_portCOM}`);
+            this.#_slaveDevices.get(_id)['battery'] = battery.toString();
+            let count = parseInt(_numDevices.innerText)
+            count++;
+            _numDevices.innerText = count
 
         }else{
             this.#_slaveDevices.get(_id)['connected'] = 0;
@@ -128,21 +133,26 @@ class MasterDevice{
     }
 
     makeBinding(devices){   
-        let count = 0;
 
+        let count = 0;
         if(devices){
             this.#_slaveDevices = new Map(Object.entries(devices));
             document.querySelector('#_numDevices').innerHTML = count;
 
             this.#_slaveDevices.forEach((value, key) => {
                 let response = execSync(`${__dirname}\\serial\\main.exe TST ${value.id} ${_portCOM}`);
-                if(response.toString().includes('ERROR') || response.toString().includes('0'))
-                 value['connected'] = 0
+                
+                if(response.toString().includes('ERROR') || response.toString().includes('0')){
+                    value['connected'] = 0
+                    value['battery'] = 0
+                }
                 else{  
                     value['connected'] = 1;
                     count++;
                     execSync(`${__dirname}\\serial\\main.exe COL ${value.id} ${_portCOM} ${value._index}`);
                     execSync(`${__dirname}\\serial\\main.exe NOM ${value.id} ${_portCOM} ${value.name}`);
+                    let battery = execSync(`${__dirname}\\serial\\main.exe BAT ${value.id} ${_portCOM}`);
+                    value['battery'] = battery.toString()
                 }
                 this.#_slaveDevices.set(key, value)
             });
@@ -202,6 +212,12 @@ ipc.on('enviar-nombre', (e, args) =>{
     statusElement.previousElementSibling.classList.add('d-none')
 })
 
+async function conectaTempo (id, port, index){
+    execSync(`${__dirname}\\serial\\main.exe COL ${id} ${port} ${index}`);
+    await sleep(10)
+
+}
+
 // Read the info.json inside the Project's folder.
 function readInfo(_nameFolder){
     _path = `${__dirname}\\Proyectos\\${_nameFolder}`;
@@ -211,7 +227,7 @@ function readInfo(_nameFolder){
         _devices = _response.Contenido.devices;
         _settings = _response.Contenido.settings;
         _master.makeBinding(_devices)
-        displayChannels(_response.Contenido.devices)
+        displayChannels(_master.JSON)
         displayGraphs(_response.Contenido.devices);
         displayLinked()
         statusElement.innerText = 'Listo'
@@ -230,7 +246,7 @@ function displayChannels(canales){
     _lista.innerHTML = '';
 
     if(canales){
-        channels = new Map(Object.entries(canales));
+        channels = _master.JSON
 
         var i = 1;
         _lista.innerHTML = '';
@@ -265,6 +281,7 @@ function displayChannels(canales){
 
 
         channels.forEach(element => {
+            console.log(element);
             var _config = element;
 
             var _li = document.createElement('li');
@@ -304,7 +321,7 @@ function displayChannels(canales){
             var _p = document.createElement('p');
             _p.classList.add('text-center')
             _p.style.color = _config._hex;
-            _p.innerHTML = '94 %'
+            _p.innerHTML = `${_config.battery} %`
 
             _sub.appendChild(_p)
 
@@ -331,10 +348,10 @@ function displayChannels(canales){
 function displayLinked(){
     var _linked = document.querySelector('.linked');
     _linked.innerHTML = '';
+    let arr = _master.JSON
 
-    console.log(_master.JSON);
-    if( _master.JSON.size > 0){
-        _master.JSON.forEach((value, key) => {
+    if( arr.size > 0){
+        arr.forEach((value, key) => {
 
             var _div = document.createElement('div');
             _div.classList.add('px-3','py-2','modal-editable')
@@ -344,8 +361,8 @@ function displayLinked(){
 
             var _p = document.createElement('p');
             _p.classList.add('m-0')
-            _p.style.color = _devices[key]._hex;
-            _p.innerText = _devices[key].name;
+            _p.style.color = arr.get(key)._hex;
+            _p.innerText = arr.get(key).name;
 
             _div.appendChild(_p);
 
@@ -395,8 +412,10 @@ connect.addEventListener('click', async function(){
     document.querySelector('#editableDevice .waves').classList.remove('d-none')
     await sleep(10)
     if(_master.connectDevice(_id)){
+        bootstrap.Modal.getInstance(editableDevice).hide()
         show('success','Dispositivo conectado correctamente')
         document.querySelector('#editableDevice #connect').classList.add('d-none')
+        displayChannels(_master.JSON)
         displayLinked()
     }else{
         show('error', 'No se pudo conectar.')
@@ -597,7 +616,7 @@ playBtn.addEventListener('click', () => {
         iterator = 0;
 
         _master.startTest(_settings)
-
+        let _tmpDevices = _master.JSON.keys()
         for(let i = 0; i < _mainCharts.length; i++){
 
             var _child = fork(__dirname + "\\js\\test.js")
@@ -608,6 +627,7 @@ playBtn.addEventListener('click', () => {
             _child.send({ 
                 msg: 'do work',
                 nTimes: _settings.imu_rate,
+                _device: _tmpDevices[i],
                 _portCOM: _portCOM,
                 pid : _child.pid, // passing pid to child
                 id_zone: _mainCharts[i].getAttribute('data-device'),
@@ -891,6 +911,7 @@ function drawAccelerometerGyroChart(color, title){
 
 // Update a chart.
 function addData(map, label, data) {
+    console.log(data);
     // We will use this variable to determine if a label was erased or not.
     let flag = false;
 

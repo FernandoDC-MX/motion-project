@@ -10,6 +10,7 @@ Comando          Parametro                     Retorno
   NOM    MAC/COM/NOM     
   COL    MAC/COM/COL
   TIM    MAC/NOM/TIEMPO
+  
 ADD -> Vincula un nuevo sensor.
 DEL -> Elimina sensor seleccionado.
 LSS -> Lista los comandos en cerebro.
