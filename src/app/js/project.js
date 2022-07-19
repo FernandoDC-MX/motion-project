@@ -164,7 +164,7 @@ class MasterDevice{
 
     startTest(settings){
         this.#_slaveDevices.forEach((value, key) => {
-            exec(`${__dirname}\\serial\\main.exe STR ${key} ${_portCOM} ${settings.number_rate} ${settings.imu_rate}`)
+            exec(`${__dirname}\\serial\\main.exe STR ${key} ${_portCOM} 100 600`)
         });
     }
 
@@ -212,11 +212,6 @@ ipc.on('enviar-nombre', (e, args) =>{
     statusElement.previousElementSibling.classList.add('d-none')
 })
 
-async function conectaTempo (id, port, index){
-    execSync(`${__dirname}\\serial\\main.exe COL ${id} ${port} ${index}`);
-    await sleep(10)
-
-}
 
 // Read the info.json inside the Project's folder.
 function readInfo(_nameFolder){
@@ -1256,7 +1251,7 @@ function settings(){
                     break;
                 case 'advanced':title.innerHTML = 'Configuración avanzada';
                                 description.innerHTML = 'La configuración avanzada sirve para...'
-                                setSettingsValues(1,1,60, false)                                
+                                setSettingsValues(1,1,60000, false)                                
                     break;
             }
 
@@ -1284,21 +1279,35 @@ const setSettingsValues = (_valueSample, _valueNumber, _valueImu, _valueExample,
     }
 }
 
+// Calulate the test's lifetime.
 sampleRate.addEventListener('change', function(){
+    var _minData = 1000;
+    let seconds = 0
 
-    if(this.value < 1 || this.value === undefined){
+    if(this.value < 1 || this.value === undefined)
         this.value = 1
+    
+    if(parseInt(sampleRateMeasure.value)){
+        seconds = this.value * 3600 // Hours in seconds.
+    }else{
+        seconds = this.value * 60; //Minutes in seconds.
     }
 
-    var _minData = 60;
+    let _imuRateResult = seconds * (_minData/numberRate.value)
+
     var _formule = this.value * _minData;
 
     imuRate.value = Math.round(_formule)
 })
 
+sampleRateMeasure.addEventListener('change', function(){
+   
+})
+
+// Calculate the data wanted/expected
 imuRate.addEventListener('change', function(){
-    if(this.value < 60 || this.value === undefined)
-        this.value = 60
+    if(this.value < 1000 || this.value === undefined)
+        this.value = 1000
     
     const _time = parseInt(numberRateMeasure.value) ? 1 : 1000;
 
@@ -1307,11 +1316,14 @@ imuRate.addEventListener('change', function(){
     sampleRate.value = _formule % 1 === 0 ? _formule :_formule.toFixed(1);
 })
 
-numberRate.addEventListener('change', function(){
-    var _min = numberRateMeasure.value ? 1 : 100
 
-    if(this.value < _min || this.value === undefined)
+numberRate.addEventListener('change', function(){
+    var _min = parseInt(numberRateMeasure.value) ? 1 : 0.5
+
+    if(this.value < _min || this.value === undefined){
         this.value = _min
+        numberRate.setAttribute('min',this.value);
+    }
 
     const _time = parseInt(numberRateMeasure.value) ? 1 : 1000;
 
@@ -1321,8 +1333,7 @@ numberRate.addEventListener('change', function(){
 })
 
 numberRateMeasure.addEventListener('change', function(){
-
-    numberRate.value = parseInt(this.value) ? 1 : 100
+    numberRate.value = parseInt(this.value) ? 1 : 0.5
     numberRate.setAttribute('min',numberRate.value);
     
     const e = new Event("change");

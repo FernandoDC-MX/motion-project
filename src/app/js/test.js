@@ -14,9 +14,9 @@ process.on('message', async (msg)=>{
         for (iterator = msg.iterator; iterator < _nTimes; iterator++) {
 
             exec(`${path1} DAT ${msg._device} ${msg._portCOM}`, (error, stdout, stderr) =>{
+                console.log(stdout);
                 if(!stdout.includes('ERROR')){
                     let res = stdout.replaceAll('\\r\\n','').split('-');
-
                     res.forEach(element => {
                         local_arr.push(JSON.parse(element));
                     });                                   
@@ -50,7 +50,7 @@ process.on('message', async (msg)=>{
                     flag: 0
                 })
             }
-            await sleep(40)
+            await sleep(1000)
         }
 
 
