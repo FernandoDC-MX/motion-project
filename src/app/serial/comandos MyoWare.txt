@@ -1,50 +1,31 @@
-Comando          Parametro                     Retorno 
-  ADD    MAC/COM/NOM/TIEMPO/COL
-  DEL    MAC/COM
-  LSS    MAC/COM
-  STR    MAC/COM/TIEMPO/N_MUESTRAS              
-  STP    MAC/COM
-  TST    MAC/COM       
-  BAT    MAC/COM
-  INF    MAC/COM
-  NOM    MAC/COM/NOM     
-  COL    MAC/COM/COL
-  TIM    MAC/NOM/TIEMPO
-  
+Comando          Parametro                               Retorno 
+  ADD    MAC/PUERTO                           {edo_con:con, bat:bat, resp_cmd: resp}
+  DEL    MAC/PUERTO                           {edo_con:con, bat:bat, resp_cmd: resp}
+  CFG    MAC/PUERTO/NOM/COL                   {edo_con:con, bat:bat, resp_cmd: resp}
+  LSS    PUERTO                               {mac:4C:75:25:DE:8B:60} 
+  STR    MAC/PUERTO/TIEMPO/N_MUESTRAS         {edo_con:con, bat:bat, resp_cmd: resp}            
+  STP    MAC/PUERTO                           {edo_con:con, bat:bat, resp_cmd: resp}
+  INF	 MAC/PUERTO                             {edo_con:con, nombre:nom, bat:bat, resp_cmd:resp, color:col, tiempo:tim}
+  DAT    MAC/PUERTO                           {id:"",myo:"",ax:"",ay:"",az:"",gx:"",gy:"",gz:""}
+
+					      Valores Respuesta Retorno(1=OK,0=Fail)
+
 ADD -> Vincula un nuevo sensor.
 DEL -> Elimina sensor seleccionado.
+CFG -> Inicializa informacion del sensor.
 LSS -> Lista los comandos en cerebro.
 STR -> Comienza prueba snsr.
 STP -> Detiene prueba snsr.
-TST -> Prueba de comunicación con el snsr. (1-OK, 0-FAIL)
-BAT -> Devuelve porcentaje de bateria snsr.
-INF -> Devuelve información del sensor (edo de conexion, nivel de bateria, Nombre, color, tiempo).
-NOM -> Asigna nombre o devuelve valor actual en el snsr.
-COL -> Asigna color o devuelve   valor actual en el snsr.
-TIM -> Asigna tiempo o devuelve valor actual en el snsr.
-Colores
- 0 - Devuelve color actual en Sensor
- 1 - naranja
- 2 - verde
- 3 - azul
- 4 - rosa
- EJ. .\name_executable COL 4C:75:25:DE:8B:60 COM4 2
-Tiempo
- La unidad de tiempo se encuentra en milisegundos
- EJ. .\name_executable TIM 4C:75:25:DE:8B:60 COM4 5 (Se tomara una muestra cada 5 milisegundos)
+INF -> Devuelve información del sensor.
+DAT -> Solicita Datos al sensor obtenidos al momento
  
  EJ.
- .\name_executable ADD 4C:75:25:DE:8B:60 COM4 Pierna 3 2
+ .\name_executable ADD 4C:75:25:DE:8B:60 COM4
  .\name_executable DEL 4C:75:25:DE:8B:60 COM4
- .\name_executable LSS 4C:75:25:DE:8B:60 COM4
- .\name_executable STR 4C:75:25:DE:8B:60 COM4
+ .\name_executable CFG 4C:75:25:DE:8B:60 COM4 Pierna 1
+ .\name_executable LSS COM4
+ .\name_executable STR 4C:75:25:DE:8B:60 COM4 100 12000
  .\name_executable STP 4C:75:25:DE:8B:60 COM4
- .\name_executable TST 4C:75:25:DE:8B:60 COM4
- .\name_executable BAT 4C:75:25:DE:8B:60 COM4
  .\name_executable INF 4C:75:25:DE:8B:60 COM4
- .\name_executable NOM 4C:75:25:DE:8B:60 COM4 Brazo (Nombre Limitado a 15 caracteres)
- .\name_executable COL 4C:75:25:DE:8B:60 COM4 0 (Devuelve Color actual en el sensor)
- .\name_executable TIM 4C:75:25:DE:8B:60 COM4 0 (Devuelve Tiempo actual en el sensor)
-
-
-
+ .\name_executable DAT 4C:75:25:DE:8B:60 COM4
+ 

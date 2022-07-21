@@ -78,10 +78,12 @@ class MasterDevice{
     }
 
     setSettingsDevice(_slaveDevice){
-        let response;
+        let response = 'ERROR';
 
         if(_slaveDevice){
-            response = execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} ${_slaveDevice._index}`);
+            execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM}`)
+            response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} ${_slaveDevice._index}`))
+            _slaveDevice['battery'] = response.bat
         }else{
           response = {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}
         }
@@ -90,46 +92,46 @@ class MasterDevice{
     }
 
     connectDevice(_id){
-        let res = execSync(`${__dirname}\\serial\\main.exe TST ${_id} ${_portCOM}`);
+        let _device = this.#_slaveDevices.get(_id);
+
+        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${_device.name} ${_device._index}`));
         
-        if(parseInt(res.toString())){
-            this.#_slaveDevices.get(_id)['connected'] = 1;
-            execSync(`${__dirname}\\serial\\main.exe COL ${_id} ${_portCOM} ${this.#_slaveDevices.get(_id)['_index']}`);
-            let battery = execSync(`${__dirname}\\serial\\main.exe BAT ${_id} ${_portCOM}`);
-            this.#_slaveDevices.get(_id)['battery'] = battery.toString();
+        if(response.edo_con){
             let count = parseInt(_numDevices.innerText)
             count++;
             _numDevices.innerText = count
-
-        }else{
-            this.#_slaveDevices.get(_id)['connected'] = 0;
         }
 
-        return parseInt(res.toString());
+        _device['battery'] = response.bat;
+        _device['connected'] = response.edo_con;
+
+
+        return response.edo_con
     }
 
     updateDevice(_id, nom){
-        let res = execSync(`${__dirname}\\serial\\main.exe NOM ${_id} ${_portCOM} ${nom}`);
+        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${nom} ${this.#_slaveDevices.get(_id)._index}`))
         
-        if(!res.toString()){
+        if(response.edo_con){
             this.#_slaveDevices.get(_id).name = nom;
         }
 
-        return parseInt(res.toString());
+        return response.edo_con;
     }
 
     deleteDevice(_id){
-        let res = execSync(`${__dirname}\\serial\\main.exe DEL ${_id} ${_portCOM}`);
+        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe DEL ${_id} ${_portCOM}`));
 
-        if(res.toString()){
+        if(!response.bat){
             this.#_slaveDevices.delete(_id)
+            
+            let count = parseInt(_numDevices.innerText)
+            console.log(count);
+            count = count - 1 <= 0 ? 0 : count--;
+            _numDevices.innerText = count
         }
 
-        let count = parseInt(_numDevices.innerText)
-        count = count - 1 < 0 ? 0 : count--;
-        _numDevices.innerText = count
-
-        return parseInt(res.toString());
+        return response.bat;
     }
 
     makeBinding(devices){   
@@ -140,19 +142,15 @@ class MasterDevice{
             document.querySelector('#_numDevices').innerHTML = count;
 
             this.#_slaveDevices.forEach((value, key) => {
-                let response = execSync(`${__dirname}\\serial\\main.exe TST ${value.id} ${_portCOM}`);
-                
-                if(response.toString().includes('ERROR') || response.toString().includes('0')){
-                    value['connected'] = 0
-                    value['battery'] = 0
+                let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${value.id} ${_portCOM} ${value.name} ${value._index}`));
+                if(!response.edo_con){
+                    value['connected'] = response.edo_con
+                    value['battery'] = response.bat
                 }
                 else{  
                     value['connected'] = 1;
                     count++;
-                    execSync(`${__dirname}\\serial\\main.exe COL ${value.id} ${_portCOM} ${value._index}`);
-                    execSync(`${__dirname}\\serial\\main.exe NOM ${value.id} ${_portCOM} ${value.name}`);
-                    let battery = execSync(`${__dirname}\\serial\\main.exe BAT ${value.id} ${_portCOM}`);
-                    value['battery'] = battery.toString()
+                    value['battery'] = response.bat
                 }
                 this.#_slaveDevices.set(key, value)
             });
@@ -427,7 +425,7 @@ update.addEventListener('click', async function(){
 
     document.querySelector('#editableDevice .waves').classList.remove('d-none')
     await sleep(100)
-    if(!_master.updateDevice(_id, nom)){
+    if(_master.updateDevice(_id, nom)){
         show('success','Dispositivo actualizado correctamente')
         document.querySelector('#editableDevice #connect').classList.add('d-none')
 
@@ -442,6 +440,9 @@ update.addEventListener('click', async function(){
         displayChannels(_response.Contenido.devices)
         displayGraphs(_response.Contenido.devices);
         displayLinked()
+        bootstrap.Modal.getInstance(editableDevice).hide()
+        _editName.value = '';
+        
     }else{
         show('error', 'No se pudo actualizar.')
     }
@@ -476,6 +477,7 @@ deleteB.addEventListener('click', async function(){
             displayChannels(_response.Contenido.devices)
             displayGraphs(_response.Contenido.devices);
             displayLinked()
+            bootstrap.Modal.getInstance(editableDevice).hide()
         }
     
         
@@ -1251,7 +1253,7 @@ function settings(){
                     break;
                 case 'advanced':title.innerHTML = 'Configuración avanzada';
                                 description.innerHTML = 'La configuración avanzada sirve para...'
-                                setSettingsValues(1,1,60000, false)                                
+                                setSettingsValues(1,1,60, false)                                
                     break;
             }
 
@@ -1281,63 +1283,78 @@ const setSettingsValues = (_valueSample, _valueNumber, _valueImu, _valueExample,
 
 // Calulate the test's lifetime.
 sampleRate.addEventListener('change', function(){
-    var _minData = 1000;
-    let seconds = 0
-
     if(this.value < 1 || this.value === undefined)
         this.value = 1
     
-    if(parseInt(sampleRateMeasure.value)){
-        seconds = this.value * 3600 // Hours in seconds.
-    }else{
-        seconds = this.value * 60; //Minutes in seconds.
-    }
-
-    let _imuRateResult = seconds * (_minData/numberRate.value)
-
-    var _formule = this.value * _minData;
-
-    imuRate.value = Math.round(_formule)
+    let minutesToSeconds = sampleRateMeasure.value === '0' ? this.value * 60 : this.value * 3600
+    let seconds = numberRateMeasure.value === '1' ? numberRate.value : numberRate.value/1000;
+    
+    imuRate.value = Math.floor(minutesToSeconds / seconds);
 })
 
 sampleRateMeasure.addEventListener('change', function(){
-   
+    const e = new Event("change");
+    sampleRate.dispatchEvent(e);
 })
 
 // Calculate the data wanted/expected
 imuRate.addEventListener('change', function(){
-    if(this.value < 1000 || this.value === undefined)
-        this.value = 1000
+    if(this.value < 60 || this.value === undefined)
+        this.value = 60
     
-    const _time = parseInt(numberRateMeasure.value) ? 1 : 1000;
+    // Converts the measure time in seconds if it is on miliseconds.
+    let milisecondsToSeconds = numberRateMeasure.value === '1' ? numberRate.value * 1 : numberRate.value / 1000
 
-    var _formule = (imuRate.value * (numberRate.value/_time)) / 60;
-    
-    sampleRate.value = _formule % 1 === 0 ? _formule :_formule.toFixed(1);
+    let result =imuRate.value * milisecondsToSeconds;
+
+    console.log(result);
+
+    if(result > 3599)
+    {
+        sampleRate.value = (result/3600).toFixed(1);
+        sampleRateMeasure.value = '1';
+    }else{ 
+        sampleRateMeasure.value = '0';
+        sampleRate.value = (result/60).toFixed(1);
+    }
 })
 
-
 numberRate.addEventListener('change', function(){
-    var _min = parseInt(numberRateMeasure.value) ? 1 : 0.5
+
+    var _min = parseInt(numberRateMeasure.value) ? 1 : 100
 
     if(this.value < _min || this.value === undefined){
-        this.value = _min
-        numberRate.setAttribute('min',this.value);
+        this.value = _min;
+        this.setAttribute('min',this.value);
     }
 
-    const _time = parseInt(numberRateMeasure.value) ? 1 : 1000;
+    if(this.value > 999){
+        this.value = 1;
+        this.setAttribute('min',this.value);
+        numberRateMeasure.value = 1
+    }
 
-    var _formule = (imuRate.value * (numberRate.value/_time)) / 60;
-        
-    sampleRate.value = _formule % 1 === 0 ? _formule :_formule.toFixed(1);
+
+    let convertValue = !parseInt(numberRateMeasure.value) ? this.value/1000 : this.value;
+
+    let result = convertValue * imuRate.value;
+
+    if(result > 3599)
+    {
+        sampleRate.value = (result/3600).toFixed(1);
+        sampleRateMeasure.value = '1';
+    }else{ 
+        sampleRateMeasure.value = '0';
+        sampleRate.value = (result/60).toFixed(1);
+    }
 })
 
 numberRateMeasure.addEventListener('change', function(){
-    numberRate.value = parseInt(this.value) ? 1 : 0.5
+    numberRate.value = parseInt(this.value) ? 1 : 100
     numberRate.setAttribute('min',numberRate.value);
     
     const e = new Event("change");
-    imuRate.dispatchEvent(e);
+    numberRate.dispatchEvent(e);
 })
 
 // Save settings.

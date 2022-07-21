@@ -47,7 +47,7 @@ const splashScreen = () =>{
     setTimeout(function () {
       splash_screen.close();
       createWindow()
-    }, 100);
+    }, 4000);
   })
 }
 
