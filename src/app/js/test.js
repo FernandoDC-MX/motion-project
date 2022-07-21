@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { exec, execSync } = require('child_process');
 const path = require('path');
 
 let _nTimes = 1; //Times to iterate the loop.
@@ -10,6 +10,11 @@ let path1 = path.resolve("src/app/serial", "main.exe");
 process.on('message', async (msg)=>{
     if(msg.play){
         _nTimes = msg.nTimes;
+        let refresh = msg._refresh
+
+        let x = execSync(`${path1} DAT ${msg._device} ${msg._portCOM}`);    
+
+        console.log("El dispositivo al inicio ya tiene: " + x);
 
         for (iterator = msg.iterator; iterator < _nTimes; iterator++) {
 
@@ -49,7 +54,7 @@ process.on('message', async (msg)=>{
                     flag: 0
                 })
             }
-            await sleep(28)
+            await sleep(refresh)
         }
 
 

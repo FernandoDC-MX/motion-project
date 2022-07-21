@@ -149,13 +149,14 @@ const projectWindow = (evt, args) =>{
   usbDetect.startMonitoring();
 
   // USB Connected.
-  usbDetect.on('add', function(device){ 
-    project.webContents.send('usb-event', {'device' : device, 'action': 'connected'}) 
+  usbDetect.on('add', async function(device){ 
+    await listSerialPorts()
+    project.webContents.send('usb-event', {'device' : device, 'action': 'connected', 'com': _portCOM}) 
   });
 
   // USB Disconnected
   usbDetect.on('remove', function(device){ 
-    project.webContents.send('usb-event', {'device' : device, 'action': 'removed'}) 
+    project.webContents.send('usb-event', {'device' : device, 'action': 'removed', 'com': _portCOM}) 
   });
 
   // Close app
@@ -210,7 +211,6 @@ const projectWindow = (evt, args) =>{
       })
     }
   }
-
 }
 
 const pingpongWindow = () =>{

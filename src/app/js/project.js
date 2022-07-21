@@ -126,7 +126,6 @@ class MasterDevice{
             this.#_slaveDevices.delete(_id)
             
             let count = parseInt(_numDevices.innerText)
-            console.log(count);
             count = count - 1 <= 0 ? 0 : count--;
             _numDevices.innerText = count
         }
@@ -143,6 +142,7 @@ class MasterDevice{
 
             this.#_slaveDevices.forEach((value, key) => {
                 let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${value.id} ${_portCOM} ${value.name} ${value._index}`));
+
                 if(!response.edo_con){
                     value['connected'] = response.edo_con
                     value['battery'] = response.bat
@@ -162,7 +162,7 @@ class MasterDevice{
 
     startTest(settings){
         this.#_slaveDevices.forEach((value, key) => {
-            exec(`${__dirname}\\serial\\main.exe STR ${key} ${_portCOM} 100 600`)
+            exec(`${__dirname}\\serial\\main.exe STR ${key} ${_portCOM} ${settings.number_rate} ${settings.imu_rate}`)
         });
     }
 
@@ -274,7 +274,6 @@ function displayChannels(canales){
 
 
         channels.forEach(element => {
-            console.log(element);
             var _config = element;
 
             var _li = document.createElement('li');
@@ -625,6 +624,7 @@ playBtn.addEventListener('click', () => {
                 msg: 'do work',
                 nTimes: _settings.imu_rate,
                 _device: _tmpDevices[i],
+                _refresh: _settings.number_rate,
                 _portCOM: _portCOM,
                 pid : _child.pid, // passing pid to child
                 id_zone: _mainCharts[i].getAttribute('data-device'),
@@ -908,7 +908,6 @@ function drawAccelerometerGyroChart(color, title){
 
 // Update a chart.
 function addData(map, label, data) {
-    console.log(data);
     // We will use this variable to determine if a label was erased or not.
     let flag = false;
 
@@ -1306,8 +1305,6 @@ imuRate.addEventListener('change', function(){
     let milisecondsToSeconds = numberRateMeasure.value === '1' ? numberRate.value * 1 : numberRate.value / 1000
 
     let result =imuRate.value * milisecondsToSeconds;
-
-    console.log(result);
 
     if(result > 3599)
     {
@@ -1985,6 +1982,8 @@ devicesBtn.addEventListener('click', () =>{
 
 ipc.on('usb-event', (e, msg)=>{ 
     if(msg.action === 'connected'){
+        _portCOM = msg.com
+        document.querySelector('#_namePort').innerHTML = _portCOM.toString()
         document.querySelector('#main-notification .btn-clse').click()
         readInfo(_title)
     }else{
