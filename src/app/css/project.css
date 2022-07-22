@@ -185,6 +185,12 @@ html, body{
     fill: #FF7B54;
 }
 
+.cls-preview{
+    fill: #ffffff75;
+    cursor: pointer;
+}
+
+
 .h-custom{
     height: 200px;
 }

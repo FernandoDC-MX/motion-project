@@ -237,8 +237,8 @@ function readInfo(_nameFolder){
 function displayChannels(canales){
     var _lista = document.querySelector('.list');
     _lista.innerHTML = '';
-
-    if(canales){
+    console.log(canales.size);
+    if(canales.size){
         channels = _master.JSON
 
         var i = 1;
@@ -1038,18 +1038,43 @@ maximizeBtn.addEventListener('click', () =>{
 ipc.on('isMaximized_2', ()=>{ changeMaximizeBtn(true) })
 ipc.on('isRestored_2', ()=>{ changeMaximizeBtn(false) })
 
+// Enable/Disable all the muscles that are already unselected/selected.
+staticBackdrop.addEventListener('shown.bs.modal', function(){
+    console.log('abrir modal');
+    var _device = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','')
+    var _muscle_info = channels.get(_device)
+
+    
+    // Add the selected muscle.
+    if(_muscle_info._id_muscle){
+        var name = _muscle_info._muscle_name.toLowerCase().replaceAll(' ','-')
+
+        Array.from(document.querySelectorAll(`path[data-name="${name}"]`)).forEach((element, index) => {
+            console.log(element);
+            element.classList.add('cls-selected')
+            element.classList.remove('cls-2') 
+        })
+
+        this.querySelector('.nombre').innerHTML = _muscle_info._muscle_name.toUpperCase()
+        this.querySelector('.nombre').classList.remove('txt-shadow')
+
+    }
+    selectMuscle()
+    disableMuscles(_muscle_info);
+})
+
 // Events to link a muscle with a device.
 function selectMuscle(){
     var _muscles = document.querySelectorAll('.cls-2')
 
     for(let i = 0; i < _muscles.length; i++){
         _muscles[i].addEventListener('mouseenter', function(e){
-            cleanHover()
 
-            _musclesTmp = document.querySelectorAll(`path[data-name="${this.getAttribute('data-name')}"]`);
-            
-            for(let i = 0; i < _musclesTmp.length; i++){
-                _musclesTmp[i].style.fill = '#ffffff75';
+            if(!this.classList.contains('cls-selected')){
+                document.querySelectorAll(`path[data-name='${this.getAttribute('data-name')}']`).forEach(element =>{
+                    element.classList.remove('cls-2');
+                    element.classList.add('cls-preview');
+                })
             }
 
             var _clone = this.cloneNode(true)
@@ -1060,69 +1085,53 @@ function selectMuscle(){
             _nombre.innerHTML =_clone.getAttribute('data-name').replaceAll('-',' ').toUpperCase()
         }),
         _muscles[i].addEventListener('mouseleave', function(e){
-            document.querySelectorAll(`path[data-name='${this.getAttribute('data-name')}']`).forEach(element =>{
-                element.style.fill = 'white'
-            })
 
-            if(document.querySelector('.cls-selected')){
-                var _nombre = document.querySelector('.cls-selected').getAttribute('data-name')
-
-                document.querySelector('.nombre').innerHTML = _nombre.toUpperCase()
-                document.querySelector('.nombre').classList.remove('txt-shadow')
-
-                Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
-                    element.style.fill = '#FF7B54'
+            if(!this.classList.contains('cls-selected')){
+                document.querySelectorAll(`path[data-name='${this.getAttribute('data-name')}']`).forEach(element =>{
+                    element.classList.remove('cls-preview');
+                    element.classList.add('cls-2');
                 })
             }
+
+            var _nombre = document.querySelector('.nombre');
+            _nombre.classList.add('txt-shadow')
+
+            // Info
+            _nombre.innerHTML =document.querySelector('.cls-selected').getAttribute('data-name').replaceAll('-',' ').toUpperCase()
         }),
         _muscles[i].addEventListener('click', function(){
-            var _tmp = document.querySelectorAll('.cls-selected')
 
-            _musclesTmp.forEach(element =>{
-                if(element.classList.contains('cls-2')){
-                    element.classList.remove('cls-2')
-                    element.classList.add('cls-selected')
-                    element.style.fill = '#FF7B54';
-    
-                }else{
-                    element.classList.add('cls-2')
-                    element.classList.remove('cls-selected')
-                    element.style.fill = 'white';                    
+            if(!this.classList.contains('cls-selected')){
+                // Muscles already selected.
+                var _tmp = document.querySelectorAll('.cls-selected')
+
+                if(_tmp.length){
+                    Array.from(_tmp).forEach(element =>{
+                        element.classList.remove('cls-selected');
+                        element.classList.add('cls-2')
+                    })
                 }
-            })
 
-            if(_tmp.length){
-                Array.from(_tmp).forEach(element =>{
-                    element.classList.remove('cls-selected');
-                    element.classList.add('cls-2')
-                    element.style.fill = 'white'
+                document.querySelectorAll(`path[data-name='${this.getAttribute('data-name')}']`).forEach(element =>{
+                    element.classList.remove('cls-preview');
+                    element.classList.remove('cls-2');
+                    element.classList.add('cls-selected')
                 })
             }
         })
     }
 }
 
-// Restore the original colors.
-function cleanHover(){
-    if(_musclesTmp)
-        _musclesTmp.forEach(element =>{
-            element.style.fill = 'white';
-        })
-}
-
 staticBackdrop.addEventListener('hidden.bs.modal', () =>{
+    console.log('cerre modal');
 
    // Remove all false selected
     if(document.querySelectorAll('.cls-selected')){
         Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
             element.classList.add('cls-2')
             element.classList.remove('cls-selected')
-            element.style.fill="#F8F8F8"
         })
     }
-
-    selectMuscle()
-    cleanHover()
 })
 
 // Event to link the device with the muscle and save into the info.json file.
@@ -1130,7 +1139,7 @@ acceptBtn.addEventListener('click', () =>{
     if(document.querySelector('.cls-selected')){
         getMuscle()
         show('success', 'Dispositivo ligado al músculo.')
-        cancelBtn.click();
+        bootstrap.Modal.getInstance(staticBackdrop).hide()
     }else
         show('warning','Tienes que seleccionar un músculo.')
 })
@@ -1153,44 +1162,13 @@ function getMuscle(){
     switch(_response.Estado){
         case 'OK':  
                     _response.Contenido.devices = Object.fromEntries(channels)
+                    console.log(_response.Contenido.devices);
                     storeFile(_path + "\\info.json", _response.Contenido)
-                    displayChannels(_response.Contenido.devices)
+                    displayChannels(_master.JSON)
                     displayGraphs(_response.Contenido.devices);
-                    selectMuscle()
             break;
     }
 }
-
-// Enable/Disable all the muscles that are already unselected/selected.
-staticBackdrop.addEventListener('shown.bs.modal', function(){
-    var _device = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','')
-    var _muscle_info = channels.get(_device)
-
-    // Remove all false selected
-    if(document.querySelectorAll('.cls-selected')){
-        Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
-            element.classList.add('cls-2')
-            element.classList.remove('cls-selected')
-        })
-    }
-
-    // Add the selected muscle.
-    if(_muscle_info._id_muscle){
-        var name = _muscle_info._muscle_name.toLowerCase().replaceAll(' ','-')
-
-        Array.from(document.querySelectorAll(`path[data-name="${name}"]`)).forEach(element => {
-            element.classList.remove('cls-2') 
-            element.classList.add('cls-selected')
-            element.style.fill = '#FF7B54';
-        })
-
-        this.querySelector('.nombre').innerHTML = _muscle_info._muscle_name.toUpperCase()
-        this.querySelector('.nombre').classList.remove('txt-shadow')
-
-    }
-
-    disableMuscles(_muscle_info);
-})
 
 // Disable the muscles that are already selected.
 function disableMuscles(_muscle_info){
@@ -1200,7 +1178,6 @@ function disableMuscles(_muscle_info){
                 element.classList.remove('cls-2')
                 element.classList.remove('cls-selected')
                 element.classList.add('cls-disabled')
-                element.style.fill = "#626262";
             })
     });
 
