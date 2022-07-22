@@ -30,6 +30,7 @@ function readFiles(_path){
 }
 
 function storeFile(__path, _data){
+    console.log(JSON.stringify(_data));
     fs.writeFileSync(__path, JSON.stringify(_data))
     
     return _data;

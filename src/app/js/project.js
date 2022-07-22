@@ -468,8 +468,9 @@ deleteB.addEventListener('click', async function(){
             tmp.delete(_id);
             if(tmp.size === 0)
                 tmp = null;
+            
 
-            _response.Contenido.devices = tmp;
+            _response.Contenido.devices = Object.fromEntries(tmp);
 
             storeFile(_path + "\\info.json", _response.Contenido)
             _devices = _response.Contenido.devices
