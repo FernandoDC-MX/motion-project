@@ -5,34 +5,25 @@ let _nTimes = 1; //Times to iterate the loop.
 let iterator;
 let local_arr = []
 let path1 = path.resolve("src/app/serial", "main.exe");
-
+const delay = 0.03
 
 process.on('message', async (msg)=>{
     if(msg.play){
         _nTimes = msg.nTimes;
-        let refresh = msg._refresh
-
-        let x = execSync(`${path1} DAT ${msg._device} ${msg._portCOM}`);    
-
-        console.log("El dispositivo al inicio ya tiene: " + x);
+        let refresh = msg._refresh + delay;
 
         for (iterator = msg.iterator; iterator < _nTimes; iterator++) {
+            let response = execSync(`${path1} DAT ${msg._device} ${msg._portCOM}`).toString();    
 
-            exec(`${path1} DAT ${msg._device} ${msg._portCOM}`, (error, stdout, stderr) =>{
-                if(!stdout.includes('ERROR')){
-                    let res = stdout.replaceAll('\\r\\n','').split('-');
-                    res.forEach(element => {
-                        local_arr.push(JSON.parse(element));
-                    });                                   
-                }
-            });    
+            console.log(iterator + ":" + response);
 
-            if(local_arr.length < 1)
-                iterator = 0;
-            else if( typeof local_arr[iterator] !== 'undefined'){
+            if(response && !response.includes('Error')){
+                let cleanData = response.replaceAll('\\r\\n','').split('-');
+                let lastData = JSON.parse(cleanData[cleanData.length - 1]);
+
                 process.send({
                     chart:'main', 
-                    data:[local_arr[iterator].myo],
+                    data:[lastData.myo],
                     label: iterator,  
                     device: msg.id_zone, 
                     flag: 0
@@ -40,7 +31,7 @@ process.on('message', async (msg)=>{
             
                 process.send({
                     chart: 'accelerometer', 
-                    data: [local_arr[iterator].ax, local_arr[iterator].ay, local_arr[iterator].az],
+                    data: [lastData.ax, lastData.ay, lastData.az],
                     label: iterator,   
                     device: msg.id_zone,  
                     flag: 0
@@ -48,16 +39,17 @@ process.on('message', async (msg)=>{
     
                 process.send({
                     chart:'gyroscope', 
-                    data: [local_arr[iterator].gx, local_arr[iterator].gy, local_arr[iterator].gz],
+                    data: [lastData.gx, lastData.gy, lastData.gz],
                     label: iterator,  
                     device:msg.id_zone, 
                     flag: 0
                 })
             }
+            
             await sleep(refresh)
         }
 
-
+        execSync(`${path1} STP ${msg._device} ${msg._portCOM}`);
         // Send the order to kill the process.
         process.send({id: msg.pid, flag: 1, device: msg.id_zone, iterator: iterator, max: _nTimes})
     }else{

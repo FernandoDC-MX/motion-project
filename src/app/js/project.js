@@ -612,7 +612,7 @@ playBtn.addEventListener('click', () => {
         iterator = 0;
 
         _master.startTest(_settings)
-        let _tmpDevices = _master.JSON.keys()
+        let _tmpDevices = [ ..._master.JSON.keys()]
         for(let i = 0; i < _mainCharts.length; i++){
 
             var _child = fork(__dirname + "\\js\\test.js")
