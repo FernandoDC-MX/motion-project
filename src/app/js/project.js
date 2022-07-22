@@ -616,7 +616,7 @@ playBtn.addEventListener('click', () => {
         let _tmpDevices = [ ..._master.JSON.keys()]
         for(let i = 0; i < _mainCharts.length; i++){
 
-            var _child = fork(__dirname + "\\js\\test.js")
+            var _child = fork(__dirname + "\\js\\demo.js")
     
             arrChilds.set(_child.pid, _child)
            
@@ -803,7 +803,8 @@ function drawMainChart(color){
                       mode: 'xy',
                     },
                     limits: {
-                        y: {min: 1, max: 100},}
+                        y: {min: 1, max: 100},
+                    }
                 },
                 title: {
                     display: true,
@@ -967,17 +968,28 @@ function readData(device, div){
 
 // Update a chart
 function reDrawChart(map){
+    let max = null;
+
     // Update labels
     map.chart.data.labels = map.labels;
 
     // Update datasets
     map.chart.data.datasets.forEach((dataset, index) => {
+
+        if(max === null)
+            max = Math.max(...dataset.data);
+        else if(Math.max(...dataset.data) > max)
+            max = Math.max(...dataset.data);
+
+        // console.log(Math.max(...));
         dataset.data = map.values[index]
 
         // Clean map values.
         map.values[index] = []
     });
-    
+
+    map.chart.config._config.options.plugins.zoom.limits.y.max = max
+
     // Clean map labels
     map.labels = []
 
@@ -1101,7 +1113,7 @@ function selectMuscle(){
         }),
         _muscles[i].addEventListener('click', function(){
 
-            if(!this.classList.contains('cls-selected')){
+            if(!this.classList.contains('cls-selected') && !this.classList.contains('cls-disabled')){
                 // Muscles already selected.
                 var _tmp = document.querySelectorAll('.cls-selected')
 
