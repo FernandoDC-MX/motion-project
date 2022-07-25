@@ -5,7 +5,6 @@ const { ipcRenderer } = require('electron')
 
 // Charts
 const Chart = require('chart.js');
-const zoomPlugin = require('chartjs-plugin-zoom');
 
 // Process
 const { execSync, exec } = require('child_process');
@@ -175,7 +174,7 @@ class MasterDevice{
 const maxResBtn = document.getElementById('maximizeBtn')
 const _hexColors = ['#F5BD85','#85F5AE','#85C8F5','#F585CC'];
 const ipc = ipcRenderer
-var _path, channels, _musclesTmp;
+var _path, channels;
 
 let iterator = 0;
 let toggleMenuFlag = 0;
@@ -189,6 +188,7 @@ let arrChilds = new Map()
 let _master = new MasterDevice()
 let _filesData = null;
 let _settings = null;
+
 
 /* ------------------------------------ Functions ---------------------------- */
 
@@ -219,6 +219,7 @@ function readInfo(_nameFolder){
     if(_response.Estado == 'OK'){
         _devices = _response.Contenido.devices;
         _settings = _response.Contenido.settings;
+        displaySettings();
         _master.makeBinding(_devices)
         displayChannels(_master.JSON)
         displayGraphs(_response.Contenido.devices);
@@ -231,6 +232,12 @@ function readInfo(_nameFolder){
 
     statusElement.previousElementSibling.classList.remove('rotating')
     settings()
+}
+
+function displaySettings(){
+    minSettings.innerHTML = _settings.sample_rate + ' ms'
+    velSettings.innerHTML = _settings.number_rate + ' ms'
+    numSettings.innerHTML = _settings.imu_rate
 }
 
 // Display the channels on the left side.
@@ -554,19 +561,6 @@ function displayGraphs(canales){
 
 // 
 function stopAll(e, status = 0){
-    // Kill all the childs created.
-    arrChilds.forEach((value, key) => {
-        process.kill(key)
-    });
-
-    // Clear the map.
-    arrChilds.clear()
-
-    // Display Play Button and Hide the Pause Button
-    playBtn.classList.remove('d-none','pressed')
-    playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
-    pauseBtn.classList.add('d-none')
-
     if(!status){
         var date = new Date () 
         var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
@@ -579,9 +573,9 @@ function stopAll(e, status = 0){
         // Redraw the charts.
         document.querySelectorAll('.main-graph-container').forEach(element => {
             var device = element.getAttribute('data-device')
-            reDrawChart(_chartsMap.get(`${device}-main`));                
-            reDrawChart(_chartsMap.get(`${device}-accelerometer`));                
-            reDrawChart(_chartsMap.get(`${device}-gyroscope`));
+            reDrawChart(_chartsMap.get(`${device}-main`),'main', 1);                
+            reDrawChart(_chartsMap.get(`${device}-accelerometer`), 'accelerometer', 1);                
+            reDrawChart(_chartsMap.get(`${device}-gyroscope`),'gyroscope', 1);
         });
 
         saveData()
@@ -590,6 +584,19 @@ function stopAll(e, status = 0){
         // Message
         show('error','Cerebro desconectado.')
     }    
+
+    // Kill all the childs created.
+    arrChilds.forEach((value, key) => {
+        process.kill(key)
+    });
+
+    // Clear the map.
+    arrChilds.clear()
+
+    // Display Play Button and Hide the Pause Button
+    playBtn.classList.remove('d-none','pressed')
+    playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
+    pauseBtn.classList.add('d-none')
 
     stopBtn.classList.add('d-none')
 }
@@ -619,7 +626,7 @@ playBtn.addEventListener('click', () => {
         let _tmpDevices = [ ..._master.JSON.keys()]
         for(let i = 0; i < _mainCharts.length; i++){
 
-            var _child = fork(__dirname + "\\js\\demo.js")
+            var _child = fork(__dirname + "\\js\\test.js")
     
             arrChilds.set(_child.pid, _child)
            
@@ -646,18 +653,22 @@ playBtn.addEventListener('click', () => {
                                     break;
                                 case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data)
                                     break;
+                                case 'buffer':  storeBuffer(_chartsMap.get(`${msg.device}-main`), msg.buffer)
+                                                storeBuffer(_chartsMap.get(`${msg.device}-accelerometer`), msg.buffer)
+                                                storeBuffer(_chartsMap.get(`${msg.device}-gyroscope`), msg.buffer)
+                                    break;
                             }
                         break;
                     case 1: // Display Play Button and Hide the Pause Button
                             playBtn.classList.remove('d-none')
                             pauseBtn.classList.add('d-none')
     
-                            if(msg.iterator === msg.max){ 
+                            if(msg.cmd === 'F'){ 
                                 var date = new Date()
                                 // Redraw each chart with all the data generated.
-                                reDrawChart(_chartsMap.get(`${msg.device}-main`));                
-                                reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`));                
-                                reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`));
+                                reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', 1);                
+                                reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`),'accelerometer', 1);                
+                                reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`), 'gyroscope', 1);
     
                                 show('success','Monitoreo terminado.')
                                 process.kill(msg.id)
@@ -669,6 +680,7 @@ playBtn.addEventListener('click', () => {
                                 document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
 
                                 playBtn.classList.remove('pressed')
+                                stopBtn.classList.add('d-none')
                                 playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
 
                                 arrChilds.clear()
@@ -718,6 +730,10 @@ playBtn.addEventListener('click', () => {
     // } 
 });
 
+function storeBuffer(map, buffer){
+    map.buffer = buffer.data
+}
+
 // Pause the test.
 pauseBtn.addEventListener('click', () =>{
     // 👇️ Using forEach
@@ -742,7 +758,7 @@ function createCharts(_divs){
 
         var _res = drawMainChart(_device._hex)
         _mainChart.appendChild(_res[0])
-        _chartsMap.set(`${_device.id}-main`, {'chart':_res[1], 'values': [[]], 'labels': []})
+        _chartsMap.set(`${_device.id}-main`, {'chart':_res[1], 'values': [[]], 'labels': [], 'buffer': []})
 
         var _secondaryCharts = _mainContainer.querySelector('.col-4');
         _secondaryCharts.innerHTML = '';
@@ -753,7 +769,7 @@ function createCharts(_divs){
         // Accelerometer chart
         _res = drawAccelerometerGyroChart(_device._hex, 'Acelerometro')
         _subgraph.appendChild(_res[0]);
-        _chartsMap.set(`${_device.id}-accelerometer`, {'chart':_res[1], 'values': [[],[],[]], 'labels': []})
+        _chartsMap.set(`${_device.id}-accelerometer`, {'chart':_res[1], 'values': [[],[],[]], 'labels': [], 'buffer': []})
 
         _secondaryCharts.appendChild(_subgraph)
 
@@ -763,7 +779,7 @@ function createCharts(_divs){
         // Gyroscope chart
         _res = drawAccelerometerGyroChart(_device._hex, 'Giroscopio')
         _subgraph.appendChild(_res[0]);
-        _chartsMap.set(`${_device.id}-gyroscope`, {'chart':_res[1], 'values': [[],[],[]], 'labels': []})
+        _chartsMap.set(`${_device.id}-gyroscope`, {'chart':_res[1], 'values': [[],[],[]], 'labels': [], 'buffer': []})
 
         _secondaryCharts.appendChild(_subgraph)
     }
@@ -973,26 +989,62 @@ function readData(device, div){
 }
 
 // Update a chart
-function reDrawChart(map){
+function reDrawChart(map, chart, buffer = 0){
     let max = null;
 
-    // Update labels
-    map.chart.data.labels = map.labels;
+    if(buffer){
+        let arr;
 
-    // Update datasets
-    map.chart.data.datasets.forEach((dataset, index) => {
+        switch(chart){
+            case 'main': arr = [[]];
+                break;
+            case 'gyroscope': arr =[[],[],[]];
+                break;
+            case 'accelerometer': arr =[[],[],[]];
+                break;
+        }
 
-        if(max === null)
-            max = Math.max(...dataset.data);
-        else if(Math.max(...dataset.data) > max)
-            max = Math.max(...dataset.data);
+        processData(arr, map.buffer, chart)
+        
 
-        // console.log(Math.max(...));
-        dataset.data = map.values[index]
+        // Update datasets with the buffer 
+        map.chart.data.datasets.forEach((dataset, index) => {
+            if(max === null)
+                max = Math.max(...arr[index]);
+            else if(Math.max(...arr[index]) > max)
+                max = Math.max(...arr[index]);
 
-        // Clean map values.
-        map.values[index] = []
-    });
+            dataset.data = arr[index]
+
+            // Clean map values.
+            map.values[index] = []
+
+            // Update labels
+            map.chart.data.labels = map.labels;
+        });
+
+        // Update labels
+        map.chart.data.labels = Array.from({length: map.buffer.length}, (_, i) => i + 1)
+        
+    }else{
+        // Update datasets without the buffer 
+        map.chart.data.datasets.forEach((dataset, index) => {
+
+            if(max === null)
+                max = Math.max(...dataset.data);
+            else if(Math.max(...dataset.data) > max)
+                max = Math.max(...dataset.data);
+
+            // console.log(Math.max(...));
+            dataset.data = map.values[index]
+
+            // Clean map values.
+            map.values[index] = []
+        });
+
+         // Update labels
+         map.chart.data.labels = map.labels;
+    }
 
     map.chart.config._config.options.plugins.zoom.limits.y.max = max
 
@@ -1001,6 +1053,29 @@ function reDrawChart(map){
 
     // Redraw chart
     map.chart.update()
+}
+
+function processData(arreglo, buffer, chart){
+    switch(chart){
+        case 'main': buffer.forEach((data) => {
+                        arreglo[0].push(JSON.parse(data).myo)
+                    });
+            break;
+        case 'accelerometer': buffer.forEach( (data) => {
+                        arreglo[0].push(JSON.parse(data).ax)
+                        arreglo[1].push(JSON.parse(data).ay)
+                        arreglo[2].push(JSON.parse(data).az)
+                    });
+            break;
+        case 'gyroscope': buffer.forEach( (data) => {
+                        arreglo[0].push(JSON.parse(data).gx)
+                        arreglo[1].push(JSON.parse(data).gy)
+                        arreglo[2].push(JSON.parse(data).gz)
+                    });
+            break;
+    }
+
+    return arreglo;
 }
 
 // Close the window.
@@ -1362,6 +1437,7 @@ btnSaveSettings.addEventListener('click', () => {
         case 'OK':  _settings = {sample_rate: sample, number_rate: parseInt(number), imu_rate: parseInt(imuRate.value)}
                     var _content = _response.Contenido;
                     _content['settings'] = _settings;
+                    displaySettings()
                     storeFile(_path + "\\info.json", _content)
                     show('success', 'Configuración guardada correctamente.')
                     btnCloseSettings.click()

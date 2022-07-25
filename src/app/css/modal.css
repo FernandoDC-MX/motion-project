@@ -77,6 +77,10 @@ body.modal-open .contentArea{
     color: #F8F8F8;
 }
 
+.bg-color-small{
+    color: #787878;
+}
+
 .cursor{
     cursor: pointer;
 }
