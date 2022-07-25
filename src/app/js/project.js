@@ -588,8 +588,12 @@ function stopAll(e, status = 0){
     }else{
         // Message
         show('error','Cerebro desconectado.')
-    }    
-
+    }
+    
+    _master.JSON.forEach(device =>{
+        exec(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`)
+    })
+    
     // Kill all the childs created.
     arrChilds.forEach((value, key) => {
         process.kill(key)
