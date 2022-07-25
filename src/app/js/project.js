@@ -82,6 +82,7 @@ class MasterDevice{
         if(_slaveDevice){
             execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM}`)
             response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} ${_slaveDevice._index}`))
+            console.log(response);
             _slaveDevice['battery'] = response.bat
         }else{
           response = {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}
@@ -93,8 +94,8 @@ class MasterDevice{
     connectDevice(_id){
         let _device = this.#_slaveDevices.get(_id);
 
-        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${_device.name} ${_device._index}`));
-        
+        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${_device.name} ${_device._index}`).toString());
+        console.log(_device);
         if(response.edo_con){
             let count = parseInt(_numDevices.innerText)
             count++;
@@ -119,7 +120,7 @@ class MasterDevice{
     }
 
     deleteDevice(_id){
-        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe DEL ${_id} ${_portCOM}`));
+        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe DEL ${_id} ${_portCOM}`).toString());
 
         if(!response.bat){
             this.#_slaveDevices.delete(_id)
@@ -235,9 +236,11 @@ function readInfo(_nameFolder){
 }
 
 function displaySettings(){
-    minSettings.innerHTML = _settings.sample_rate + ' ms'
-    velSettings.innerHTML = _settings.number_rate + ' ms'
-    numSettings.innerHTML = _settings.imu_rate
+    if(_settings){
+        minSettings.innerHTML = _settings.sample_rate + ' ms'
+        velSettings.innerHTML = _settings.number_rate + ' ms'
+        numSettings.innerHTML = _settings.imu_rate
+    }
 }
 
 // Display the channels on the left side.
@@ -473,15 +476,17 @@ deleteB.addEventListener('click', async function(){
         if(_response.Contenido.devices){
             var tmp = new Map(Object.entries(_response.Contenido.devices))
             tmp.delete(_id);
-            if(tmp.size === 0)
+            if(tmp.size === 0){
                 tmp = null;
+                _response.Contenido.devices = null
+            }else{
+                _response.Contenido.devices = Object.fromEntries(tmp);
+            }
             
-
-            _response.Contenido.devices = Object.fromEntries(tmp);
 
             storeFile(_path + "\\info.json", _response.Contenido)
             _devices = _response.Contenido.devices
-            displayChannels(_response.Contenido.devices)
+            displayChannels(_master.JSON)
             displayGraphs(_response.Contenido.devices);
             displayLinked()
             bootstrap.Modal.getInstance(editableDevice).hide()
@@ -1556,7 +1561,7 @@ linkBtn.addEventListener('click', async () => {
     
             storeFile(_path + "\\info.json", _response.Contenido)
             _devices = _response.Contenido.devices
-            displayChannels(_response.Contenido.devices)
+            displayChannels(_master.JSON)
             displayGraphs(_response.Contenido.devices);
             displayLinked()
             show('success', 'Dispositivo vinculado correctamente.')

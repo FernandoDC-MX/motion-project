@@ -6,7 +6,8 @@ const usbDetect = require('usb-detection');
 const path = require('path')
 
 // Serial
-const { SerialPort } = require('serialport')
+const { SerialPort } = require('serialport');
+const { execSync } = require('child_process');
 
 // Enable live reload for all the files inside your project directory
 require('electron-reload')(__dirname, {ignored: /Proyectos|[\/\\]\./});
@@ -151,6 +152,7 @@ const projectWindow = (evt, args) =>{
   // USB Connected.
   usbDetect.on('add', async function(device){ 
     await listSerialPorts()
+    console.log(_portCOM);
     project.webContents.send('usb-event', {'device' : device, 'action': 'connected', 'com': _portCOM}) 
   });
 
@@ -206,7 +208,13 @@ const projectWindow = (evt, args) =>{
   async function listSerialPorts() {
     await SerialPort.list().then((ports, err) => {
         if(ports.length){
-            _portCOM = ports[1].path
+            ports.forEach((ports) => {
+              let res = execSync(`${__dirname}\\src\\app\\serial\\main.exe LSS ${ports.path}`).toString();
+              if(res && !res.includes('Error')){
+                _portCOM = ports.path;
+                return;
+              }
+            });
         }
       })
     }
