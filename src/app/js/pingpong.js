@@ -119,7 +119,7 @@ if (
 
 	ball_coord = initial_ball_coord;
 	ball.style = initial_ball.style;
-	message.innerHTML = 'Press Enter to Play Pong';
+	message.innerHTML = 'Presionar Enter';
 	message.style.left = 38 + 'vw';
 	return;
 }

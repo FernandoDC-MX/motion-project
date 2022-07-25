@@ -7,12 +7,29 @@
 		"width=device-width, initial-scale=1.0">
 	<title>Ping Pong</title>
 
+    
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+
 	<link rel="stylesheet" href="css/pingpong.css">
     <link rel="stylesheet" href="css/fonts.css">
+    
     
 </head>
 
 <body>
+    <div class="topBar">
+        <div class="titleBar">
+            <div class="title">Ping pong</div>
+        </div>
+
+        <div class="titleBarBtns justify-content-end">
+            <button id="minimizeBtn" class="topBtn minimizeBtn d-none" title="Minimize"></button>
+            <button id="maximizeBtn" class="topBtn restoreBtn d-none" title="Maximize"></button>
+            <button id="closeBtn" class="topBtn closeBtn" title="Close"></button>
+        </div>
+    </div>
+
 	<div class="board">
 		<div class='ball'>
 			<div class="ball_effect"></div>

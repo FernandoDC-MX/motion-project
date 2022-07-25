@@ -222,27 +222,35 @@ const projectWindow = (evt, args) =>{
 }
 
 const pingpongWindow = () =>{
-  // Create the ping pong window.
-  game = new BrowserWindow({
-    Height:800,
-    Width: 1000,
-    webPreferences: {
-      devTools: true,
-    },
-    frame: true,
-    show: false,
-    backgroundColor: '#383838'
-  })
 
-  game.maximize()
+  if(!game){
+    // Create the ping pong window.
+    game = new BrowserWindow({
+      Height:800,
+      Width: 1000,
+      webPreferences: {
+        devTools: true,
+      },
+      frame: false,
+      show: false,
+      backgroundColor: '#383838'
+    })
 
-  // and load the index.html of the app.
-  game.loadFile('src/app/pingpong.html')
+    game.maximize()
 
-  // Event 
-  game.on('ready-to-show', () =>{
-    game.show()
-  })
+    // and load the index.html of the app.
+    game.loadFile('src/app/pingpong.html')
+
+    // Event 
+    game.on('ready-to-show', () =>{
+      game.show()
+    })
+
+    game.on('closed',()=>{
+      ipc.removeAllListeners('maximizeRestoreProject');
+      game = null;
+    })
+  }
 
 }
 
