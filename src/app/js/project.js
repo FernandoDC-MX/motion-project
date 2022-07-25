@@ -237,7 +237,7 @@ function readInfo(_nameFolder){
 function displayChannels(canales){
     var _lista = document.querySelector('.list');
     _lista.innerHTML = '';
-    console.log(canales.size);
+
     if(canales.size){
         channels = _master.JSON
 
@@ -590,6 +590,8 @@ function stopAll(e, status = 0){
         // Message
         show('error','Cerebro desconectado.')
     }    
+
+    stopBtn.classList.add('d-none')
 }
 
 // Finish the test.
@@ -604,7 +606,8 @@ playBtn.addEventListener('click', () => {
     if(!playBtn.classList.contains('pressed') && _settings != null){
         // Display Pause Button and Hide the Play Button
         playBtn.classList.add('d-none')
-        pauseBtn.classList.remove('d-none')
+        // pauseBtn.classList.remove('d-none')
+        stopBtn.classList.remove('d-none')
         playBtn.querySelector('title').innerHTML = "Reanudar prueba"
 
 
@@ -687,29 +690,32 @@ playBtn.addEventListener('click', () => {
 
     }else if(_settings == null){
         show('error', 'Primero debes de seleccionar una configuración.')
-    }else{
-        // Display Play Button and Hide the Pause Button
-        playBtn.classList.add('d-none')
-        pauseBtn.classList.remove('d-none')
+    }
+    
+    // Untoggle this comments to enable the pause option
+    // else{
+    //     // Display Play Button and Hide the Pause Button
+    //     playBtn.classList.add('d-none')
+    //     pauseBtn.classList.remove('d-none')
         
 
-        let i = 0;
-        // Resume the pending data.
-        arrChilds.forEach((value, key) => {
-            // Execute the test.
-            value.send({ 
-                msg: 'do work',
-                pid : key, // passing pid to child
-                id_zone: _mainCharts[i].getAttribute('data-device'),
-                play: 1,
-                iterator: iterator
-            })
+    //     let i = 0;
+    //     // Resume the pending data.
+    //     arrChilds.forEach((value, key) => {
+    //         // Execute the test.
+    //         value.send({ 
+    //             msg: 'do work',
+    //             pid : key, // passing pid to child
+    //             id_zone: _mainCharts[i].getAttribute('data-device'),
+    //             play: 1,
+    //             iterator: iterator
+    //         })
             
-            i++;
-        });
+    //         i++;
+    //     });
 
-        show('info', 'La prueba ha sido reanudada')
-    } 
+    //     show('info', 'La prueba ha sido reanudada')
+    // } 
 });
 
 // Pause the test.

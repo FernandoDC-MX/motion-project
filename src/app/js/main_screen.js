@@ -58,7 +58,7 @@ function readProjects(){
              var x = readFile(__dirname + `\\Proyectos\\${file}\\info.json`)
              _proyectos.push(x.Contenido)
           }
-          if(_proyectos.length > 1){
+          if(_proyectos.length){
             _openProject.classList.remove('d-none')
             document.querySelector('#_container_table .table').classList.remove('d-none')
             document.querySelector('#_container_table div').classList.add('d-none')
