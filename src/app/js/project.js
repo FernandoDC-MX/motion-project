@@ -186,7 +186,7 @@ class MasterDevice{
     }
 
     stopTests(){
-        
+
     }
 
     get JSON(){
@@ -698,7 +698,7 @@ playBtn.addEventListener('click', () => {
                                 playBtn.classList.remove('d-none')
                                 pauseBtn.classList.add('d-none')
         
-                                if(msg.cmd === 'F'){ 
+                                if(msg.cmd === 'F' || msg.cmd === 'H'){ 
                                     var date = new Date()
                                     // Redraw each chart with all the data generated.
                                     reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', 1);                

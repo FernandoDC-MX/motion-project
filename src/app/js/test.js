@@ -23,12 +23,11 @@ process.on('message', async (msg)=>{
 
         while(resp_cmd != 'F'){
             let response = execSync(`${path1} DAT ${msg._device} ${msg._portCOM}`).toString();
-            
             if(response && !response.includes('Error')){
                 let cleanData = response.replaceAll('\\r\\n','').split('-');
                 let lastData = JSON.parse(cleanData[cleanData.length - 1]);
 
-                if(lastData.resp_cmd === 'F'){
+                if(lastData.resp_cmd === 'F' || lastData.resp_cmd === 'H'){
                     resp_cmd = lastData.resp_cmd;
 
                     let x = execSync(`${path1} STP ${msg._device} ${msg._portCOM}`).toString();
