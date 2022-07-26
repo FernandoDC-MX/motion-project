@@ -697,15 +697,17 @@ playBtn.addEventListener('click', () => {
                         case 1: // Display Play Button and Hide the Pause Button
                                 playBtn.classList.remove('d-none')
                                 pauseBtn.classList.add('d-none')
-        
-                                if(msg.cmd === 'F' || msg.cmd === 'H'){ 
+
+                                if(msg.cmd === 'F' || msg.cmd === 'H'){
                                     var date = new Date()
+                                    
                                     // Redraw each chart with all the data generated.
                                     reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', 1);                
                                     reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`),'accelerometer', 1);                
                                     reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`), 'gyroscope', 1);
         
-                                    show('success','Monitoreo terminado.')
+                                    show('success',`Monitoreo terminado ${msg.device}.`)
+
                                     process.kill(msg.id)
 
                                     var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
@@ -2043,12 +2045,77 @@ function updateReadables(){
             if(_response.Estado === 'OK'){
                 var _content = _response.Contenido.data;
                 
+                
+                document.querySelector('.menu').classList.add('d-none')
+
+                const _zone = document.querySelector('._charts');
+                _zone.innerHTML = ''
+                document.querySelector('.container-message').classList.add('d-none');                
+
+                Object.keys(_content).forEach(element =>{
+                    var _div = document.createElement('div');
+                        _div.classList.add('main-graph-container', 'row');
+                        _div.setAttribute('data-device', element)
+    
+                        var _graph = document.createElement('div');
+                        _graph.classList.add('col-8','col-md-8', 'col-sm-12', 'pl-0', 'text-center','h-100');
+    
+                        var _graph_div = document.createElement('div');
+                        _graph.appendChild(_graph_div)
+    
+                        _div.appendChild(_graph)
+    
+                        var _subgraphs = document.createElement('div');
+                        _subgraphs.classList.add('col-4','col-md-4','col-sm-12', 'pr-0', 'text-center', 'h-100')
+    
+                        _div.appendChild(_subgraphs)
+    
+                        _zone.appendChild(_div)
+                })
+
+                _zone.classList.remove('d-none')
+
                 // Gets all the main charts.
                 var _mainCharts = document.querySelectorAll('.main-graph-container');
-                createCharts(_mainCharts)
+                // createCharts(_mainCharts)  
                 
-
                 var keys = Object.keys(_content)
+
+
+                for(let i = 0; i < _mainCharts.length; i++){
+                    var _mainContainer = _mainCharts[i];
+            
+                    var _mainChart = _mainContainer.querySelector('.col-8');
+                    _mainChart.innerHTML = ''
+                    
+            
+                    var _res = drawMainChart('#F8F8F8')
+                    _mainChart.appendChild(_res[0])
+                    _chartsMap.set(`${keys[i]}-main`, {'chart':_res[1], 'values': [[]], 'labels': [], 'buffer': []})
+            
+                    var _secondaryCharts = _mainContainer.querySelector('.col-4');
+                    _secondaryCharts.innerHTML = '';
+            
+                    var _subgraph = document.createElement('div');
+                    _subgraph.classList.add('subgraph');
+            
+                    // Accelerometer chart
+                    _res = drawAccelerometerGyroChart('#F7F7F7', 'Acelerometro')
+                    _subgraph.appendChild(_res[0]);
+                    _chartsMap.set(`${keys[i]}-accelerometer`, {'chart':_res[1], 'values': [[],[],[]], 'labels': [], 'buffer': []})
+            
+                    _secondaryCharts.appendChild(_subgraph)
+            
+                    _subgraph = document.createElement('div');
+                    _subgraph.classList.add('subgraph');
+            
+                    // Gyroscope chart
+                    _res = drawAccelerometerGyroChart('#F6F6F6', 'Giroscopio')
+                    _subgraph.appendChild(_res[0]);
+                    _chartsMap.set(`${keys[i]}-gyroscope`, {'chart':_res[1], 'values': [[],[],[]], 'labels': [], 'buffer': []})
+            
+                    _secondaryCharts.appendChild(_subgraph)
+                }
 
                 keys.forEach(key =>{
                     var main = _chartsMap.get(`${key}-main`);
