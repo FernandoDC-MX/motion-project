@@ -1758,7 +1758,7 @@ document.onkeyup = function () {
     var e = e || window.event; // for IE to cover IEs window event-object
     let toggleMenu = document.querySelector('.toggle-menu')
 
-    if(e.ctrlKey && e.which == 68) { //Press CTRL + D
+    if(e.ctrlKey && e.which == 68 && _portCOM) { //Press CTRL + D
         if(!toggleMenuFlag){
             toggleMenu.style.width = '60px'
             toggleMenuFlag = 1

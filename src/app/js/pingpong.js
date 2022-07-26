@@ -1,3 +1,7 @@
+const { ipcRenderer } = require('electron')
+const ipc = ipcRenderer
+
+
 let gameState = 'start';
 let paddle_1 = document.querySelector('.paddle_1');
 let paddle_2 = document.querySelector('.paddle_2');
@@ -135,3 +139,7 @@ if (
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+closeBtn.addEventListener('click', () =>{
+    ipc.send('closeGame');
+})

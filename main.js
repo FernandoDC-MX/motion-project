@@ -152,7 +152,6 @@ const projectWindow = (evt, args) =>{
   // USB Connected.
   usbDetect.on('add', async function(device){ 
     await listSerialPorts()
-    console.log(_portCOM);
     project.webContents.send('usb-event', {'device' : device, 'action': 'connected', 'com': _portCOM}) 
   });
 
@@ -230,6 +229,8 @@ const pingpongWindow = () =>{
       Width: 1000,
       webPreferences: {
         devTools: true,
+        nodeIntegration: true,
+        contextIsolation: false,
       },
       frame: false,
       show: false,
@@ -244,6 +245,11 @@ const pingpongWindow = () =>{
     // Event 
     game.on('ready-to-show', () =>{
       game.show()
+    })
+
+    // Close app
+    ipc.on('closeGame', (evt, msg)=>{
+      game.close()
     })
 
     game.on('closed',()=>{
