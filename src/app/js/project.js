@@ -171,10 +171,22 @@ class MasterDevice{
             if(!res.edo_con){
                 value.connected = 0
 
+                let count = parseInt(_numDevices.innerText)
+                count = count - 1 <= 0 ? 0 : count--;
+                _numDevices.innerText = count
+
                 _errorNotification.classList.remove('d-none')
                 _errorProgram.innerHTML = `Dispositivos desconectados al inicar prueba: `
+            }else if(!value.connected && res.edo_con){
+                let count = parseInt(_numDevices.innerText)
+                count += 1;
+                _numDevices.innerText = count
             }
         });
+    }
+
+    stopTests(){
+        
     }
 
     get JSON(){
