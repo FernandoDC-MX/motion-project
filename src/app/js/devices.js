@@ -74,24 +74,7 @@ function _cleanForm(){
 
 nextBtn.addEventListener('click', function(){
   if(!validateForm()){
-
-    if(i >= 1){
       createProject()
-    }else{
-      this.innerHTML = 'Siguiente';
-      document.querySelectorAll('section')[i].classList.add('d-none')
-      document.querySelectorAll('section')[i].classList.remove('active')
-
-      i++;
-      if(i >= 1){
-        i = 1
-        this.innerHTML = 'Crear';
-      }
-
-      prevBtn.classList.remove('d-none')
-      document.querySelectorAll('section')[i].classList.remove('d-none');
-      document.querySelectorAll('section')[i].classList.add('active');
-      }
     }
 })
 

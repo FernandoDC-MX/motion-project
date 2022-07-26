@@ -2001,6 +2001,7 @@ function updateReadables(){
                 // Gets all the main charts.
                 var _mainCharts = document.querySelectorAll('.main-graph-container');
                 createCharts(_mainCharts)
+                
 
                 var keys = Object.keys(_content)
 
@@ -2008,6 +2009,7 @@ function updateReadables(){
                     var main = _chartsMap.get(`${key}-main`);
                     var accelerometer = _chartsMap.get(`${key}-accelerometer`);
                     var gyroscope = _chartsMap.get(`${key}-gyroscope`);
+
 
                     main.values[0] = _content[key].main.data[0].data;
                     main.labels = _content[key].main.labels;
