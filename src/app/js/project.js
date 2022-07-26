@@ -141,18 +141,22 @@ class MasterDevice{
             document.querySelector('#_numDevices').innerHTML = count;
 
             this.#_slaveDevices.forEach((value, key) => {
-                let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${value.id} ${_portCOM} ${value.name} ${value._index}`));
+                let response = execSync(`${__dirname}\\serial\\main.exe CFG ${value.id} ${_portCOM} ${value.name} ${value._index}`);
 
-                if(!response.edo_con){
-                    value['connected'] = response.edo_con
-                    value['battery'] = response.bat
+                if(!response.includes('Error')){
+                    response = JSON.parse(response)
+                    if(!response.edo_con){
+                        value['connected'] = response.edo_con
+                        value['battery'] = response.bat
+                    }
+                    else{  
+                        value['connected'] = 1;
+                        count++;
+                        value['battery'] = response.bat
+                    }
+
+                    this.#_slaveDevices.set(key, value)
                 }
-                else{  
-                    value['connected'] = 1;
-                    count++;
-                    value['battery'] = response.bat
-                }
-                this.#_slaveDevices.set(key, value)
             });
         }
         
@@ -1104,10 +1108,15 @@ function processData(arreglo, buffer, chart){
 closeBtn.addEventListener('click', () =>{
     if(!playBtn.classList.contains('d-none') && !playBtn.classList.contains('pressed')){
         ipc.send('closeProject', 1)
+        _master.JSON.forEach(device =>{
+            exec(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`)
+        })
+        
     }    
     else{
         document.querySelector('.hd-close').click()
         document.querySelector('#emergentWindow').classList.remove('d-none')
+        
     }
 })
 
@@ -1124,7 +1133,18 @@ comOut.addEventListener('click', () =>{
 })
 
 homeBtn.addEventListener('click', () =>{
-    ipc.send('closeProject',0)
+    if(!playBtn.classList.contains('d-none') && !playBtn.classList.contains('pressed')){
+        ipc.send('closeProject',0)
+        _master.JSON.forEach(device =>{
+            exec(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`)
+        })
+        
+    }    
+    else{
+        document.querySelector('.hd-close').click()
+        document.querySelector('#emergentWindow').classList.remove('d-none')
+        
+    }
 })
 
 // Minimize the window.
