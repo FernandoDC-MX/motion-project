@@ -606,7 +606,6 @@ function stopAll(e, status = 0){
             reDrawChart(_chartsMap.get(`${device}-accelerometer`), 'accelerometer', 1);                
             reDrawChart(_chartsMap.get(`${device}-gyroscope`),'gyroscope', 1);
         });
-
         saveData()
         document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;
     }else{
@@ -1866,9 +1865,9 @@ function saveData(){
     var meridian = date.getHours() > 12 ? 'PM' : 'AM'
     var name = localDate + localHour + meridian
 
-    var _fileTest = new FileTest(name, name, Object.fromEntries(map))   
+    var _fileTest = new FileTest(_title, _title, Object.fromEntries(map))   
 
-    storeFile(_path + '\\Data\\' + name + '.json', _fileTest.JSON)
+    storeData(_path + '\\Data\\', _fileTest.JSON, _title)
 }
 
 document.querySelectorAll('.toggle-menu div').forEach(element => {
