@@ -2,6 +2,7 @@
 
 // Render
 const { ipcRenderer } = require('electron')
+const zoomPlugin = require('chartjs-plugin-zoom');
 
 // Charts
 const Chart = require('chart.js');
@@ -1069,14 +1070,13 @@ function reDrawChart(map, chart, buffer = 0){
     }else{
         // Update datasets without the buffer 
         map.chart.data.datasets.forEach((dataset, index) => {
+            // console.log(Math.max(...));
+            dataset.data = map.values[index]
 
             if(max === null)
                 max = Math.max(...dataset.data);
             else if(Math.max(...dataset.data) > max)
                 max = Math.max(...dataset.data);
-
-            // console.log(Math.max(...));
-            dataset.data = map.values[index]
 
             // Clean map values.
             map.values[index] = []
@@ -1086,7 +1086,8 @@ function reDrawChart(map, chart, buffer = 0){
          map.chart.data.labels = map.labels;
     }
 
-    map.chart.config._config.options.plugins.zoom.limits.y.max = max
+    map.chart.config._config.options.plugins.zoom.limits.y.max = max + 20
+    console.log( map.chart.config._config.options.plugins.zoom.limits.y.max );
 
     // Clean map labels
     map.labels = []
