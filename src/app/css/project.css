@@ -190,7 +190,6 @@ html, body{
     cursor: pointer;
 }
 
-
 .h-custom{
     height: 200px;
 }
@@ -550,6 +549,20 @@ animation-delay: 0.8s;
 
 .wave:nth-child(10) {
 animation-delay: 0.9s;
+}
+
+._toggleMenu{
+    position: absolute;
+    width: 30px;
+    left: -5px;
+    top: 50%;
+    border-top-right-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+    background: #282828;
+    border: 1px solid#282828;
+    color: #f8f8f8;
+    transition: 0.2s all ease-in-out;
+    outline: none;
 }
 
 .toggle-menu{

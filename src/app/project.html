@@ -79,7 +79,12 @@
                 <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"/>
               </svg>
             </div>
-            
+            <button class="_toggleMenu" id="_toggleMenu">
+              <svg xmlns="http://www.w3.org/2000/svg" class="my-1" fill="currentColor" width="20" height="20" viewBox="0 0 256 512">
+                <!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                <path d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"/>
+              </svg>
+            </button>
           </div>
           <div class="channels user-select-none">
             <div class="channel-title px-3 py-2">
@@ -122,11 +127,11 @@
               </div>
             </div>
             <div class="d-charts py-2 d-flex justify-content-end">
-              <button title="Menú desplegable" id="_toggleMenu">
+              <!-- <button title="Menú desplegable" id="_toggleMenu">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-list" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
                 </svg>
-              </button>
+              </button> -->
               <button title="Ocultar la gráfica de ritmo" id="hideBeatBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-activity" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
@@ -226,7 +231,7 @@
                         <path class="cls-2" data-name="pectoral-mayor-derecho" data-id="muscle-3" d="M200.91,178.88s-9.34,8-8.53,45.35c.58,26.68,45.78,36.74,69,40.16a11.2,11.2,0,0,0,12.81-11.67c-.73-13.76-1.87-35-2.69-47.67C270.24,185.18,200.91,178.88,200.91,178.88Z"/>
                         
                         <!-- Bícep derecho -->
-                        <path class="cls-2" data-name="bicep-derecho" data-id="muscle-4" d="M155.67,243.36c-26.3,68.07-6.89,94.61-6.89,94.61s11.92-4.33,22.56-17.65C196,289.44,185.72,235,185.72,235S158.48,236.08,155.67,243.36Z"/>
+                        <path class="cls-2" data-name="biceps-derecho" data-id="muscle-4" d="M155.67,243.36c-26.3,68.07-6.89,94.61-6.89,94.61s11.92-4.33,22.56-17.65C196,289.44,185.72,235,185.72,235S158.48,236.08,155.67,243.36Z"/>
                         
                         <!-- Braquioradial derecho -->
                         <path class="cls-2" data-name="branquioradial-derecho" data-id="muscle-5" d="M133.46,339.25s-21.74,17.4-32.61,59.39c-6,23.18-17.7,43.88-24.11,54.12a.63.63,0,0,0,1,.76c15.72-17.38,60.12-67.42,64.25-82.59C145.47,358.16,133.46,339.25,133.46,339.25Z"/>
@@ -265,7 +270,7 @@
                         <path class="cls-2" data-name="pectoral-mayor-izquierdo" data-id="muscle-16" d="M358.78,178.88s9.34,8,8.53,45.35c-.58,26.68-45.78,36.74-69,40.16a11.2,11.2,0,0,1-12.81-11.67c.73-13.76,1.87-35,2.69-47.67C289.45,185.18,358.78,178.88,358.78,178.88Z"/>
                         
                         <!-- Bícep izquierdo -->
-                        <path class="cls-2" data-name="bicep-izquierdo" data-id="muscle-17" d="M404,243.36c26.31,68.07,6.9,94.61,6.9,94.61s-11.92-4.33-22.56-17.65C363.71,289.44,374,235,374,235S401.2,236.08,404,243.36Z"/>
+                        <path class="cls-2" data-name="biceps-izquierdo" data-id="muscle-17" d="M404,243.36c26.31,68.07,6.9,94.61,6.9,94.61s-11.92-4.33-22.56-17.65C363.71,289.44,374,235,374,235S401.2,236.08,404,243.36Z"/>
                         
                         <!-- Braquioradial izquierdo -->
                         <path class="cls-2" data-name="branquioradial-izquierdo" data-id="muscle-18" d="M426.22,339.25s21.75,17.4,32.62,59.39c6,23.18,17.7,43.88,24.11,54.12a.63.63,0,0,1-1,.76c-15.72-17.38-60.12-67.42-64.25-82.59C414.22,358.16,426.22,339.25,426.22,339.25Z"/>
@@ -773,6 +778,7 @@
       </div>
 
     </div>
+
     <div class="indicator-actions justify-content-between px-3 user-select-none">
       <div class="d-flex">
         <div class="mx-2" title="Puerto al que esta conectado el cerebro">

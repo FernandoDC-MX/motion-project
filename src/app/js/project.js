@@ -1808,9 +1808,13 @@ document.onkeyup = function () {
     if(e.ctrlKey && e.which == 68 && _portCOM) { //Press CTRL + D
         if(!toggleMenuFlag){
             toggleMenu.style.width = '60px'
+            _toggleMenu.style.left = '48px'
+            _toggleMenu.childNodes[1].style.transform = 'rotate(180deg)'
             toggleMenuFlag = 1
         }else{
             toggleMenu.style.width = '0px'
+            _toggleMenu.style.left = '-5px'
+            _toggleMenu.childNodes[1].style.transform = 'rotate(0deg)'
             toggleMenuFlag = 0
         }
 
@@ -1824,9 +1828,13 @@ _toggleMenu.addEventListener('click', () =>{
 
     if(!toggleMenuFlag){
         toggleMenu.style.width = '60px'
+        _toggleMenu.style.left = '49px'
+        _toggleMenu.childNodes[1].style.transform = 'rotate(180deg)'
         toggleMenuFlag = 1
     }else{
         toggleMenu.style.width = '0px'
+        _toggleMenu.style.left = '-5px'
+        _toggleMenu.childNodes[1].style.transform = 'rotate(0deg)'
         toggleMenuFlag = 0
     }
 
