@@ -1,3 +1,36 @@
+class Notification{
+    constructor(message){
+        this.message = message;
+    }
+
+    appendNotification(){
+        let _div = document.createElement('div');
+        _div.classList.add('notification')
+
+        let _body = document.createElement('div');
+        _body.classList.add('notification-body')
+        _body.innerText = this.message;
+
+        _div.append(_body)
+
+        let _progress = document.createElement('div');
+        _progress.classList.add('progress-bar')
+
+        _div.append(_progress)
+
+        queueNotification.append(_div)
+
+        this.delete(_div)
+    }   
+
+    async delete(notification){
+        await sleep(1500)
+
+        notification.remove()
+    }
+}
+
+
 const show = (icon, message) =>{
     var _icon = document.querySelector('#notification .icon');
     var _text = document.querySelector('#notification .text');
@@ -30,3 +63,9 @@ const show = (icon, message) =>{
     }, 2000)
 }
 
+addNdeniedn.addEventListener('click', ()=>{
+    let message = 'Notifación de prueba';
+
+    let notification = new Notification(message)
+    notification.appendNotification()    
+})
