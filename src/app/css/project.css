@@ -554,17 +554,17 @@ animation-delay: 0.9s;
 
 #queueNotification{
     position: absolute;
-    width: 13.2em;
+    width: 19em;
     height: 91.2%;
-    background: red;
     top: 5.5%;
-    left: 87%;
+    left: 80.7%;
 }
 
 #queueNotification .notification{
     width: 100%;
-    height: 100px;
-    background: white;
+    min-height: 70px;
+    max-height: 150px;
+    border-radius: 0.5em;
 }
 
 #queueNotification .notification .notification-body{
@@ -573,11 +573,19 @@ animation-delay: 0.9s;
     height: 98%;
 }
 
+#queueNotification .notification .notification-body .notification-header{
+    color: whitesmoke;
+}
+
+#queueNotification .notification .notification-body .notification-text{
+    color: #f8f8f8;
+}
+
 
 #queueNotification .notification .progress-bar{
     width: 0%;
-    height: 2%;
-    background: green;
+    height: 2px;
+    background: white;
     animation: load 1.5s ease-in-out;
 }
 
@@ -588,6 +596,15 @@ animation-delay: 0.9s;
     100%{
         width: 99%;
     }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+     }
 }
 
 ._toggleMenu{
