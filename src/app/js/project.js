@@ -175,9 +175,6 @@ class MasterDevice{
                 let count = parseInt(_numDevices.innerText)
                 count = count - 1 <= 0 ? 0 : count--;
                 _numDevices.innerText = count
-
-                _errorNotification.classList.remove('d-none')
-                _errorProgram.innerHTML = `Dispositivos desconectados al inicar prueba: `
             }else if(!value.connected && res.edo_con){
                 let count = parseInt(_numDevices.innerText)
                 count += 1;
@@ -213,6 +210,8 @@ let arrChilds = new Map()
 let _master = new MasterDevice()
 let _filesData = null;
 let _settings = null;
+
+let BUFFER = 1;
 
 
 /* ------------------------------------ Functions ---------------------------- */
@@ -493,6 +492,7 @@ deleteB.addEventListener('click', async function(){
 
     if(!_master.deleteDevice(_id)){
         show('success','Dispositivo eliminado correctamente')
+
         bootstrap.Modal.getInstance(editableDevice).hide()
 
         var _response = readFile(_path + "\\info.json")
@@ -602,9 +602,9 @@ function stopAll(e, status = 0){
         // Redraw the charts.
         document.querySelectorAll('.main-graph-container').forEach(element => {
             var device = element.getAttribute('data-device')
-            reDrawChart(_chartsMap.get(`${device}-main`),'main', 1);                
-            reDrawChart(_chartsMap.get(`${device}-accelerometer`), 'accelerometer', 1);                
-            reDrawChart(_chartsMap.get(`${device}-gyroscope`),'gyroscope', 1);
+            reDrawChart(_chartsMap.get(`${device}-main`),'main', BUFFER);                
+            reDrawChart(_chartsMap.get(`${device}-accelerometer`), 'accelerometer', BUFFER);                
+            reDrawChart(_chartsMap.get(`${device}-gyroscope`),'gyroscope', BUFFER);
         });
         saveData()
         document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;
@@ -660,6 +660,82 @@ playBtn.addEventListener('click', () => {
 
         let _tmpDevices = [ ..._master.JSON.keys()]
         for(let i = 0; i < _mainCharts.length; i++){
+                // var _child = fork(__dirname + "\\js\\demo.js")
+    
+                // arrChilds.set(_child.pid, _child)
+            
+                // // Execute the test.
+                // _child.send({ 
+                //     msg: 'do work',
+                //     nTimes: _settings.imu_rate,
+                //     _device: _tmpDevices[i],
+                //     _refresh: _settings.number_rate,
+                //     _portCOM: _portCOM,
+                //     pid : _child.pid, // passing pid to child
+                //     id_zone: _mainCharts[i].getAttribute('data-device'),
+                //     play: 1,
+                //     iterator: iterator
+                // })
+        
+                // _child.on('message', (msg) =>{
+                //     switch(msg.flag){
+                //         // Start the process.
+                //         case 0: switch(msg.chart){
+                //                     case 'main': addData(_chartsMap.get(`${msg.device}-main`), msg.label, msg.data)
+                //                         break;
+                //                     case 'accelerometer': addData(_chartsMap.get(`${msg.device}-accelerometer`), msg.label, msg.data)
+                //                         break;
+                //                     case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data)
+                //                         break;
+                //                     case 'buffer':  
+                //                                     storeBuffer(_chartsMap.get(`${msg.device}-main`), msg.buffer)
+                //                                     storeBuffer(_chartsMap.get(`${msg.device}-accelerometer`), msg.buffer)
+                //                                     storeBuffer(_chartsMap.get(`${msg.device}-gyroscope`), msg.buffer)
+                //                         break;
+                //                 }
+                //             break;
+                //         case 1: // Display Play Button and Hide the Pause Button
+                //                 playBtn.classList.remove('d-none')
+                //                 pauseBtn.classList.add('d-none')
+
+                //                 if(msg.cmd === 'F' || msg.cmd === 'H'){
+                //                     var date = new Date()
+                                    
+                //                     // Redraw each chart with all the data generated.
+                //                     reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', BUFFER);                
+                //                     reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`),'accelerometer', BUFFER);                
+                //                     reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`), 'gyroscope', BUFFER);
+        
+                //                     show('success',`Monitoreo terminado ${msg.device}.`)
+
+                //                     process.kill(msg.id)
+
+                //                     var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
+                //                     var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
+                //                     var meridian = date.getHours() > 12 ? 'P.M.' : 'A.M.'
+
+                //                     document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
+
+                //                     playBtn.classList.remove('pressed')
+                //                     stopBtn.classList.add('d-none')
+                //                     playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
+
+                //                     arrChilds.clear()
+                //                     saveData()
+                //                 }
+                //             break;
+                //         case 2: iterator = msg.iterator
+                //                 show('info','La prueba ha sido pausada por el usuario')
+
+                //                 // Display Pause Button and Hide the Play Button
+                //                 playBtn.classList.remove('d-none')
+                //                 pauseBtn.classList.add('d-none')
+                //             break;
+                //     }
+                // })
+
+                // show('info','La prueba ha empezado.')
+            
             if(_master.JSON.get(_tmpDevices[i]).connected){
                 var _child = fork(__dirname + "\\js\\test.js")
     
@@ -688,7 +764,8 @@ playBtn.addEventListener('click', () => {
                                         break;
                                     case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data)
                                         break;
-                                    case 'buffer':  storeBuffer(_chartsMap.get(`${msg.device}-main`), msg.buffer)
+                                    case 'buffer':  
+                                                    storeBuffer(_chartsMap.get(`${msg.device}-main`), msg.buffer)
                                                     storeBuffer(_chartsMap.get(`${msg.device}-accelerometer`), msg.buffer)
                                                     storeBuffer(_chartsMap.get(`${msg.device}-gyroscope`), msg.buffer)
                                         break;
@@ -702,9 +779,9 @@ playBtn.addEventListener('click', () => {
                                     var date = new Date()
                                     
                                     // Redraw each chart with all the data generated.
-                                    reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', 1);                
-                                    reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`),'accelerometer', 1);                
-                                    reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`), 'gyroscope', 1);
+                                    reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', BUFFER);                
+                                    reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`),'accelerometer', BUFFER);                
+                                    reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`), 'gyroscope', BUFFER);
         
                                     show('success',`Monitoreo terminado ${msg.device}.`)
 
@@ -734,10 +811,10 @@ playBtn.addEventListener('click', () => {
                     }
                 })
 
+                show('info','La prueba ha empezado.')
             }else{
-                _errorProgram.innerHTML += `${_tmpDevices[i]}, `;
+                show('error', `${_tmpDevices[i]} sin respuesta `)
             }
-            show('info','La prueba ha empezado.')
         }
 
     }else if(_settings == null){
@@ -840,45 +917,30 @@ function drawMainChart(color){
                 backgroundColor: color,
                 borderColor: color,
                 label: 'EMG',
-                data: []
+                data: [],
+                tension: 0.1
             }]
         },
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
             plugins: {
                 zoom: {
                     zoom: {
                       wheel: {
                         enabled: true,
-                        speed: 0.1,
                       },
                       drag: {
-                        enabled: true
-                      },
-                      pinch: {
                         enabled: true
                       },
                       mode: 'xy',
                     },
                     limits: {
                         y: {min: 1, max: 100},
+                        x: {min: 0, max: 1000},
                     }
                 },
                 title: {
                     display: true,
                     text: 'EMG'
-                }
-            },
-            transitions: {
-                zoom: {
-                  animation: {
-                    duration: 1000,
-                    easing: 'easeOutCubic'
-                  }
                 }
             },
             responsive: true,
@@ -945,7 +1007,8 @@ function drawAccelerometerGyroChart(color, title){
                       mode: 'xy',
                     },
                     limits: {
-                        y: {min: 1, max: 100},}
+                        y: {min: 1, max: 100}
+                    }
                 },
                 title: {
                     display: true,
@@ -964,7 +1027,6 @@ function drawAccelerometerGyroChart(color, title){
             maintainAspectRatio: false
         }
     });
-
 
 
     return [_canvas, chart];
@@ -1086,14 +1148,16 @@ function reDrawChart(map, chart, buffer = 0){
     }
 
     map.chart.config._config.options.plugins.zoom.limits.y.max = max + 20
-    console.log( map.chart.config._config.options.plugins.zoom.limits.y.max );
+    map.chart.config._config.options.plugins.zoom.limits.y.min = 0
 
-    // Clean map labels
+    // // Clean map labels
     map.labels = []
 
     // Redraw chart
     map.chart.update()
 }
+
+
 
 function processData(arreglo, buffer, chart){
     switch(chart){
@@ -1288,6 +1352,7 @@ acceptBtn.addEventListener('click', () =>{
     if(document.querySelector('.cls-selected')){
         getMuscle()
         show('success', 'Dispositivo ligado al músculo.')
+
         bootstrap.Modal.getInstance(staticBackdrop).hide()
     }else
         show('warning','Tienes que seleccionar un músculo.')
@@ -1495,7 +1560,7 @@ btnSaveSettings.addEventListener('click', () => {
                     _content['settings'] = _settings;
                     displaySettings()
                     storeFile(_path + "\\info.json", _content)
-                    show('success', 'Configuración guardada correctamente.')
+                    show('success','Configuración guardada correctamente.')
                     btnCloseSettings.click()
             break;
         case 'ERROR': show('error', 'Hubo un problema al guardar la información.')
@@ -1615,7 +1680,7 @@ linkBtn.addEventListener('click', async () => {
             displayChannels(_master.JSON)
             displayGraphs(_response.Contenido.devices);
             displayLinked()
-            show('success', 'Dispositivo vinculado correctamente.')
+            show('success', 'Dispositivo vinculado correctamente.');
 
             linkClose.click()
         }else{
@@ -2145,9 +2210,9 @@ function updateReadables(){
                     gyroscope.labels = _content[key].gyroscope.labels;
 
 
-                    reDrawChart(main)
-                    reDrawChart(accelerometer)
-                    reDrawChart(gyroscope)
+                    reDrawChart(main, BUFFER)
+                    reDrawChart(accelerometer, BUFFER)
+                    reDrawChart(gyroscope, BUFFER)
                     
                 })
 

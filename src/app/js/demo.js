@@ -1,4 +1,4 @@
-const _nTimes = 5; //Times to iterate the loop.
+const _nTimes = 55; //Times to iterate the loop.
 const max = 100; // Max value
 const min = 1; // Min value
 let iterator;
@@ -43,7 +43,7 @@ process.on('message', async (msg)=>{
                 flag: 0
             })
     
-            await sleep(250);
+            await sleep(10);
         }
 
         // Send the order to kill the process.
