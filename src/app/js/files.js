@@ -64,6 +64,19 @@ function readDataFolder(_path){
 
 }
 
+function deleteFolder(_path){
+    fs.rmSync(_path, { recursive: true, force: true });
+}
+
 function infoFile(file){
     return  fs.statSync(file)
+}
+
+function renameFolder(_dir, oldName, newName){
+    try{
+        fs.renameSync(`${_dir}\\${oldName}`, `${_dir}\\${newName}`)
+        console.log("Successfully renamed the directory.")
+    }catch(err) {
+        console.log(err)
+    }
 }

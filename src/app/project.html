@@ -29,7 +29,9 @@
       <!-- Toolbar -->
       <div class="topBar">
           <div class="titleBar">
-              <div class="title"></div>
+              <div class=" title">
+              </div>
+              
           </div>
 
           <div class="titleBarBtns justify-content-end">
@@ -57,7 +59,7 @@
                 <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" d="M142,297.67V308a71.1,71.1,0,0,0,142.2,0V242.6"/>
               </svg>
             </div>
-            <div class="element d-flex justify-content-center align-items-center" title="Información del proyecto">
+            <div class="element d-flex justify-content-center align-items-center" id="infoBtn" title="Información del proyecto">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
                 <path d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704l1.323-6.208Zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0Z"/>
               </svg>
@@ -124,6 +126,41 @@
                 <div class="linked">
 
                 </div>
+              </div>
+            </div>
+            <div class="channel-title d-none px-3 py-2">
+              Información
+            </div>
+            <div class="channel-info d-none px-3">
+              <div class="mt-2">
+                <small class="channel-info-small">Nombre</small>
+                <input type="text" class="channel-info-input" id="titleProject">
+                <!-- <p title="" class="channel-info-text" class=""></p> -->
+              </div>
+              <div class="mt-2">
+                <small class="channel-info-small">Comentarios</small>
+                <textarea class="channel-info-input" name="" id="commentsProject" cols="30" rows="1"></textarea>
+              </div>
+              <!-- <div class="mt-2">
+                <small class="channel-info-small">Dispositivos</small>
+                <input type="text" class="channel-info-input" disabled>
+              </div> -->
+              <hr>
+              <div class="d-grid gap-2">
+                <button class="btn btn-save" type="button" id="saveBtn" disabled>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 448 512">
+                    <!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                    <path d="M433.1 129.1l-83.9-83.9C342.3 38.32 327.1 32 316.1 32H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h320c35.35 0 64-28.65 64-64V163.9C448 152.9 441.7 137.7 433.1 129.1zM224 416c-35.34 0-64-28.66-64-64s28.66-64 64-64s64 28.66 64 64S259.3 416 224 416zM320 208C320 216.8 312.8 224 304 224h-224C71.16 224 64 216.8 64 208v-96C64 103.2 71.16 96 80 96h224C312.8 96 320 103.2 320 112V208z"/>
+                  </svg>
+                  Guardar cambios
+                </button>
+                <button class="btn btn-clse" type="button" id="deleteProyectBtn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 448 512">
+                    <!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                    <path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z"/>
+                  </svg>
+                  Eliminar proyecto
+                </button>
               </div>
             </div>
             <div class="d-charts py-2 d-flex justify-content-end">

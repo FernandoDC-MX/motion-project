@@ -9,6 +9,7 @@ const Chart = require('chart.js');
 
 // Process
 const { execSync, exec } = require('child_process');
+const { info } = require('console');
 const fork = require("child_process").fork
 
 /* ---------------------------- Classes ------------------------------ */
@@ -224,6 +225,7 @@ ipc.on('enviar-nombre', (e, args) =>{
 
     _portCOM = args.port;
 
+
     if(_portCOM){
         document.querySelector('#_namePort').innerHTML = _portCOM.toString()
         readInfo(_title)
@@ -239,8 +241,10 @@ ipc.on('enviar-nombre', (e, args) =>{
 function readInfo(_nameFolder){
     _path = `${__dirname}\\Proyectos\\${_nameFolder}`;
     var _response = readFile(_path + "\\info.json")
+    console.log(_response);
 
     if(_response.Estado == 'OK'){
+        setInfoProject(_response.Contenido)
         _devices = _response.Contenido.devices;
         _settings = _response.Contenido.settings;
         displaySettings();
@@ -251,7 +255,7 @@ function readInfo(_nameFolder){
         statusElement.innerText = 'Listo'
     }else{
         alert('Hubo algún error al tratar de abrir el archivo.')
-        closeBtn.click()
+        // closeBtn.click()
     }
 
     statusElement.previousElementSibling.classList.remove('rotating')
@@ -431,6 +435,54 @@ function editableDevices(){
     }
 }
 
+const setInfoProject = (info) =>{
+    var _p = document.querySelectorAll('.channel-info .channel-info-input')
+    console.log(_p);
+
+    // Nombre
+    _p[0].value = info.name;
+    _p[0].addEventListener('keydown', enableSaveBtn)
+
+    // Comentarios
+    _p[1].innerHTML = info.comments ? info.comments : 'No hay comentarios.'
+    _p[1].addEventListener('keydown', enableSaveBtn)
+}
+
+const enableSaveBtn = () => {
+    saveBtn.disabled = false
+}
+
+saveBtn.addEventListener('click', () => {
+    this.disabled = true;
+
+    const _response = readFile(_path + "\\info.json");
+
+    if(_response.Estado === 'OK'){
+        _response.Contenido.name = titleProject.value;
+        _response.Contenido.comments = commentsProject.value;
+
+        renameFolder(`${__dirname}\\Proyectos`, _title, titleProject.value)
+        _path = `${__dirname}\\Proyectos\\${titleProject.value}`;
+        _response.Contenido.path = _path;
+        storeFile(_path + "\\info.json", _response.Contenido)
+
+        _title = titleProject.value;
+        document.querySelector('title').innerHTML = _title
+        document.querySelector('.title').innerHTML = _title
+
+        statusElement.previousElementSibling.classList.add('d-none')
+
+        ipc.send('update-name', _title)
+        
+        show('success','Los cambios fueron guardados.')
+    }else{
+        show('error','Hubo un problema al guardar los cambios')
+    }
+
+    this.disabled = true;
+
+})
+
 connect.addEventListener('click', async function(){
     let _id = document.querySelector('#editableDevice .modal-title').getAttribute('temporal-id');
 
@@ -524,7 +576,12 @@ deleteB.addEventListener('click', async function(){
 
     document.querySelector('#editableDevice .waves').classList.add('d-none')
 
-})
+});
+
+deleteProyectBtn.addEventListener('click', () => {
+    deleteFolder(_path)
+    homeBtn.click()
+});
 
 // Return if at least one device has linked with a muscle.
 function existsMuscle(canales){
@@ -1208,6 +1265,12 @@ outBtn.addEventListener('click', () =>{
 
 comOut.addEventListener('click', () =>{
     ipc.send('closeProject',0)
+})
+
+infoBtn.addEventListener('click', () =>{
+    var tmp = document.querySelector('.channel-info');
+    tmp.previousElementSibling.classList.remove('d-none')
+    tmp.classList.contains('d-none') ? tmp.classList.remove('d-none') : tmp.classList.add('d-none')
 })
 
 homeBtn.addEventListener('click', () =>{
@@ -1954,6 +2017,13 @@ document.querySelectorAll('.toggle-menu div').forEach(element => {
                 document.querySelector('.vinculados .arrow-svg').style.transform = 'rotate(0deg)'
                 document.querySelector('.vinculados').nextElementSibling.classList.add('d-none')
                 document.querySelector('.vinculados').classList.add('d-none')
+            }
+
+            if(document.querySelector('.toggle-icon-pressed').getAttribute('id') === 'infoBtn'){
+                
+
+                document.querySelector('.channel-info').previousElementSibling.classList.add('d-none')
+                document.querySelector('.channel-info').classList.add('d-none')
             }
 
             document.querySelector('.toggle-icon-pressed').classList.remove('toggle-icon-pressed')

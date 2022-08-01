@@ -113,6 +113,8 @@ const createWindow = () => {
 }
 
 const projectWindow = (evt, args) =>{
+  let _title = args;
+
   if(!project){
     let _portCOM = null;
 
@@ -140,11 +142,15 @@ const projectWindow = (evt, args) =>{
   // Event 
   project.on('ready-to-show', async () =>{
     await listSerialPorts();
-
     // Send the data.
-    project.webContents.send('enviar-nombre', {'title': args, 'port': _portCOM})
+    project.webContents.send('enviar-nombre', {'title': _title, 'port': _portCOM})
     project.show()
   })
+
+  ipc.on('update-name', (e, title) =>{
+    _title = title;
+    project.webContents.send('enviar-nombre', {'title': _title, 'port': _portCOM})
+  });
 
   // Start process to listen any usb event on the computer.
   usbDetect.startMonitoring();
@@ -166,7 +172,12 @@ const projectWindow = (evt, args) =>{
 
     // Stop the USB process.
     usbDetect.stopMonitoring();
-    msg ? app.quit() : mainWindow.show()
+    if(msg){
+       app.quit()
+    }else{
+      mainWindow.show()
+      mainWindow.webContents.send('read-projects');
+    }
   })
 
    // Minimize app
