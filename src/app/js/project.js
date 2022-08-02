@@ -2338,7 +2338,7 @@ const cleanToggle = () =>{
 }
 
 pongBtn.addEventListener('click', () =>{
-    ipc.send('startPong', _master.JSON);
+    ipc.send('startPong', {'devices': _master.JSON, 'com': _portCOM});
 })
 
 devicesBtn.addEventListener('click', () =>{

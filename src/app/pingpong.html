@@ -53,37 +53,24 @@
             <span>L</span>
             <span>!</span>
         </div>
-		
 	</div>
     <div class="left-wall wall"></div>
     <div class="right-wall wall"></div>
+    <div class="control d-none">
+        <small>Dispositivo</small>
+        <p id="currentDevice"></p>
+    </div>
 
 
   <!-- Modal -->
-  <div class="modal fade " id="editableDevice" aria-modal="true" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade  t-100" id="editableDevice" aria-modal="true" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content bg-gray-modal h-300 w-400">
         <div class="modal-header">
           <p class="modal-title">Seleccionar un dispositvo para jugar</p>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body ">
-          <div class="cards-zone mx-auto row justify-content-center">
-            <div class="col-3 px-2">
-                <div class="card-device px-1 index-1">
-                    <div class="icon d-flex align-items-center justify-content-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" viewBox="0 0 400 400">
-                            <path fill="currentColor" d="M284.24,166.81a32.9,32.9,0,1,1-32.9,32.89,32.92,32.92,0,0,1,32.9-32.89m0-10a42.9,42.9,0,1,0,42.89,42.89,42.9,42.9,0,0,0-42.89-42.89Z"/>
-                            <path fill="currentColor" d="M142,31a59.24,59.24,0,0,1,59.18,59.17V228.49a59.18,59.18,0,1,1-118.35,0V90.13A59.23,59.23,0,0,1,142,31m0-10A69.17,69.17,0,0,0,72.87,90.13V228.49a69.18,69.18,0,1,0,138.35,0V90.13A69.17,69.17,0,0,0,142,21Z"/>
-                            <line stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" x1="142.04" y1="124.77" x2="142.04" y2="193.85"/>
-                            <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" d="M142,297.67V308a71.1,71.1,0,0,0,142.2,0V242.6"/>
-                        </svg>
-                    </div>
-                    <div class="footer d-flex align-items-center justify-content-center">
-                        4C:34:34:34:34
-                    </div>
-                </div>
-            </div>
+          <div class="cards-zone mx-auto row justify-content-center" id="cards_zone">
             <!-- <div class="col-3 px-2">
                 <div class="card-device index-2">
                     
@@ -100,9 +87,6 @@
                 </div>
             </div> -->
           </div>
-        </div>
-        <div class="modal-footer d-flex justify-content-center">
-          <button type="button" class="btn btn-save">Aceptar</button>
         </div>
       </div>
     </div>
