@@ -291,3 +291,56 @@ body {
                     0 0.02125em 0.06125em rgba(0, 0, 0, 0.25);  
     }
 }
+
+.cards-zone{
+    width: 100%;
+    height: 90%;
+}
+
+.card-device{
+    border-radius: 0.5em;
+    border: 1px solid whitesmoke;
+    transition: 0.3s all ease-in-out;
+    cursor: pointer;
+    color: white;
+    height: 100%;
+}
+
+.index-1{
+    background: #ff7c5448;
+    border: 1px solid  #FF7B54;
+}
+
+
+.index-1:hover{
+    background: #ff7c54a2;
+    border: 1px solid  white;
+}
+
+.index-2{
+    background: #85f5ae38;
+    border: 1px solid  #85F5AE;
+}
+
+.cards-zone .index-3{
+    background: #85c8f52a;
+    border: 1px solid  #85C8F5;
+}
+
+
+.cards-zone .index-4{
+    background: #f585cc32;
+    border: 1px solid  #F585CC;
+}
+
+.cards-zone .card-device .icon{
+    height: 75%;
+}
+
+.cards-zone .card-device .footer{
+    border-top: 1px solid rgb(224, 224, 224);
+    height: 25%;
+    font-family: 'Rubik';
+    font-size: 0.9em;
+}
+

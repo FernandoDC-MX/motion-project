@@ -25,6 +25,7 @@ let dyd = Math.floor(Math.random() * 2);
 
 document.addEventListener('keydown', (e) => {
 if (e.key == 'Enter') {
+
 	gameState = gameState == 'start' ? 'play' : 'start';
 	if (gameState == 'play') {
     document.querySelector('#goal-notification').style.animation = '';
@@ -143,3 +144,8 @@ function sleep(ms) {
 closeBtn.addEventListener('click', () =>{
     ipc.send('closeGame');
 })
+
+var myModal = new bootstrap.Modal(document.getElementById("editableDevice"), {});
+document.onreadystatechange = function () {
+  myModal.show();
+};
