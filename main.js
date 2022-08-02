@@ -53,7 +53,7 @@ const splashScreen = () =>{
 }
 
 // [Main] Window
-const createWindow = () => {
+const  createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     minHeight:600,

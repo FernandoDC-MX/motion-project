@@ -10,7 +10,7 @@ let buffer = {
     labels: []
 }
 
-let path1 = path.resolve("src/app/serial", "main.exe");
+let path1 = path.resolve(__dirname, "main.exe");
 const delay = 0.03
 
 process.on('message', async (msg)=>{
