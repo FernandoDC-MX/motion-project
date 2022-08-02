@@ -84,7 +84,11 @@ class MasterDevice{
         if(_slaveDevice){
             execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM}`)
             response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} ${_slaveDevice._index}`))
-            console.log(response);
+            // if(response.edo_con)
+            //     _slaveDevice.connected = 1;
+            // else
+            //     _slaveDevice.connected = 0;
+
             _slaveDevice['battery'] = response.bat
         }else{
           response = {'Error': 'No existe el dispositivo dentro del proyecto. Verifica que realmente este vinculado y trata de nuevo.'}

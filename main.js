@@ -172,6 +172,7 @@ const projectWindow = (evt, args) =>{
 
     // Stop the USB process.
     usbDetect.stopMonitoring();
+    
     if(msg){
        app.quit()
     }else{

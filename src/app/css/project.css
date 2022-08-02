@@ -144,7 +144,7 @@ html, body{
     background: #282828;
     height: 100%;
     margin: 0 auto;
-    overflow-y: none;
+    overflow-y: auto;
     overflow-x: none;
 }
 
