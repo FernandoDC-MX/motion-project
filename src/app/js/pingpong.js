@@ -1,6 +1,9 @@
 const { ipcRenderer } = require('electron')
 const ipc = ipcRenderer
 
+const { exec, execSync } = require('child_process');
+const path = require('path');
+
 
 let gameState = 'start';
 let paddle_1 = document.querySelector('.paddle_1');
@@ -24,8 +27,9 @@ let dxd = Math.floor(Math.random() * 2);
 let dyd = Math.floor(Math.random() * 2);
 
 document.addEventListener('keydown', (e) => {
+	e.preventDefault()
 if (e.key == 'Enter') {
-
+	document.querySelector('.control').classList.add('d-none')
 	gameState = gameState == 'start' ? 'play' : 'start';
 	if (gameState == 'play') {
     document.querySelector('#goal-notification').style.animation = '';
@@ -125,6 +129,7 @@ if (
 	ball_coord = initial_ball_coord;
 	ball.style = initial_ball.style;
 	message.innerHTML = 'Presionar Enter';
+	document.querySelector('.control').classList.remove('d-none')
 	message.style.left = 38 + 'vw';
 	return;
 }
@@ -146,12 +151,54 @@ closeBtn.addEventListener('click', () =>{
 })
 
 
-ipc.on('enviar-dispositivos', (e, args) => {
-	var myModal = new bootstrap.Modal(document.getElementById("editableDevice"), {});
-	myModal.show();
+// ipc.on('enviar-dispositivos', (e, args) => {
+// 	var myModal = new bootstrap.Modal(document.getElementById("editableDevice"), {});
+// 	myModal.show();
 
-	args.devices.forEach((value, key) => {
-		console.log(value, key);
-	});
-	  
-})
+// 	console.log(args);
+// 	cards_zone.innerHTML = ''
+
+// 	args.devices.forEach((value, key) => {
+// 		cards_zone.innerHTML += `
+// 			<div class="col-3 px-2" id="${key}">
+// 				<div class="card-device px-1 index-${value._index} clickable">
+// 					<div class="icon d-flex align-items-center justify-content-center">
+// 						<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" viewBox="0 0 400 400">
+// 							<path fill="currentColor" d="M284.24,166.81a32.9,32.9,0,1,1-32.9,32.89,32.92,32.92,0,0,1,32.9-32.89m0-10a42.9,42.9,0,1,0,42.89,42.89,42.9,42.9,0,0,0-42.89-42.89Z"/>
+// 							<path fill="currentColor" d="M142,31a59.24,59.24,0,0,1,59.18,59.17V228.49a59.18,59.18,0,1,1-118.35,0V90.13A59.23,59.23,0,0,1,142,31m0-10A69.17,69.17,0,0,0,72.87,90.13V228.49a69.18,69.18,0,1,0,138.35,0V90.13A69.17,69.17,0,0,0,142,21Z"/>
+// 							<line stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" x1="142.04" y1="124.77" x2="142.04" y2="193.85"/>
+// 							<path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" d="M142,297.67V308a71.1,71.1,0,0,0,142.2,0V242.6"/>
+// 						</svg>
+// 					</div>
+// 					<div class="footer d-flex align-items-center justify-content-center">
+// 						${key}
+// 					</div>
+// 				</div>
+// 			</div>
+// 		` 
+// 	});
+
+// 	updateClickable();
+// })
+
+// function updateClickable(){
+// 	var _elements = document.querySelectorAll('.clickable')
+
+
+// 	_elements.forEach( element => {
+// 		element.addEventListener('click', function(){
+// 			if(document.querySelector('.selected'))
+// 				document.querySelector('.selected').classList.remove('selected')
+
+// 			this.classList.add('selected')
+// 			currentDevice.innerText = this.parentNode.getAttribute('id')
+// 			bootstrap.Modal.getInstance(document.getElementById("editableDevice")).hide();
+// 			document.querySelector('.control').classList.remove('d-none')
+// 		})
+// 	})
+// }
+
+
+// async function startMyo(){
+// 	exec(`${__dirname}\\main.exe STR ${currentDevice.innerText} COM3`)
+// }

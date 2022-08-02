@@ -64,7 +64,8 @@ process.on('message', async (msg)=>{
                         chart:'buffer', 
                         buffer: buffer,
                         device: msg.id_zone,
-                        flag: 0
+                        flag: 0,
+                        raw: cleanData,
                     })
                 }
             }

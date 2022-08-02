@@ -508,7 +508,6 @@ connect.addEventListener('click', async function(){
         show('error', 'No se pudo conectar.')
     }
 
-
     document.querySelector('#editableDevice .waves').classList.add('d-none')
 
 })
@@ -535,11 +534,9 @@ update.addEventListener('click', async function(){
 
         
             storeFile(_path + "\\info.json", _response.Contenido)
-            // console.log('ANtes:', _devices);
 
             _devices = _response.Contenido.devices
 
-            // console.log('Después:', _devices);
 
 
             displayChannels(_master.JSON)
@@ -840,6 +837,7 @@ playBtn.addEventListener('click', () => {
                 })
         
                 _child.on('message', (msg) =>{
+                    console.log(msg.raw || '');
                     switch(msg.flag){
                         // Start the process.
                         case 0: switch(msg.chart){
@@ -1749,7 +1747,7 @@ linkBtn.addEventListener('click', async () => {
 
         var _device = new Device(_address, null, null, _hexColors[color], color + 1, _name)
 
-        await sleep(1500)
+        await sleep(100)
 
         const _linkResponse = _master.setNewDevice(_address,_device)
 
@@ -2338,7 +2336,7 @@ const cleanToggle = () =>{
 }
 
 pongBtn.addEventListener('click', () =>{
-    ipc.send('startPong', _master.JSON);
+    ipc.send('startPong', {'devices': _master.JSON, 'com': _portCOM});
 })
 
 devicesBtn.addEventListener('click', () =>{
