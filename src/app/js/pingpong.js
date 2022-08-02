@@ -145,7 +145,13 @@ closeBtn.addEventListener('click', () =>{
     ipc.send('closeGame');
 })
 
-var myModal = new bootstrap.Modal(document.getElementById("editableDevice"), {});
-document.onreadystatechange = function () {
-  myModal.show();
-};
+
+ipc.on('enviar-dispositivos', (e, args) => {
+	var myModal = new bootstrap.Modal(document.getElementById("editableDevice"), {});
+	myModal.show();
+
+	args.devices.forEach((value, key) => {
+		console.log(value, key);
+	});
+	  
+})

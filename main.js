@@ -196,8 +196,8 @@ const projectWindow = (evt, args) =>{
       project = null;
   })
 
-  ipc.on('startPong', () =>{
-    pingpongWindow()
+  ipc.on('startPong', (evt, args) =>{
+    pingpongWindow(evt, args)
   })
 
   // Maximize app
@@ -232,8 +232,7 @@ const projectWindow = (evt, args) =>{
   }
 }
 
-const pingpongWindow = () =>{
-
+const pingpongWindow = (evt, args) =>{
   if(!game){
     // Create the ping pong window.
     game = new BrowserWindow({
@@ -257,10 +256,11 @@ const pingpongWindow = () =>{
     // Event 
     game.on('ready-to-show', () =>{
       game.show()
+      game.webContents.send('enviar-dispositivos', {'devices': args})
     })
 
     // Close app
-    ipc.on('closeGame', (evt, msg)=>{
+    ipc.on('closeGame', ()=>{
       game.close()
     })
 
