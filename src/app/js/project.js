@@ -60,19 +60,19 @@ class MasterDevice{
         this.#_slaveDevices = new Map()
     }
 
+    // No agregar al conjunto hasta que no se agregue en el cerebro.
     setNewDevice(mac_address, Device){
         if(!this.#_slaveDevices.has(mac_address)){
 
             this.#_slaveDevices.set(mac_address, Device)
 
             let _linkres = this.setSettingsDevice(this.#_slaveDevices.get(mac_address))
-            this.#_slaveDevices.get(mac_address)['connected'] = 1;
 
             let count = parseInt(_numDevices.innerText)
             count++;
             _numDevices.innerText = count
             
-            return _linkres.toString();
+            return _linkres;
         }else{
             return 'ERROR';
         }
@@ -84,10 +84,11 @@ class MasterDevice{
         if(_slaveDevice){
             execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM}`)
             response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} ${_slaveDevice._index}`))
-            // if(response.edo_con)
-            //     _slaveDevice.connected = 1;
-            // else
-            //     _slaveDevice.connected = 0;
+            console.log(response);
+            if(response.edo_con)
+                _slaveDevice.connected = 1;
+            else
+                _slaveDevice.connected = 0;
 
             _slaveDevice['battery'] = response.bat
         }else{
@@ -101,7 +102,7 @@ class MasterDevice{
         let _device = this.#_slaveDevices.get(_id);
 
         let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${_device.name} ${_device._index}`).toString());
-        console.log(_device);
+
         if(response.edo_con){
             let count = parseInt(_numDevices.innerText)
             count++;
@@ -117,9 +118,14 @@ class MasterDevice{
 
     updateDevice(_id, nom){
         let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${nom} ${this.#_slaveDevices.get(_id)._index}`))
-        
         if(response.edo_con){
             this.#_slaveDevices.get(_id).name = nom;
+            this.#_slaveDevices.get(_id).battery = response.bat
+        }else{
+            this.#_slaveDevices.get(_id).connected = response.edo_con
+            let count = parseInt(_numDevices.innerText)
+            count = count - 1 <= 0 ? 0 : count--;
+            _numDevices.innerText = count
         }
 
         return response.edo_con;
@@ -128,15 +134,17 @@ class MasterDevice{
     deleteDevice(_id){
         let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe DEL ${_id} ${_portCOM}`).toString());
 
-        if(!response.bat){
+        if(response.edo_con){
             this.#_slaveDevices.delete(_id)
-            
-            let count = parseInt(_numDevices.innerText)
-            count = count - 1 <= 0 ? 0 : count--;
-            _numDevices.innerText = count
+        }else{
+            this.#_slaveDevices.get(_id).connected = response.edo_con
         }
 
-        return response.bat;
+        let count = parseInt(_numDevices.innerText)
+            count = count - 1 <= 0 ? 0 : count--;
+            _numDevices.innerText = count
+
+        return response.edo_con;
     }
 
     makeBinding(devices){   
@@ -245,7 +253,6 @@ ipc.on('enviar-nombre', (e, args) =>{
 function readInfo(_nameFolder){
     _path = `${__dirname}\\Proyectos\\${_nameFolder}`;
     var _response = readFile(_path + "\\info.json")
-    console.log(_response);
 
     if(_response.Estado == 'OK'){
         setInfoProject(_response.Contenido)
@@ -441,7 +448,6 @@ function editableDevices(){
 
 const setInfoProject = (info) =>{
     var _p = document.querySelectorAll('.channel-info .channel-info-input')
-    console.log(_p);
 
     // Nombre
     _p[0].value = info.name;
@@ -511,33 +517,51 @@ update.addEventListener('click', async function(){
     let _id = document.querySelector('#editableDevice .modal-title').getAttribute('temporal-id');
     let nom = document.querySelector('#editableDevice #_editName').value
 
-    document.querySelector('#editableDevice .waves').classList.remove('d-none')
-    await sleep(100)
-    if(_master.updateDevice(_id, nom)){
-        show('success','Dispositivo actualizado correctamente')
-        document.querySelector('#editableDevice #connect').classList.add('d-none')
+    if(nom){
+        document.querySelector('#editableDevice .waves').classList.remove('d-none')
 
-        var _response = readFile(_path + "\\info.json")
+        await sleep(10)
+        if(_master.updateDevice(_id, nom)){
+            show('success','Dispositivo actualizado correctamente')
+            document.querySelector('#editableDevice #connect').classList.add('d-none')
+
+            var _response = readFile(_path + "\\info.json")
+            
+            if(_response.Contenido.devices){
+                    _response.Contenido.devices[_id].name = nom;
+                    _response.Contenido.devices[_id].connected = 1;
+                    _response.Contenido.devices[_id].battery = 1;
+            }
+
         
-        if(_response.Contenido.devices){
-                _response.Contenido.devices[_id].name = nom;
+            storeFile(_path + "\\info.json", _response.Contenido)
+            // console.log('ANtes:', _devices);
+
+            _devices = _response.Contenido.devices
+
+            // console.log('Después:', _devices);
+
+
+            displayChannels(_master.JSON)
+            displayGraphs(_response.Contenido.devices);
+            displayLinked()
+            bootstrap.Modal.getInstance(editableDevice).hide()
+            _editName.value = '';
+            
+        }else{
+            show('error', 'No se pudo actualizar el dispositivo.')
         }
-    
-        storeFile(_path + "\\info.json", _response.Contenido)
-        _devices = _response.Contenido.devices
-        displayChannels(_response.Contenido.devices)
-        displayGraphs(_response.Contenido.devices);
-        displayLinked()
-        bootstrap.Modal.getInstance(editableDevice).hide()
-        _editName.value = '';
-        
     }else{
-        show('error', 'No se pudo actualizar.')
+        errorEditName.innerText = 'Este campo es obligatorio'
     }
-
+    
 
     document.querySelector('#editableDevice .waves').classList.add('d-none')
 
+})
+
+editableDevice.addEventListener('hidden.bs.modal', () => {
+    errorEditName.innerText = ''
 })
 
 deleteB.addEventListener('click', async function(){
@@ -546,7 +570,7 @@ deleteB.addEventListener('click', async function(){
     document.querySelector('#editableDevice .waves').classList.remove('d-none')
     await sleep(10)
 
-    if(!_master.deleteDevice(_id)){
+    if(_master.deleteDevice(_id)){
         show('success','Dispositivo eliminado correctamente')
 
         bootstrap.Modal.getInstance(editableDevice).hide()
@@ -574,7 +598,7 @@ deleteB.addEventListener('click', async function(){
     
         
     }else{
-        show('error', 'No se pudo actualizar.')
+        show('error', 'No se pudo eliminar el dispositivo.')
     }
 
 
@@ -1729,7 +1753,7 @@ linkBtn.addEventListener('click', async () => {
 
         const _linkResponse = _master.setNewDevice(_address,_device)
 
-        if(!_linkResponse.includes('ERROR')){
+        if(_linkResponse.edo_con){
             var _response = readFile(_path + "\\info.json")
         
             if(_response.Contenido.devices){
@@ -1751,6 +1775,7 @@ linkBtn.addEventListener('click', async () => {
 
             linkClose.click()
         }else{
+            _master.JSON.delete(_address)
             show('error', 'Hubo un error en la vinculación.');
             document.querySelector('#errorMac').innerText = 'Este dispositivo ya existe en el proyecto.';
         }
