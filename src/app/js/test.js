@@ -32,7 +32,7 @@ process.on('message', async (msg)=>{
 
                     let x = execSync(`${path1} STP ${msg._device} ${msg._portCOM}`).toString();
                     // Send the order to kill the process.
-                    process.send({id: msg.pid, flag: 1, device: msg.id_zone, iterator: iterator, cmd: resp_cmd, buffer: buffer})
+                    process.send({id: msg.pid, flag: 1, device: msg.id_zone, iterator: iterator, cmd: resp_cmd, buffer: buffer, update: x})
                 }else{
                     process.send({
                         chart:'main', 

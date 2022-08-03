@@ -196,10 +196,6 @@ class MasterDevice{
         });
     }
 
-    stopTests(){
-
-    }
-
     get JSON(){
         return this.#_slaveDevices;
     }
@@ -696,7 +692,9 @@ function stopAll(e, status = 0){
     }
     
     _master.JSON.forEach(device =>{
-        exec(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`)
+        let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
+
+        console.log(res);
     })
     
     // Kill all the childs created.
@@ -860,12 +858,15 @@ playBtn.addEventListener('click', () => {
 
                                 if(msg.cmd === 'F' || msg.cmd === 'H'){
                                     var date = new Date()
+
+                                    _master.JSON.get(`${msg.device}`).battery = JSON.parse(msg.update).bat
+                                    console.log( _master.JSON.get(`${msg.device}`));
                                     
                                     // Redraw each chart with all the data generated.
                                     reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', BUFFER);                
                                     reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`),'accelerometer', BUFFER);                
                                     reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`), 'gyroscope', BUFFER);
-        
+                                    displayChannels(_master.JSON)
                                     show('success',`Monitoreo terminado ${msg.device}.`)
 
                                     process.kill(msg.id)
@@ -1128,7 +1129,7 @@ function addData(map, label, data) {
     map.chart.data.datasets.forEach((dataset, index) => {
 
         // If the array's length is superior to 10, the firs element will be deleted.
-        if(dataset.data.length > 50){
+        if(dataset.data.length > 30){
 
             // Delete the first data.
             dataset.data.shift()
@@ -1270,7 +1271,9 @@ closeBtn.addEventListener('click', () =>{
     if(!playBtn.classList.contains('d-none') && !playBtn.classList.contains('pressed')){
         ipc.send('closeProject', 1)
         _master.JSON.forEach(device =>{
-            exec(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`)
+            let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
+
+        console.log(res);
         })
         
     }    
@@ -1303,7 +1306,9 @@ homeBtn.addEventListener('click', () =>{
     if(!playBtn.classList.contains('d-none') && !playBtn.classList.contains('pressed')){
         ipc.send('closeProject',0)
         _master.JSON.forEach(device =>{
-            exec(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`)
+            let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
+
+            console.log(res);
         })
         
     }    

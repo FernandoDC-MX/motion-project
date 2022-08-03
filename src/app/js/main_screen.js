@@ -49,8 +49,6 @@ window.onload = function(){
 }
 
 function readProjects(){
-    console.log('Hola desde carga');
-
     _proyectos = []
 
     fs.readdir(
