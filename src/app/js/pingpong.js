@@ -29,6 +29,7 @@ let dxd = Math.floor(Math.random() * 2);
 let dyd = Math.floor(Math.random() * 2);
 
 let com;
+let lastValue = 0;
 
 document.addEventListener('keydown', (e) => {
 	if (e.key == 'Enter') {
@@ -47,6 +48,7 @@ document.addEventListener('keydown', (e) => {
 			document.querySelector('#goal-notification').style.animation = '';
 			message.innerHTML = '';
 			message.style.left = 42 + 'vw';
+			
 			requestAnimationFrame(() => {
 					dx = Math.floor(Math.random() * 4) + 3;
 					dy = Math.floor(Math.random() * 4) + 3;
@@ -59,23 +61,23 @@ document.addEventListener('keydown', (e) => {
 
 	if (gameState == 'play') {
 				
-		if (e.key == 'w') {
-		paddle_1.style.top =
-			Math.max(
-			board_coord.top,
-			paddle_1_coord.top - window.innerHeight * 0.06
-			) + 'px';
-		paddle_1_coord = paddle_1.getBoundingClientRect();
-		}
+		// if (e.key == 'w') {
+		// paddle_1.style.top =
+		// 	Math.max(
+		// 		board_coord.top,
+		// 		paddle_1_coord.top - window.innerHeight * 0.06
+		// 	) + 'px';
+		// 	paddle_1_coord = paddle_1.getBoundingClientRect();
+		// }
 
-		if (e.key == 's') {
-		paddle_1.style.top =
-			Math.min(
-			board_coord.bottom - paddle_common.height,
-			paddle_1_coord.top + window.innerHeight * 0.06
-			) + 'px';
-		paddle_1_coord = paddle_1.getBoundingClientRect();
-		}
+		// if (e.key == 's') {
+		// 	paddle_1.style.top =
+		// 		Math.min(
+		// 			board_coord.bottom - paddle_common.height,
+		// 			paddle_1_coord.top + window.innerHeight * 0.06
+		// 		) + 'px';
+		// 	paddle_1_coord = paddle_1.getBoundingClientRect();
+		// }
 
 		if (e.key == 'ArrowUp') {
 		paddle_2.style.top =
@@ -97,69 +99,69 @@ document.addEventListener('keydown', (e) => {
 });
 
 async function moveBall(dx, dy, dxd, dyd) {
-if (ball_coord.top <= board_coord.top) {
-	dyd = 1;
-}
-if (ball_coord.bottom >= board_coord.bottom) {
-	dyd = 0;
-}
-if (
-	ball_coord.left <= paddle_1_coord.right &&
-	ball_coord.top >= paddle_1_coord.top &&
-	ball_coord.bottom <= paddle_1_coord.bottom
-) {
-	dxd = 1;
-	dx = Math.floor(Math.random() * 4) + 3;
-	dy = Math.floor(Math.random() * 4) + 3;
-}
-if (
-	ball_coord.right >= paddle_2_coord.left &&
-	ball_coord.top >= paddle_2_coord.top &&
-	ball_coord.bottom <= paddle_2_coord.bottom
-) {
-	dxd = 0;
-	dx = Math.floor(Math.random() * 4) + 3;
-	dy = Math.floor(Math.random() * 4) + 3;
-}
-if (
-	ball_coord.left <= board_coord.left ||
-	ball_coord.right >= board_coord.right
-) {
-	if (ball_coord.left <= board_coord.left) {
-	score_2.innerHTML = +score_2.innerHTML + 1;
-	} else {
-	score_1.innerHTML = +score_1.innerHTML + 1;
+	if (ball_coord.top <= board_coord.top) {
+		dyd = 1;
+	}
+	if (ball_coord.bottom >= board_coord.bottom) {
+		dyd = 0;
+	}
+	if (
+		ball_coord.left <= paddle_1_coord.right &&
+		ball_coord.top >= paddle_1_coord.top &&
+		ball_coord.bottom <= paddle_1_coord.bottom
+	) {
+		dxd = 1;
+		dx = Math.floor(Math.random() * 4) + 3;
+		dy = Math.floor(Math.random() * 4) + 3;
+	}
+	if (
+		ball_coord.right >= paddle_2_coord.left &&
+		ball_coord.top >= paddle_2_coord.top &&
+		ball_coord.bottom <= paddle_2_coord.bottom
+	) {
+		dxd = 0;
+		dx = Math.floor(Math.random() * 4) + 3;
+		dy = Math.floor(Math.random() * 4) + 3;
+	}
+	if ( ball_coord.left <= board_coord.left || ball_coord.right >= board_coord.right) {
+		if (ball_coord.left <= board_coord.left) {
+			score_2.innerHTML = +score_2.innerHTML + 1;
+		} else {
+			score_1.innerHTML = +score_1.innerHTML + 1;
+		}
+
+		// Stop action
+		child.send({
+			'action': 'stop',
+			'id': currentDevice.innerText,
+			'com': com,
+		})
+
+		document.querySelector('.left-wall').style.animation = 'left-animation-enter 0.5s linear forwards'
+		document.querySelector('.right-wall').style.animation = 'right-animation-enter 0.5s linear forwards'
+		document.querySelector('#goal-notification').style.animation = 'pop-enter 1.7s linear';
+		await sleep(1700)
+
+		document.querySelector('.left-wall').style.animation = 'left-animation-leave 0.5s linear forwards'
+		document.querySelector('.right-wall').style.animation = 'right-animation-leave 0.5s linear forwards'
+		await sleep(501)
+
+		gameState = 'start';
+
+
+		ball_coord = initial_ball_coord;
+		ball.style = initial_ball.style;
+		message.innerHTML = 'Presionar Enter';
+		document.querySelector('.control').classList.remove('d-none')
+		message.style.left = 38 + 'vw';
+
+		return;
 	}
 
-	// Stop action
-	child.send({
-		'action': 'stop',
-		'id': currentDevice.innerText,
-		'com': com,
-	})
-
-    document.querySelector('.left-wall').style.animation = 'left-animation-enter 0.5s linear forwards'
-    document.querySelector('.right-wall').style.animation = 'right-animation-enter 0.5s linear forwards'
-    document.querySelector('#goal-notification').style.animation = 'pop-enter 1.7s linear';
-    await sleep(1700)
-
-    document.querySelector('.left-wall').style.animation = 'left-animation-leave 0.5s linear forwards'
-    document.querySelector('.right-wall').style.animation = 'right-animation-leave 0.5s linear forwards'
-    await sleep(501)
-
-	gameState = 'start';
-
-
-	ball_coord = initial_ball_coord;
-	ball.style = initial_ball.style;
-	message.innerHTML = 'Presionar Enter';
-	document.querySelector('.control').classList.remove('d-none')
-	message.style.left = 38 + 'vw';
-	return;
-}
     ball.style.top = ball_coord.top + dy * (dyd == 0 ? -1 : 1) + 'px';
     ball.style.left = ball_coord.left + dx * (dxd == 0 ? -1 : 1) + 'px';
     ball_coord = ball.getBoundingClientRect();
+
     requestAnimationFrame(() => {
         moveBall(dx, dy, dxd, dyd);
     });
@@ -219,19 +221,36 @@ function updateClickable(){
 			// startMyo()
 
 
-		child.on('message', (msg) => {
-			console.log(msg);
-			switch(msg.action){
-				case 'stop': child.send({ 
-								'action': 'stop',
-								'id': this.parentNode.getAttribute('id'),
-								'com': com
-							})
-					break;
-				case 'closed':
-					break;
-			}
-		})
+			child.on('message', (msg) => {
+				switch(msg.action){
+					case 'stop': child.send({ 
+									'action': 'stop',
+									'id': this.parentNode.getAttribute('id'),
+									'com': com
+								})
+						break;
+					case 'movement': console.log('Valor actual: ', lastValue, ' Valor que llega: ', msg.last);
+									if(msg.last > 2000){ //Sube
+										console.log('subo');
+										paddle_1.style.top =
+											Math.max(
+												board_coord.top,
+												paddle_1_coord.top - window.innerHeight * 0.06
+											) + 'px';
+										paddle_1_coord = paddle_1.getBoundingClientRect();
+									}else{ //Baja
+										console.log('bajo');
+										paddle_1.style.top =
+											Math.min(
+												board_coord.bottom - paddle_common.height,
+												paddle_1_coord.top + window.innerHeight * 0.06
+											) + 'px';
+										paddle_1_coord = paddle_1.getBoundingClientRect();
+									}
+									lastValue = msg.last;
+							break;
+				}
+			})
 			
 		})
 	})

@@ -1,8 +1,8 @@
 const { spawn } = require('child_process');
 
 let buffer = []
-let nMaxIterations = 50;
-let nRefresh = 1000;
+let nMaxIterations = 20000;
+let nRefresh = 80;
 let iterator = 0;
 
 process.on('message', (args) => {
@@ -83,7 +83,7 @@ const fillBuffer = async (_id, com) =>{
 
                 if(!lastData.hasOwnProperty('resp_cmd')){
                     buffer.push(lastData)
-                    process.send({'stdout':buffer, 'last': lastData})
+                    process.send({'last': lastData.myo, 'action': 'movement'})
                 }
             }
         });
