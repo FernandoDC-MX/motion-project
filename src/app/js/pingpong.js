@@ -1,9 +1,11 @@
 const { ipcRenderer } = require('electron')
 const ipc = ipcRenderer
 
-const { exec, execSync } = require('child_process');
+const { exec, fork } = require('child_process');
 const path = require('path');
+const { spawn } = require('child_process');
 
+var child = fork(__dirname + "\\js\\spawn_process.js");
 
 let gameState = 'start';
 let paddle_1 = document.querySelector('.paddle_1');
@@ -29,57 +31,69 @@ let dyd = Math.floor(Math.random() * 2);
 let com;
 
 document.addEventListener('keydown', (e) => {
-if (e.key == 'Enter') {
-	document.querySelector('.control').classList.add('d-none')
-	gameState = gameState == 'start' ? 'play' : 'start';
-	if (gameState == 'play') {
-    document.querySelector('#goal-notification').style.animation = '';
-	message.innerHTML = '';
-	message.style.left = 42 + 'vw';
-	requestAnimationFrame(() => {
-		dx = Math.floor(Math.random() * 4) + 3;
-		dy = Math.floor(Math.random() * 4) + 3;
-		dxd = Math.floor(Math.random() * 2);
-		dyd = Math.floor(Math.random() * 2);
-		moveBall(dx, dy, dxd, dyd);
-	});
-	}
-}
-if (gameState == 'play') {
-	if (e.key == 'w') {
-	paddle_1.style.top =
-		Math.max(
-		board_coord.top,
-		paddle_1_coord.top - window.innerHeight * 0.06
-		) + 'px';
-	paddle_1_coord = paddle_1.getBoundingClientRect();
-	}
-	if (e.key == 's') {
-	paddle_1.style.top =
-		Math.min(
-		board_coord.bottom - paddle_common.height,
-		paddle_1_coord.top + window.innerHeight * 0.06
-		) + 'px';
-	paddle_1_coord = paddle_1.getBoundingClientRect();
+	if (e.key == 'Enter') {
+		document.querySelector('.control').classList.add('d-none')
+		gameState = gameState == 'start' ? 'play' : 'start';
+
+		if (gameState == 'play') {
+			// Play action
+			child.send({
+				'action': 'play',
+				'id': currentDevice.innerText,
+				'com': com,
+				'_pid': child.pid
+			})
+
+			document.querySelector('#goal-notification').style.animation = '';
+			message.innerHTML = '';
+			message.style.left = 42 + 'vw';
+			requestAnimationFrame(() => {
+					dx = Math.floor(Math.random() * 4) + 3;
+					dy = Math.floor(Math.random() * 4) + 3;
+					dxd = Math.floor(Math.random() * 2);
+					dyd = Math.floor(Math.random() * 2);
+					moveBall(dx, dy, dxd, dyd);
+			});
+		}
 	}
 
-	if (e.key == 'ArrowUp') {
-	paddle_2.style.top =
-		Math.max(
-		board_coord.top,
-		paddle_2_coord.top - window.innerHeight * 0.1
-		) + 'px';
-	paddle_2_coord = paddle_2.getBoundingClientRect();
+	if (gameState == 'play') {
+				
+		if (e.key == 'w') {
+		paddle_1.style.top =
+			Math.max(
+			board_coord.top,
+			paddle_1_coord.top - window.innerHeight * 0.06
+			) + 'px';
+		paddle_1_coord = paddle_1.getBoundingClientRect();
+		}
+
+		if (e.key == 's') {
+		paddle_1.style.top =
+			Math.min(
+			board_coord.bottom - paddle_common.height,
+			paddle_1_coord.top + window.innerHeight * 0.06
+			) + 'px';
+		paddle_1_coord = paddle_1.getBoundingClientRect();
+		}
+
+		if (e.key == 'ArrowUp') {
+		paddle_2.style.top =
+			Math.max(
+			board_coord.top,
+			paddle_2_coord.top - window.innerHeight * 0.1
+			) + 'px';
+		paddle_2_coord = paddle_2.getBoundingClientRect();
+		}
+		if (e.key == 'ArrowDown') {
+		paddle_2.style.top =
+			Math.min(
+			board_coord.bottom - paddle_common.height,
+			paddle_2_coord.top + window.innerHeight * 0.1
+			) + 'px';
+		paddle_2_coord = paddle_2.getBoundingClientRect();
+		}
 	}
-	if (e.key == 'ArrowDown') {
-	paddle_2.style.top =
-		Math.min(
-		board_coord.bottom - paddle_common.height,
-		paddle_2_coord.top + window.innerHeight * 0.1
-		) + 'px';
-	paddle_2_coord = paddle_2.getBoundingClientRect();
-	}
-}
 });
 
 async function moveBall(dx, dy, dxd, dyd) {
@@ -116,6 +130,14 @@ if (
 	} else {
 	score_1.innerHTML = +score_1.innerHTML + 1;
 	}
+
+	// Stop action
+	child.send({
+		'action': 'stop',
+		'id': currentDevice.innerText,
+		'com': com,
+	})
+
     document.querySelector('.left-wall').style.animation = 'left-animation-enter 0.5s linear forwards'
     document.querySelector('.right-wall').style.animation = 'right-animation-enter 0.5s linear forwards'
     document.querySelector('#goal-notification').style.animation = 'pop-enter 1.7s linear';
@@ -126,6 +148,7 @@ if (
     await sleep(501)
 
 	gameState = 'start';
+
 
 	ball_coord = initial_ball_coord;
 	ball.style = initial_ball.style;
@@ -150,8 +173,6 @@ function sleep(ms) {
 closeBtn.addEventListener('click', () =>{
     ipc.send('closeGame');
 })
-
-
 
 ipc.on('enviar-dispositivos', (e, args) => {
 	var myModal = new bootstrap.Modal(document.getElementById("editableDevice"), {});
@@ -195,23 +216,26 @@ function updateClickable(){
 			currentDevice.innerText = this.parentNode.getAttribute('id')
 			bootstrap.Modal.getInstance(document.getElementById("editableDevice")).hide();
 			document.querySelector('.control').classList.remove('d-none')
-			startMyo()
-			bucle()
+			// startMyo()
+
+
+		child.on('message', (msg) => {
+			console.log(msg);
+			switch(msg.action){
+				case 'stop': child.send({ 
+								'action': 'stop',
+								'id': this.parentNode.getAttribute('id'),
+								'com': com
+							})
+					break;
+				case 'closed':
+					break;
+			}
+		})
+			
 		})
 	})
 }
-
-const bucle = async () =>{
-	let i = 0;
-	while(i < 100){
-		let res = execSync(`${__dirname}\\js\\main.exe DAT ${currentDevice.innerText} ${com}`).toString();
-		console.log(res);
-		await sleep(100)
-	}
-
-	exec(`${__dirname}\\main.exe STP ${currentDevice.innerText} ${com}`);
-}
-
 
 async function startMyo(){
 	exec(`${__dirname}\\js\\main.exe STR ${currentDevice.innerText} ${com} 100 10000`);
