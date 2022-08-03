@@ -73,6 +73,11 @@ const  createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadFile('src/app/index.html')
 
+   // Event 
+   mainWindow.on('ready-to-show', async () =>{
+    // Send the data.
+    mainWindow.show()
+  })
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
@@ -177,6 +182,7 @@ const projectWindow = (evt, args) =>{
        app.quit()
     }else{
       mainWindow.show()
+      ipc.removeAllListeners('maximizeRestoreProject');
       mainWindow.webContents.send('read-projects');
     }
   })
@@ -257,10 +263,7 @@ const pingpongWindow = (evt, args) =>{
     game.on('ready-to-show', () =>{
       // game.webContents.send('enviar-dispositivos', {'devices': args.devices, 'com': args.com})
       game.show()
-<<<<<<< HEAD
-=======
       game.webContents.send('enviar-dispositivos', {'devices': args.devices, 'com':args.com})
->>>>>>> a48bc13f22a9a29a59674741dc641b54e39572f2
     })
 
     // Close app

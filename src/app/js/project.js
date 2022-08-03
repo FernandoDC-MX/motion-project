@@ -266,7 +266,7 @@ function readInfo(_nameFolder){
         statusElement.innerText = 'Listo'
     }else{
         alert('Hubo algún error al tratar de abrir el archivo.')
-        // closeBtn.click()
+        closeBtn.click()
     }
 
     statusElement.previousElementSibling.classList.remove('rotating')

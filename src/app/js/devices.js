@@ -70,11 +70,14 @@ function _cleanForm(){
   // Name
   document.querySelector('#name').value = '';
   document.querySelector('#errorName').innerHTML = '';
+  document.querySelector('#comments').innerHTML = '';
+
 }
 
 nextBtn.addEventListener('click', function(){
   if(!validateForm()){
       createProject()
+      _cleanForm()
     }
 })
 
@@ -134,7 +137,6 @@ function createProject(){
       cancelBtn.click();
       ipc.send('openProject', name)
   }
-
 
   readProjects()
 }
