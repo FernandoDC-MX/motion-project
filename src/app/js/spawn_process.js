@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 
 let buffer = []
 let nMaxIterations = 20000;
-let nRefresh = 80;
+let nRefresh = 100;
 let iterator = 0;
 
 process.on('message', (args) => {
@@ -21,22 +21,29 @@ const playTest = (_id, com) =>{
     const child = spawn(__dirname + '\\main.exe', ['STR', _id, com, nRefresh, nMaxIterations]);
 
 	child.stdout.on('data', (data) => {
-        let _data = JSON.parse(data);
 
-        if(_data.edo_con){
-            process.send({'stdout':_data})
-            fillBuffer(_id, com);
+        if(!data.includes('ERROR')){
+            let _data = JSON.parse(data);
+            if(_data.edo_con){
+                process.send({'stdout play':_data})
+                fillBuffer(_id, com);
+            }
+            else{
+                process.send({'action': 'stop'})
+            }
         }
-        else{
-            process.send({'action': 'stop'})
-        }
+       
 	});
 
 	child.stderr.on('data', (data) => {
+        // process.send({'errrorr':data})
+
         process.send({'stderr':data})
 	});
 
 	child.on('error', (error) => {
+        process.send({'errrorr':error})
+
         process.send({'error':error.message})
 	});
 
@@ -49,10 +56,12 @@ const stopTest = (_id, com) =>{
     const child = spawn(__dirname + '\\main.exe', ['STP', _id, com]);
 
     child.stdout.on('data', (data) => {
-        let _data = JSON.parse(data)
 
-        process.send({'stdout':_data})
+        if(!data.includes('ERROR')){
+            let _data = JSON.parse(data)
 
+            process.send({'stdout':_data})
+        }
         iterator = nMaxIterations;
     });
 

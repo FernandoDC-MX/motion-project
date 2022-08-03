@@ -3,7 +3,6 @@ const ipc = ipcRenderer
 
 const { exec, fork } = require('child_process');
 const path = require('path');
-const { spawn } = require('child_process');
 
 var child = fork(__dirname + "\\js\\spawn_process.js");
 
@@ -222,6 +221,7 @@ function updateClickable(){
 
 
 			child.on('message', (msg) => {
+				console.log(msg);
 				switch(msg.action){
 					case 'stop': child.send({ 
 									'action': 'stop',
