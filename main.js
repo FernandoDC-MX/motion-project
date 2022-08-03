@@ -257,6 +257,10 @@ const pingpongWindow = (evt, args) =>{
     game.on('ready-to-show', () =>{
       // game.webContents.send('enviar-dispositivos', {'devices': args.devices, 'com': args.com})
       game.show()
+<<<<<<< HEAD
+=======
+      game.webContents.send('enviar-dispositivos', {'devices': args.devices, 'com':args.com})
+>>>>>>> a48bc13f22a9a29a59674741dc641b54e39572f2
     })
 
     // Close app

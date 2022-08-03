@@ -342,6 +342,19 @@ body {
     height: 25%;
     font-family: 'Rubik';
     font-size: 0.8em;
+<<<<<<< HEAD
+}
+
+.control{
+    position: absolute;
+    top: 10%;
+    left: 8%;
+    width: 160px;
+    color: white;
+    height: 50px;
+    font-size: 0.9em;
+=======
+>>>>>>> a48bc13f22a9a29a59674741dc641b54e39572f2
 }
 
 .control{
@@ -353,4 +366,3 @@ body {
     height: 50px;
     font-size: 0.9em;
 }
-

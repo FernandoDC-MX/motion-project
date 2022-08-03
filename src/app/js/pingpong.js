@@ -1,9 +1,11 @@
 const { ipcRenderer } = require('electron')
 const ipc = ipcRenderer
 
-const { exec, execSync } = require('child_process');
+const { exec, fork } = require('child_process');
 const path = require('path');
+const { spawn } = require('child_process');
 
+var child = fork(__dirname + "\\js\\spawn_process.js");
 
 let gameState = 'start';
 let paddle_1 = document.querySelector('.paddle_1');
@@ -26,116 +28,140 @@ let dy = Math.floor(Math.random() * 4) + 3;
 let dxd = Math.floor(Math.random() * 2);
 let dyd = Math.floor(Math.random() * 2);
 
+let com;
+let lastValue = 0;
+
 document.addEventListener('keydown', (e) => {
-	e.preventDefault()
-if (e.key == 'Enter') {
-	document.querySelector('.control').classList.add('d-none')
-	gameState = gameState == 'start' ? 'play' : 'start';
-	if (gameState == 'play') {
-    document.querySelector('#goal-notification').style.animation = '';
-	message.innerHTML = '';
-	message.style.left = 42 + 'vw';
-	requestAnimationFrame(() => {
-		dx = Math.floor(Math.random() * 4) + 3;
-		dy = Math.floor(Math.random() * 4) + 3;
-		dxd = Math.floor(Math.random() * 2);
-		dyd = Math.floor(Math.random() * 2);
-		moveBall(dx, dy, dxd, dyd);
-	});
-	}
-}
-if (gameState == 'play') {
-	if (e.key == 'w') {
-	paddle_1.style.top =
-		Math.max(
-		board_coord.top,
-		paddle_1_coord.top - window.innerHeight * 0.06
-		) + 'px';
-	paddle_1_coord = paddle_1.getBoundingClientRect();
-	}
-	if (e.key == 's') {
-	paddle_1.style.top =
-		Math.min(
-		board_coord.bottom - paddle_common.height,
-		paddle_1_coord.top + window.innerHeight * 0.06
-		) + 'px';
-	paddle_1_coord = paddle_1.getBoundingClientRect();
+	if (e.key == 'Enter') {
+		document.querySelector('.control').classList.add('d-none')
+		gameState = gameState == 'start' ? 'play' : 'start';
+
+		if (gameState == 'play') {
+			// Play action
+			child.send({
+				'action': 'play',
+				'id': currentDevice.innerText,
+				'com': com,
+				'_pid': child.pid
+			})
+
+			document.querySelector('#goal-notification').style.animation = '';
+			message.innerHTML = '';
+			message.style.left = 42 + 'vw';
+			
+			requestAnimationFrame(() => {
+					dx = Math.floor(Math.random() * 4) + 3;
+					dy = Math.floor(Math.random() * 4) + 3;
+					dxd = Math.floor(Math.random() * 2);
+					dyd = Math.floor(Math.random() * 2);
+					moveBall(dx, dy, dxd, dyd);
+			});
+		}
 	}
 
-	if (e.key == 'ArrowUp') {
-	paddle_2.style.top =
-		Math.max(
-		board_coord.top,
-		paddle_2_coord.top - window.innerHeight * 0.1
-		) + 'px';
-	paddle_2_coord = paddle_2.getBoundingClientRect();
+	if (gameState == 'play') {
+				
+		// if (e.key == 'w') {
+		// paddle_1.style.top =
+		// 	Math.max(
+		// 		board_coord.top,
+		// 		paddle_1_coord.top - window.innerHeight * 0.06
+		// 	) + 'px';
+		// 	paddle_1_coord = paddle_1.getBoundingClientRect();
+		// }
+
+		// if (e.key == 's') {
+		// 	paddle_1.style.top =
+		// 		Math.min(
+		// 			board_coord.bottom - paddle_common.height,
+		// 			paddle_1_coord.top + window.innerHeight * 0.06
+		// 		) + 'px';
+		// 	paddle_1_coord = paddle_1.getBoundingClientRect();
+		// }
+
+		if (e.key == 'ArrowUp') {
+		paddle_2.style.top =
+			Math.max(
+			board_coord.top,
+			paddle_2_coord.top - window.innerHeight * 0.1
+			) + 'px';
+		paddle_2_coord = paddle_2.getBoundingClientRect();
+		}
+		if (e.key == 'ArrowDown') {
+		paddle_2.style.top =
+			Math.min(
+			board_coord.bottom - paddle_common.height,
+			paddle_2_coord.top + window.innerHeight * 0.1
+			) + 'px';
+		paddle_2_coord = paddle_2.getBoundingClientRect();
+		}
 	}
-	if (e.key == 'ArrowDown') {
-	paddle_2.style.top =
-		Math.min(
-		board_coord.bottom - paddle_common.height,
-		paddle_2_coord.top + window.innerHeight * 0.1
-		) + 'px';
-	paddle_2_coord = paddle_2.getBoundingClientRect();
-	}
-}
 });
 
 async function moveBall(dx, dy, dxd, dyd) {
-if (ball_coord.top <= board_coord.top) {
-	dyd = 1;
-}
-if (ball_coord.bottom >= board_coord.bottom) {
-	dyd = 0;
-}
-if (
-	ball_coord.left <= paddle_1_coord.right &&
-	ball_coord.top >= paddle_1_coord.top &&
-	ball_coord.bottom <= paddle_1_coord.bottom
-) {
-	dxd = 1;
-	dx = Math.floor(Math.random() * 4) + 3;
-	dy = Math.floor(Math.random() * 4) + 3;
-}
-if (
-	ball_coord.right >= paddle_2_coord.left &&
-	ball_coord.top >= paddle_2_coord.top &&
-	ball_coord.bottom <= paddle_2_coord.bottom
-) {
-	dxd = 0;
-	dx = Math.floor(Math.random() * 4) + 3;
-	dy = Math.floor(Math.random() * 4) + 3;
-}
-if (
-	ball_coord.left <= board_coord.left ||
-	ball_coord.right >= board_coord.right
-) {
-	if (ball_coord.left <= board_coord.left) {
-	score_2.innerHTML = +score_2.innerHTML + 1;
-	} else {
-	score_1.innerHTML = +score_1.innerHTML + 1;
+	if (ball_coord.top <= board_coord.top) {
+		dyd = 1;
 	}
-    document.querySelector('.left-wall').style.animation = 'left-animation-enter 0.5s linear forwards'
-    document.querySelector('.right-wall').style.animation = 'right-animation-enter 0.5s linear forwards'
-    document.querySelector('#goal-notification').style.animation = 'pop-enter 1.7s linear';
-    await sleep(1700)
+	if (ball_coord.bottom >= board_coord.bottom) {
+		dyd = 0;
+	}
+	if (
+		ball_coord.left <= paddle_1_coord.right &&
+		ball_coord.top >= paddle_1_coord.top &&
+		ball_coord.bottom <= paddle_1_coord.bottom
+	) {
+		dxd = 1;
+		dx = Math.floor(Math.random() * 4) + 3;
+		dy = Math.floor(Math.random() * 4) + 3;
+	}
+	if (
+		ball_coord.right >= paddle_2_coord.left &&
+		ball_coord.top >= paddle_2_coord.top &&
+		ball_coord.bottom <= paddle_2_coord.bottom
+	) {
+		dxd = 0;
+		dx = Math.floor(Math.random() * 4) + 3;
+		dy = Math.floor(Math.random() * 4) + 3;
+	}
+	if ( ball_coord.left <= board_coord.left || ball_coord.right >= board_coord.right) {
+		if (ball_coord.left <= board_coord.left) {
+			score_2.innerHTML = +score_2.innerHTML + 1;
+		} else {
+			score_1.innerHTML = +score_1.innerHTML + 1;
+		}
 
-    document.querySelector('.left-wall').style.animation = 'left-animation-leave 0.5s linear forwards'
-    document.querySelector('.right-wall').style.animation = 'right-animation-leave 0.5s linear forwards'
-    await sleep(501)
+		// Stop action
+		child.send({
+			'action': 'stop',
+			'id': currentDevice.innerText,
+			'com': com,
+		})
 
-	gameState = 'start';
+		document.querySelector('.left-wall').style.animation = 'left-animation-enter 0.5s linear forwards'
+		document.querySelector('.right-wall').style.animation = 'right-animation-enter 0.5s linear forwards'
+		document.querySelector('#goal-notification').style.animation = 'pop-enter 1.7s linear';
+		await sleep(1700)
 
-	ball_coord = initial_ball_coord;
-	ball.style = initial_ball.style;
-	message.innerHTML = 'Presionar Enter';
-	document.querySelector('.control').classList.remove('d-none')
-	message.style.left = 38 + 'vw';
-	return;
-}
+		document.querySelector('.left-wall').style.animation = 'left-animation-leave 0.5s linear forwards'
+		document.querySelector('.right-wall').style.animation = 'right-animation-leave 0.5s linear forwards'
+		await sleep(501)
+
+		gameState = 'start';
+
+
+		ball_coord = initial_ball_coord;
+		ball.style = initial_ball.style;
+		message.innerHTML = 'Presionar Enter';
+		document.querySelector('.control').classList.remove('d-none')
+		message.style.left = 38 + 'vw';
+
+		return;
+	}
+
     ball.style.top = ball_coord.top + dy * (dyd == 0 ? -1 : 1) + 'px';
     ball.style.left = ball_coord.left + dx * (dxd == 0 ? -1 : 1) + 'px';
     ball_coord = ball.getBoundingClientRect();
+
     requestAnimationFrame(() => {
         moveBall(dx, dy, dxd, dyd);
     });
@@ -150,55 +176,91 @@ closeBtn.addEventListener('click', () =>{
     ipc.send('closeGame');
 })
 
+ipc.on('enviar-dispositivos', (e, args) => {
+	var myModal = new bootstrap.Modal(document.getElementById("editableDevice"), {});
+	myModal.show();
 
-// ipc.on('enviar-dispositivos', (e, args) => {
-// 	var myModal = new bootstrap.Modal(document.getElementById("editableDevice"), {});
-// 	myModal.show();
+	cards_zone.innerHTML = ''
+	com = args.com;
+	args.devices.forEach((value, key) => {
+		cards_zone.innerHTML += `
+			<div class="col-3 px-2" id="${key}">
+				<div class="card-device px-1 index-${value._index} clickable">
+					<div class="icon d-flex align-items-center justify-content-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" viewBox="0 0 400 400">
+							<path fill="currentColor" d="M284.24,166.81a32.9,32.9,0,1,1-32.9,32.89,32.92,32.92,0,0,1,32.9-32.89m0-10a42.9,42.9,0,1,0,42.89,42.89,42.9,42.9,0,0,0-42.89-42.89Z"/>
+							<path fill="currentColor" d="M142,31a59.24,59.24,0,0,1,59.18,59.17V228.49a59.18,59.18,0,1,1-118.35,0V90.13A59.23,59.23,0,0,1,142,31m0-10A69.17,69.17,0,0,0,72.87,90.13V228.49a69.18,69.18,0,1,0,138.35,0V90.13A69.17,69.17,0,0,0,142,21Z"/>
+							<line stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" x1="142.04" y1="124.77" x2="142.04" y2="193.85"/>
+							<path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" d="M142,297.67V308a71.1,71.1,0,0,0,142.2,0V242.6"/>
+						</svg>
+					</div>
+					<div class="footer d-flex align-items-center justify-content-center">
+						${key}
+					</div>
+				</div>
+			</div>
+		` 
+	});
 
-// 	console.log(args);
-// 	cards_zone.innerHTML = ''
+	updateClickable();
+})
 
-// 	args.devices.forEach((value, key) => {
-// 		cards_zone.innerHTML += `
-// 			<div class="col-3 px-2" id="${key}">
-// 				<div class="card-device px-1 index-${value._index} clickable">
-// 					<div class="icon d-flex align-items-center justify-content-center">
-// 						<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" viewBox="0 0 400 400">
-// 							<path fill="currentColor" d="M284.24,166.81a32.9,32.9,0,1,1-32.9,32.89,32.92,32.92,0,0,1,32.9-32.89m0-10a42.9,42.9,0,1,0,42.89,42.89,42.9,42.9,0,0,0-42.89-42.89Z"/>
-// 							<path fill="currentColor" d="M142,31a59.24,59.24,0,0,1,59.18,59.17V228.49a59.18,59.18,0,1,1-118.35,0V90.13A59.23,59.23,0,0,1,142,31m0-10A69.17,69.17,0,0,0,72.87,90.13V228.49a69.18,69.18,0,1,0,138.35,0V90.13A69.17,69.17,0,0,0,142,21Z"/>
-// 							<line stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" x1="142.04" y1="124.77" x2="142.04" y2="193.85"/>
-// 							<path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" d="M142,297.67V308a71.1,71.1,0,0,0,142.2,0V242.6"/>
-// 						</svg>
-// 					</div>
-// 					<div class="footer d-flex align-items-center justify-content-center">
-// 						${key}
-// 					</div>
-// 				</div>
-// 			</div>
-// 		` 
-// 	});
-
-// 	updateClickable();
-// })
-
-// function updateClickable(){
-// 	var _elements = document.querySelectorAll('.clickable')
+function updateClickable(){
+	var _elements = document.querySelectorAll('.clickable')
 
 
-// 	_elements.forEach( element => {
-// 		element.addEventListener('click', function(){
-// 			if(document.querySelector('.selected'))
-// 				document.querySelector('.selected').classList.remove('selected')
+	_elements.forEach( element => {
+		element.addEventListener('click', function(){
+			if(document.querySelector('.selected'))
+				document.querySelector('.selected').classList.remove('selected')
 
-// 			this.classList.add('selected')
-// 			currentDevice.innerText = this.parentNode.getAttribute('id')
-// 			bootstrap.Modal.getInstance(document.getElementById("editableDevice")).hide();
-// 			document.querySelector('.control').classList.remove('d-none')
-// 		})
-// 	})
-// }
+			this.classList.add('selected')
+			currentDevice.innerText = this.parentNode.getAttribute('id')
+			bootstrap.Modal.getInstance(document.getElementById("editableDevice")).hide();
+			document.querySelector('.control').classList.remove('d-none')
+			// startMyo()
 
 
-// async function startMyo(){
-// 	exec(`${__dirname}\\main.exe STR ${currentDevice.innerText} COM3`)
-// }
+			child.on('message', (msg) => {
+				switch(msg.action){
+					case 'stop': child.send({ 
+									'action': 'stop',
+									'id': this.parentNode.getAttribute('id'),
+									'com': com
+								})
+						break;
+					case 'movement': console.log('Valor actual: ', lastValue, ' Valor que llega: ', msg.last);
+									if(msg.last > 2000){ //Sube
+										console.log('subo');
+										paddle_1.style.top =
+											Math.max(
+												board_coord.top,
+												paddle_1_coord.top - window.innerHeight * 0.06
+											) + 'px';
+										paddle_1_coord = paddle_1.getBoundingClientRect();
+									}else{ //Baja
+										console.log('bajo');
+										paddle_1.style.top =
+											Math.min(
+												board_coord.bottom - paddle_common.height,
+												paddle_1_coord.top + window.innerHeight * 0.06
+											) + 'px';
+										paddle_1_coord = paddle_1.getBoundingClientRect();
+									}
+									lastValue = msg.last;
+							break;
+				}
+			})
+			
+		})
+	})
+}
+
+async function startMyo(){
+	exec(`${__dirname}\\js\\main.exe STR ${currentDevice.innerText} ${com} 100 10000`);
+}
+
+// Delay functions
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
