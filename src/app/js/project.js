@@ -890,7 +890,7 @@ playBtn.addEventListener('click', () => {
 
                                         document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
 
-                                        playBtn.classList.remove('pressed')
+                                        playBtn.classList.remove('pressed','d-none')
                                         stopBtn.classList.add('d-none')
                                         playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
 
