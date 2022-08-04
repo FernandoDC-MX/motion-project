@@ -9,7 +9,6 @@ const Chart = require('chart.js');
 
 // Process
 const { execSync, exec } = require('child_process');
-const { info } = require('console');
 const fork = require("child_process").fork
 
 /* ---------------------------- Classes ------------------------------ */
@@ -220,7 +219,7 @@ let _filesData = null;
 let _settings = null;
 
 let BUFFER = 1;
-
+let _finished = 0;
 
 /* ------------------------------------ Functions ---------------------------- */
 
@@ -856,7 +855,7 @@ playBtn.addEventListener('click', () => {
                                 playBtn.classList.remove('d-none')
                                 pauseBtn.classList.add('d-none')
 
-                                if(msg.cmd === 'F' || msg.cmd === 'H'){
+                                if(msg.cmd === 'F' || msg.cmd === 'H' || msg.cmd === 'P'){
                                     var date = new Date()
                                     msg.update = JSON.parse(msg.update)
 
@@ -882,19 +881,23 @@ playBtn.addEventListener('click', () => {
                                     show('success',`Monitoreo terminado ${msg.device}.`)
 
                                     process.kill(msg.id)
+                                    _finished++;
+                                    console.log('Terminando en: ', _finished);
+                                    if(_finished >= parseInt(_numDevices.innerText)){
+                                        var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
+                                        var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
+                                        var meridian = date.getHours() > 12 ? 'P.M.' : 'A.M.'
 
-                                    var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
-                                    var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
-                                    var meridian = date.getHours() > 12 ? 'P.M.' : 'A.M.'
+                                        document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
 
-                                    document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
+                                        playBtn.classList.remove('pressed')
+                                        stopBtn.classList.add('d-none')
+                                        playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
 
-                                    playBtn.classList.remove('pressed')
-                                    stopBtn.classList.add('d-none')
-                                    playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
-
-                                    arrChilds.clear()
-                                    saveData()
+                                        arrChilds.clear()
+                                        saveData()
+                                        _finished = 0;
+                                    }
                                 }
                             break;
                         case 2: iterator = msg.iterator
