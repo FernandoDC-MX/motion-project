@@ -83,7 +83,7 @@ class MasterDevice{
 
         if(_slaveDevice){
             execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM}`)
-            response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name} ${_slaveDevice._index}`))
+            response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name.trim().replaceAll(' ','')} ${_slaveDevice._index}`))
             console.log(response);
             if(response.edo_con)
                 _slaveDevice.connected = 1;
@@ -101,7 +101,7 @@ class MasterDevice{
     connectDevice(_id){
         let _device = this.#_slaveDevices.get(_id);
 
-        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${_device.name} ${_device._index}`).toString());
+        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${_device.name.trim().replaceAll(' ','')} ${_device._index}`).toString());
 
         if(response.edo_con){
             let count = parseInt(_numDevices.innerText)
@@ -117,7 +117,7 @@ class MasterDevice{
     }
 
     updateDevice(_id, nom){
-        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${nom} ${this.#_slaveDevices.get(_id)._index}`))
+        let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_id} ${_portCOM} ${nom.trim().replaceAll(' ','')} ${this.#_slaveDevices.get(_id)._index}`))
         if(response.edo_con){
             this.#_slaveDevices.get(_id).name = nom;
             this.#_slaveDevices.get(_id).battery = response.bat
@@ -155,7 +155,7 @@ class MasterDevice{
             document.querySelector('#_numDevices').innerHTML = count;
 
             this.#_slaveDevices.forEach((value, key) => {
-                let response = execSync(`${__dirname}\\serial\\main.exe CFG ${value.id} ${_portCOM} ${value.name} ${value._index}`);
+                let response = execSync(`${__dirname}\\serial\\main.exe CFG ${value.id} ${_portCOM} ${value.name.trim().replaceAll(' ','')} ${value._index}`);
 
                 if(!response.includes('Error')){
                     response = JSON.parse(response)
@@ -818,7 +818,7 @@ playBtn.addEventListener('click', () => {
             
             if(_master.JSON.get(_tmpDevices[i]).connected){
                 var _child = fork(__dirname + "\\js\\test.js")
-    
+                    
                 arrChilds.set(_child.pid, _child)
             
                 // Execute the test.
@@ -833,9 +833,10 @@ playBtn.addEventListener('click', () => {
                     play: 1,
                     iterator: iterator
                 })
-        
+                
+                show('info','La prueba ha empezado: ' + _master.JSON.get(_tmpDevices[i]).id)
+
                 _child.on('message', (msg) =>{
-                    console.log(msg.raw || '');
                     switch(msg.flag){
                         // Start the process.
                         case 0: switch(msg.chart){
@@ -858,9 +859,21 @@ playBtn.addEventListener('click', () => {
 
                                 if(msg.cmd === 'F' || msg.cmd === 'H'){
                                     var date = new Date()
+                                    msg.update = JSON.parse(msg.update)
 
-                                    _master.JSON.get(`${msg.device}`).battery = JSON.parse(msg.update).bat
-                                    console.log( _master.JSON.get(`${msg.device}`));
+                                    _master.JSON.get(`${msg.device}`).battery = msg.update.bat
+
+
+                                    if(!msg.update.edo_con){
+                                        _master.JSON.get(`${msg.device}`).connected = msg.update.edo_con
+
+                                        let count = parseInt(_numDevices.innerText)
+                                        count = count - 1 <= 0 ? 0 : count--;
+                                        _numDevices.innerText = count;
+
+                                        show('error','Se desconecto el dispositivo: ' +  _master.JSON.get(msg.device).id)
+
+                                    }
                                     
                                     // Redraw each chart with all the data generated.
                                     reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', BUFFER);                
@@ -894,8 +907,6 @@ playBtn.addEventListener('click', () => {
                             break;
                     }
                 })
-
-                show('info','La prueba ha empezado.')
             }else{
                 show('error', `${_tmpDevices[i]} sin respuesta `)
             }
@@ -1019,12 +1030,12 @@ function drawMainChart(color){
                         speed: 0.1,
 
                       },
-                      drag: {
-                        enabled: true
-                      },
-                         pinch: {
-                        enabled: true
-                      },
+                    //   drag: {
+                    //     enabled: true
+                    //   },
+                    //      pinch: {
+                    //     enabled: true
+                    //   },
                       mode: 'xy',
                     },
                     limits: {
@@ -1200,6 +1211,7 @@ function readData(device, div){
 // Update a chart
 function reDrawChart(map, chart, buffer = 0){
     let max = null;
+    let min = null;
 
     if(buffer){
         let arr;
@@ -1223,6 +1235,11 @@ function reDrawChart(map, chart, buffer = 0){
             else if(Math.max(...arr[index]) > max)
                 max = Math.max(...arr[index]);
 
+            if(min === null)
+                min = Math.min(...arr[index]);
+            else if(Math.min(...arr[index]) < min)
+                min = Math.min(...arr[index]);
+
             dataset.data = arr[index]
 
             // Clean map values.
@@ -1245,6 +1262,12 @@ function reDrawChart(map, chart, buffer = 0){
                 max = Math.max(...dataset.data);
             else if(Math.max(...dataset.data) > max)
                 max = Math.max(...dataset.data);
+            
+            if(min === null)
+                min = Math.min(...dataset.data);
+            else if(Math.min(...dataset.data) < min)
+                min = Math.min(...dataset.data);
+
 
             // Clean map values.
             map.values[index] = []
@@ -1254,8 +1277,8 @@ function reDrawChart(map, chart, buffer = 0){
          map.chart.data.labels = map.labels;
     }
 
-    map.chart.config._config.options.plugins.zoom.limits.y.max = max + 20
-    map.chart.config._config.options.plugins.zoom.limits.y.min = -5
+    map.chart.config._config.options.plugins.zoom.limits.y.max = max + 1
+    map.chart.config._config.options.plugins.zoom.limits.y.min = min - 1
 
     // // Clean map labels
     map.labels = []
@@ -1427,7 +1450,8 @@ function selectMuscle(){
             _nombre.classList.add('txt-shadow')
 
             // Info
-            _nombre.innerHTML =document.querySelector('.cls-selected').getAttribute('data-name').replaceAll('-',' ').toUpperCase()
+            if(document.querySelector('.cls-selected'))
+                _nombre.innerHTML =document.querySelector('.cls-selected').getAttribute('data-name').replaceAll('-',' ').toUpperCase()
         }),
         _muscles[i].addEventListener('click', function(){
 
@@ -1775,7 +1799,7 @@ linkBtn.addEventListener('click', async () => {
 
         var _device = new Device(_address, null, null, _hexColors[color], color + 1, _name)
 
-        await sleep(100)
+        await sleep(10)
 
         const _linkResponse = _master.setNewDevice(_address,_device)
 
