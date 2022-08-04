@@ -23,6 +23,7 @@ process.on('message', async (msg)=>{
 
         while(resp_cmd != 'F'){
             let response = execSync(`${path1} DAT ${msg._device} ${msg._portCOM}`).toString();
+            process.send({'raw': msg._device + ': ' +response})
             if(response && !response.includes('Error')){
                 let cleanData = response.replaceAll('\\r\\n','').split('-');
                 let lastData = JSON.parse(cleanData[cleanData.length - 1]);
@@ -64,7 +65,6 @@ process.on('message', async (msg)=>{
                         buffer: buffer,
                         device: msg.id_zone,
                         flag: 0,
-                        raw: cleanData,
                     })
                 }
             }

@@ -230,20 +230,18 @@ function updateClickable(){
 								})
 						break;
 					case 'movement': console.log('Valor actual: ', lastValue, ' Valor que llega: ', msg.last);
-									if(msg.last > 2000){ //Sube
-										console.log('subo');
+									if(msg.last > 1000){ //Sube
 										paddle_1.style.top =
 											Math.max(
 												board_coord.top,
-												paddle_1_coord.top - window.innerHeight * 0.06
+												paddle_1_coord.top - window.innerHeight * 0.12
 											) + 'px';
 										paddle_1_coord = paddle_1.getBoundingClientRect();
 									}else{ //Baja
-										console.log('bajo');
 										paddle_1.style.top =
 											Math.min(
 												board_coord.bottom - paddle_common.height,
-												paddle_1_coord.top + window.innerHeight * 0.06
+												paddle_1_coord.top + window.innerHeight * 0.12
 											) + 'px';
 										paddle_1_coord = paddle_1.getBoundingClientRect();
 									}

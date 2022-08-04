@@ -84,7 +84,6 @@ class MasterDevice{
         if(_slaveDevice){
             execSync(`${__dirname}\\serial\\main.exe ADD ${_slaveDevice.id} ${_portCOM}`)
             response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe CFG ${_slaveDevice.id} ${_portCOM} ${_slaveDevice.name.trim().replaceAll(' ','')} ${_slaveDevice._index}`))
-            console.log(response);
             if(response.edo_con)
                 _slaveDevice.connected = 1;
             else
@@ -694,7 +693,6 @@ function stopAll(e, status = 0){
     _master.JSON.forEach(device =>{
         let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
 
-        console.log(res);
     })
     
     // Kill all the childs created.
@@ -837,6 +835,7 @@ playBtn.addEventListener('click', () => {
                 show('info','La prueba ha empezado: ' + _master.JSON.get(_tmpDevices[i]).id)
 
                 _child.on('message', (msg) =>{
+                    console.log(msg.raw || '');
                     switch(msg.flag){
                         // Start the process.
                         case 0: switch(msg.chart){
@@ -1318,8 +1317,6 @@ closeBtn.addEventListener('click', () =>{
         ipc.send('closeProject', 1)
         _master.JSON.forEach(device =>{
             let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
-
-        console.log(res);
         })
         
     }    
@@ -1353,8 +1350,6 @@ homeBtn.addEventListener('click', () =>{
         ipc.send('closeProject',0)
         _master.JSON.forEach(device =>{
             let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
-
-            console.log(res);
         })
         
     }    
@@ -1517,7 +1512,6 @@ function getMuscle(){
     switch(_response.Estado){
         case 'OK':  
                     _response.Contenido.devices = Object.fromEntries(channels)
-                    console.log(_response.Contenido.devices);
                     storeFile(_path + "\\info.json", _response.Contenido)
                     displayChannels(_master.JSON)
                     displayGraphs(_response.Contenido.devices);
