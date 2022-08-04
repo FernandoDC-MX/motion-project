@@ -1002,29 +1002,47 @@ function drawMainChart(color){
                 borderColor: color,
                 label: 'EMG',
                 data: [],
-                tension: 0.1
+                tension: 0.2
             }]
         },
         options: {
             plugins: {
                 zoom: {
+                    pan: {
+                        enabled: true,
+                        mode: 'xy',
+                        threshold: 5,
+                    },
                     zoom: {
                       wheel: {
                         enabled: true,
+                        speed: 0.1,
+
                       },
                       drag: {
+                        enabled: true
+                      },
+                         pinch: {
                         enabled: true
                       },
                       mode: 'xy',
                     },
                     limits: {
-                        y: {min: 1, max: 100},
-                        x: {min: 0, max: 1000},
+                        y: {min: -5, max: 4000, minRange: 1},
+                        x: {min: 0, max: 1000, minRange: 2},
                     }
                 },
                 title: {
                     display: true,
                     text: 'EMG'
+                }
+            },
+            transitions: {
+                zoom: {
+                  animation: {
+                    duration: 1000,
+                    easing: 'easeOutCubic'
+                  }
                 }
             },
             responsive: true,
@@ -1077,17 +1095,22 @@ function drawAccelerometerGyroChart(color, title){
             },
             plugins: {
                 zoom: {
+                    pan: {
+                        enabled: true,
+                        mode: 'xy',
+                        threshold: 5,
+                    },
                     zoom: {
                       wheel: {
                         enabled: true,
-                        speed: 0.1,
+                        speed: 0.5,
                       },
-                      drag: {
-                        enabled: true
-                      },
-                      pinch: {
-                        enabled: true
-                      },
+                    //   drag: {
+                    //     enabled: true
+                    //   },
+                    //   pinch: {
+                    //     enabled: true
+                    //   },
                       mode: 'xy',
                     },
                     limits: {
@@ -1139,8 +1162,8 @@ function addData(map, label, data) {
                 flag = true;
                 map.chart.data.labels.shift()
             }
-            
         }
+
 
         // Store all the data.
         map.values[index].push(data[index]);
