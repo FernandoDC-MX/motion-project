@@ -1210,7 +1210,7 @@ function reDrawChart(map, chart, buffer = 0){
         });
 
         // Update labels
-        map.chart.data.labels = Array.from({length: map.buffer.length}, (_, i) => i + 1)
+        map.chart.data.labels = Array.from({length: map.buffer.length}, (_, i) => i)
         
     }else{
         // Update datasets without the buffer 
@@ -1232,7 +1232,7 @@ function reDrawChart(map, chart, buffer = 0){
     }
 
     map.chart.config._config.options.plugins.zoom.limits.y.max = max + 20
-    map.chart.config._config.options.plugins.zoom.limits.y.min = 0
+    map.chart.config._config.options.plugins.zoom.limits.y.min = -5
 
     // // Clean map labels
     map.labels = []

@@ -566,10 +566,10 @@ animation-delay: 0.9s;
 #queueNotification{
     position: absolute;
     width: 19em;
-    height: 91.2%;
+    height: auto;
     top: 5.5%;
     left: 80.7%;
-    z-index: 100000;
+    z-index: 1000;
 }
 
 #queueNotification .notification{

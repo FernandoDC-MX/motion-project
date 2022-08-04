@@ -19,7 +19,7 @@ minimizeBtn.addEventListener('click', () =>{
 })
 
 // Update Projects 
-ipc.on('read-projects', () =>{ readProjects()})
+ipc.on('read-projects', () =>{ readProjects() })
 
 // Function to read a file and return its content.
 function readFile(path){
