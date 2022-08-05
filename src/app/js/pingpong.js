@@ -36,13 +36,7 @@ document.addEventListener('keydown', (e) => {
 		gameState = gameState == 'start' ? 'play' : 'start';
 
 		if (gameState == 'play') {
-			// Play action
-			child.send({
-				'action': 'play',
-				'id': currentDevice.innerText,
-				'com': com,
-				'_pid': child.pid
-			})
+			
 
 			document.querySelector('#goal-notification').style.animation = '';
 			message.innerHTML = '';
@@ -128,6 +122,8 @@ async function moveBall(dx, dy, dxd, dyd) {
 		} else {
 			score_1.innerHTML = +score_1.innerHTML + 1;
 		}
+
+		await(500)
 
 		// Stop action
 		child.send({
@@ -216,57 +212,69 @@ function updateClickable(){
 			this.classList.add('selected')
 			currentDevice.innerText = this.parentNode.getAttribute('id')
 			
-			if(startMyo()){
-				bootstrap.Modal.getInstance(document.getElementById("editableDevice")).hide();
-				document.querySelector('.control').classList.remove('d-none')
+			child.send({
+				'action': 'init',
+				'id': currentDevice.innerText,
+				'com': com
+			})
 
-				child.on('message', (msg) => {
-					console.log(msg);
-					switch(msg.action){
-						case 'stop': child.send({ 
-										'action': 'stop',
-										'id': this.parentNode.getAttribute('id'),
-										'com': com
-									})
+			cards_zone.classList.add('d-none')
+			document.querySelector('.loader').classList.remove('d-none')
+
+			child.on('message', (msg) => {
+				console.log(msg);
+				switch(msg.action){
+					case 'stop': stopMyo();
+						break;
+					case 'movement': console.log('Valor actual: ', lastValue, ' Valor que llega: ', msg.last);
+									if(msg.last > 1000){ //Sube
+										paddle_1.style.top =
+											Math.max(
+												board_coord.top,
+												paddle_1_coord.top - window.innerHeight * 0.12
+											) + 'px';
+										paddle_1_coord = paddle_1.getBoundingClientRect();
+									}else{ //Baja
+										paddle_1.style.top =
+											Math.min(
+												board_coord.bottom - paddle_common.height,
+												paddle_1_coord.top + window.innerHeight * 0.12
+											) + 'px';
+										paddle_1_coord = paddle_1.getBoundingClientRect();
+									}
+									lastValue = msg.last;
 							break;
-						case 'movement': console.log('Valor actual: ', lastValue, ' Valor que llega: ', msg.last);
-										if(msg.last > 1000){ //Sube
-											paddle_1.style.top =
-												Math.max(
-													board_coord.top,
-													paddle_1_coord.top - window.innerHeight * 0.12
-												) + 'px';
-											paddle_1_coord = paddle_1.getBoundingClientRect();
-										}else{ //Baja
-											paddle_1.style.top =
-												Math.min(
-													board_coord.bottom - paddle_common.height,
-													paddle_1_coord.top + window.innerHeight * 0.12
-												) + 'px';
-											paddle_1_coord = paddle_1.getBoundingClientRect();
-										}
-										lastValue = msg.last;
-								break;
-					}
-				})
-
-			}else{
-				alert('El dispositivo no responde. Trata con otro.')
-			}
+					case 'play': console.log(msg);
+							break;
+					case 'continue': cards_zone.classList.remove('d-none') 
+									 bootstrap.Modal.getInstance(document.getElementById("editableDevice")).hide();
+									 document.querySelector('.control').classList.remove('d-none');
+						break;
+					case 'failed': cards_zone.classList.remove('d-none') 
+									document.querySelector('.loader').classList.add('d-none')
+						break;
+				}
+			})
 		})
 	})
 }
 
 function startMyo(){
-	let res = execSync(`${__dirname}\\js\\main.exe STR ${currentDevice.innerText} ${com} 100 1000`).toString();
+	// Play action
+	child.send({
+		'action': 'play',
+		'id': currentDevice.innerText,
+		'com': com,
+		'_pid': child.pid
+	})
+}
 
-	if(!res.includes('ERROR')){
-		res = JSON.parse(res);
-
-		return res.edo_con;
-	}else{
-		return 0;
-	}
+function stopMyo(){
+	child.send({ 
+		'action': 'stop',
+		'id': currentDevice.innerText,
+		'com': com
+	})
 }
 
 // Delay functions
