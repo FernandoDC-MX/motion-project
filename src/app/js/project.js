@@ -834,7 +834,7 @@ playBtn.addEventListener('click', () => {
                 show('info','La prueba ha empezado: ' + _master.JSON.get(_tmpDevices[i]).id)
 
                 _child.on('message', (msg) =>{
-                    console.log(msg.raw || '');
+                    // console.log(msg.raw || '');
                     switch(msg.flag){
                         // Start the process.
                         case 0: switch(msg.chart){
@@ -855,23 +855,23 @@ playBtn.addEventListener('click', () => {
                                 playBtn.classList.remove('d-none')
                                 pauseBtn.classList.add('d-none')
 
-                                if(msg.cmd === 'F' || msg.cmd === 'H' || msg.cmd === 'P'){
+                                if(msg.cmd === 'F' || msg.cmd === 'P'){
                                     var date = new Date()
-                                    msg.update = JSON.parse(msg.update)
+                                    // msg.update = JSON.parse(msg.update)
 
-                                    _master.JSON.get(`${msg.device}`).battery = msg.update.bat
+                                    // _master.JSON.get(`${msg.device}`).battery = msg.update.bat
 
 
-                                    if(!msg.update.edo_con){
-                                        _master.JSON.get(`${msg.device}`).connected = msg.update.edo_con
+                                    // if(!msg.update.edo_con){
+                                    //     _master.JSON.get(`${msg.device}`).connected = msg.update.edo_con
 
-                                        let count = parseInt(_numDevices.innerText)
-                                        count = count - 1 <= 0 ? 0 : count--;
-                                        _numDevices.innerText = count;
+                                    //     let count = parseInt(_numDevices.innerText)
+                                    //     count = count - 1 <= 0 ? 0 : count--;
+                                    //     _numDevices.innerText = count;
 
-                                        show('error','Se desconecto el dispositivo: ' +  _master.JSON.get(msg.device).id)
+                                    //     show('error','Se desconecto el dispositivo: ' +  _master.JSON.get(msg.device).id)
 
-                                    }
+                                    // }
                                     
                                     // Redraw each chart with all the data generated.
                                     reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', BUFFER);                
@@ -882,7 +882,7 @@ playBtn.addEventListener('click', () => {
 
                                     process.kill(msg.id)
                                     _finished++;
-                                    console.log('Terminando en: ', _finished);
+
                                     if(_finished >= parseInt(_numDevices.innerText)){
                                         var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
                                         var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
@@ -1019,6 +1019,15 @@ function drawMainChart(color){
             }]
         },
         options: {
+            scales: {
+                y: {
+                    ticks: {
+                      callback: function(val, index) {
+                          return val;
+                      },
+                    }
+                },
+            },
             plugins: {
                 zoom: {
                     pan: {
@@ -1282,6 +1291,9 @@ function reDrawChart(map, chart, buffer = 0){
     map.chart.config._config.options.plugins.zoom.limits.y.max = max + 1
     map.chart.config._config.options.plugins.zoom.limits.y.min = min - 1
 
+    // console.log(map.chart.config._config.options.plugins.zoom.limits);
+
+
     // // Clean map labels
     map.labels = []
 
@@ -1391,7 +1403,6 @@ ipc.on('isRestored_2', ()=>{ changeMaximizeBtn(false) })
 
 // Enable/Disable all the muscles that are already unselected/selected.
 staticBackdrop.addEventListener('shown.bs.modal', function(){
-    console.log('abrir modal');
     var _device = document.querySelector('.modal-title').getAttribute('data-id').replace('title-','')
     var _muscle_info = channels.get(_device)
 
@@ -1401,7 +1412,6 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
         var name = _muscle_info._muscle_name.toLowerCase().replaceAll(' ','-')
 
         Array.from(document.querySelectorAll(`path[data-name="${name}"]`)).forEach((element, index) => {
-            console.log(element);
             element.classList.add('cls-selected')
             element.classList.remove('cls-2') 
         })
@@ -1475,8 +1485,6 @@ function selectMuscle(){
 }
 
 staticBackdrop.addEventListener('hidden.bs.modal', () =>{
-    console.log('cerre modal');
-
    // Remove all false selected
     if(document.querySelectorAll('.cls-selected')){
         Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
@@ -2087,7 +2095,7 @@ document.querySelectorAll('.toggle-menu div').forEach(element => {
         if(document.querySelector('.toggle-icon-pressed')){
 
             if(document.querySelector('.toggle-icon-pressed').getAttribute('id') === 'devicesBtn'){
-                
+    
                 // document.querySelector('.vinculados').click()
 
                 document.querySelector('.vinculados .arrow-svg').style.transform = 'rotate(0deg)'
@@ -2097,7 +2105,6 @@ document.querySelectorAll('.toggle-menu div').forEach(element => {
 
             if(document.querySelector('.toggle-icon-pressed').getAttribute('id') === 'infoBtn'){
                 
-
                 document.querySelector('.channel-info').previousElementSibling.classList.add('d-none')
                 document.querySelector('.channel-info').classList.add('d-none')
             }

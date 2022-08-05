@@ -10,7 +10,7 @@ let buffer = {
     labels: []
 }
 
-let path1 = path.resolve(__dirname, "main.exe");
+let path1 = path.resolve("src/app/serial", "main.exe");
 const delay = 0.03
 
 process.on('message', async (msg)=>{
@@ -23,17 +23,17 @@ process.on('message', async (msg)=>{
 
         while(resp_cmd != 'F'){
             let response = execSync(`${path1} DAT ${msg._device} ${msg._portCOM}`).toString();
-            process.send({'raw': msg._device + ': ' +response})
             if(response && !response.includes('Error')){
                 let cleanData = response.replaceAll('\\r\\n','').split('-');
                 let lastData = JSON.parse(cleanData[cleanData.length - 1]);
-                
-                if(lastData.resp_cmd === 'F' || lastData.resp_cmd === 'H' || lastData.resp_cmd === 'P'){
+
+                if(lastData.resp_cmd === 'F' || lastData.resp_cmd === 'P'){
                     resp_cmd = lastData.resp_cmd;
 
                     let x = execSync(`${path1} STP ${msg._device} ${msg._portCOM}`).toString();
+                    console.log(x);
                     // Send the order to kill the process.
-                    process.send({id: msg.pid, flag: 1, device: msg.id_zone, iterator: iterator, cmd: resp_cmd, buffer: buffer, update: x})
+                    process.send({id: msg.pid, flag: 1, device: msg.id_zone, iterator: iterator, cmd: resp_cmd, buffer: buffer})
                 }else{
                     process.send({
                         chart:'main', 
@@ -65,11 +65,13 @@ process.on('message', async (msg)=>{
                         chart:'buffer', 
                         buffer: buffer,
                         device: msg.id_zone,
-                        flag: 0,
+                        flag: 0
                     })
+
+                    iterator++;
+
                 }
             }
-            iterator++;
             await sleep(refresh)
         }
     }else{
