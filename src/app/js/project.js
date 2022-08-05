@@ -154,6 +154,8 @@ class MasterDevice{
 
             this.#_slaveDevices.forEach((value, key) => {
                 let response = execSync(`${__dirname}\\serial\\main.exe CFG ${value.id} ${_portCOM} ${value.name.trim().replaceAll(' ','')} ${value._index}`);
+                
+                _hexColors[_hexColors.indexOf(value._hex)] = 0;
 
                 if(!response.includes('Error')){
                     response = JSON.parse(response)
@@ -171,7 +173,6 @@ class MasterDevice{
                 }
             });
         }
-        
         document.querySelector('#_numDevices').innerHTML = count;
 
     }
@@ -1859,9 +1860,15 @@ linkBtn.addEventListener('click', async () => {
 const pickColor = () =>{
     var index = 0;
 
-    if(_devices){       
-        index =  Object.keys(_devices).length;
+    while(_hexColors[index] !== 0){
+        index++;
     }
+
+    _hexColors[index] = 0;
+
+    // if(_devices){       
+    //     index =  Object.keys(_devices).length;
+    // }
 
     return index;
 }
