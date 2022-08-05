@@ -133,6 +133,7 @@ class MasterDevice{
         let response = JSON.parse(execSync(`${__dirname}\\serial\\main.exe DEL ${_id} ${_portCOM}`).toString());
 
         if(response.edo_con){
+            _hexColors[this.#_slaveDevices.get(_id)._index - 1] = this.#_slaveDevices.get(_id)._hex;
             this.#_slaveDevices.delete(_id)
         }else{
             this.#_slaveDevices.get(_id).connected = response.edo_con
@@ -1805,6 +1806,9 @@ linkBtn.addEventListener('click', async () => {
 
         var _device = new Device(_address, null, null, _hexColors[color], color + 1, _name)
 
+        let tmp = _hexColors[color];
+        _hexColors[color] = 0;
+
         await sleep(10)
 
         const _linkResponse = _master.setNewDevice(_address,_device)
@@ -1832,6 +1836,7 @@ linkBtn.addEventListener('click', async () => {
             linkClose.click()
         }else{
             _master.JSON.delete(_address)
+            _hexColors[color] = tmp;
             show('error', 'Hubo un error en la vinculación.');
             document.querySelector('#errorMac').innerText = 'Este dispositivo ya existe en el proyecto.';
         }
@@ -1860,11 +1865,10 @@ linkBtn.addEventListener('click', async () => {
 const pickColor = () =>{
     var index = 0;
 
-    while(_hexColors[index] !== 0){
+    while(_hexColors[index] === 0){
+        console.log(index);
         index++;
     }
-
-    _hexColors[index] = 0;
 
     // if(_devices){       
     //     index =  Object.keys(_devices).length;

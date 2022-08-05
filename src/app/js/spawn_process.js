@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 
 let buffer = []
 let nMaxIterations = 20000;
-let nRefresh = 50;
+let nRefresh = 70;
 let iterator = 0;
 
 process.on('message', (args) => {

@@ -221,7 +221,7 @@ function updateClickable(){
 				document.querySelector('.control').classList.remove('d-none')
 
 				child.on('message', (msg) => {
-					// console.log(msg);
+					console.log(msg);
 					switch(msg.action){
 						case 'stop': child.send({ 
 										'action': 'stop',
@@ -249,7 +249,7 @@ function updateClickable(){
 								break;
 					}
 				})
-					
+
 			}else{
 				alert('El dispositivo no responde. Trata con otro.')
 			}
