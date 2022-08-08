@@ -41,14 +41,17 @@ const playTest = (_id, com) =>{
 
     // Si no existe un error en el puerto.
     if(!response.includes('ERROR')){
+
         let res = JSON.parse(response);
 
         if(res.edo_con){
-            fillBuffer(_id, com);
+            // fillBuffer(_id, com);
             process.send({response: res.edo_con, message: res, action: 'play', function: 'playTest'})
         }else{
             process.send({response: res.edo_con, message: res, action: 'stop', function: 'playTest'})
         } 
+
+        return res.edo_con;
         
     }else{ //Se manda un error.
         process.send({response: 0, message: res, action: 'stop', function: 'playTest'})
@@ -62,7 +65,6 @@ const stopTest = (_id, com) =>{
     buffer = [];
 
     let response = execSync(`${__dirname}\\main.exe STP ${_id} ${com}`).toString();
-
      // Si no existe un error en el puerto.
      if(!response.includes('ERROR')){
         let res = JSON.parse(response);

@@ -244,14 +244,15 @@ function updateClickable(){
 									}
 									lastValue = msg.last;
 							break;
-					case 'play': console.log(msg);
+					case 'play': 
 							break;
 					case 'continue': cards_zone.classList.remove('d-none') 
 									 bootstrap.Modal.getInstance(document.getElementById("editableDevice")).hide();
 									 document.querySelector('.control').classList.remove('d-none');
 						break;
 					case 'failed': cards_zone.classList.remove('d-none') 
-									document.querySelector('.loader').classList.add('d-none')
+									document.querySelector('.loader').classList.add('d-none');
+									alert('Error al conectar dispositivo')
 						break;
 				}
 			})

@@ -693,7 +693,6 @@ function stopAll(e, status = 0){
     
     _master.JSON.forEach(device =>{
         let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
-
     })
     
     // Kill all the childs created.
@@ -1264,7 +1263,7 @@ function reDrawChart(map, chart, buffer = 0){
 
         // Update labels
         map.chart.data.labels = Array.from({length: map.buffer.length}, (_, i) => i)
-        
+
     }else{
         // Update datasets without the buffer 
         map.chart.data.datasets.forEach((dataset, index) => {
