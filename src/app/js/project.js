@@ -667,7 +667,7 @@ function displayGraphs(canales){
 }
 
 // 
-function stopAll(e, status = 0){
+async function stopAll(e, status = 0){
     if(!status){
         var date = new Date () 
         var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
@@ -677,38 +677,31 @@ function stopAll(e, status = 0){
         // Message
         show('info','La prueba ha sido terminada por el usuario.')
 
-        // Redraw the charts.
-        document.querySelectorAll('.main-graph-container').forEach(element => {
-            var device = element.getAttribute('data-device')
-            reDrawChart(_chartsMap.get(`${device}-main`),'main', BUFFER);                
-            reDrawChart(_chartsMap.get(`${device}-accelerometer`), 'accelerometer', BUFFER);                
-            reDrawChart(_chartsMap.get(`${device}-gyroscope`),'gyroscope', BUFFER);
-        });
+        // _finished = 0;
         saveData()
         document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;
+        
     }else{
         // Message
         show('error','Cerebro desconectado.')
     }
-    
-    _master.JSON.forEach(device =>{
-        let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
-    })
-    
-    // Kill all the childs created.
-    arrChilds.forEach((value, key) => {
-        process.kill(key)
-    });
+
+     // Kill all the childs created.
+     let i = 0;
+     let dev = document.querySelectorAll('.main-graph-container');
+
+     arrChilds.forEach((value, key) => {
+         value.send({
+             stop: 1,
+             pid: key,
+             _portCOM: _portCOM,
+             _device: dev[i].getAttribute('data-device')
+         })
+         i++;
+     });
 
     // Clear the map.
-    arrChilds.clear()
-
-    // Display Play Button and Hide the Pause Button
-    playBtn.classList.remove('d-none','pressed')
-    playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
-    pauseBtn.classList.add('d-none')
-
-    stopBtn.classList.add('d-none')
+    arrChilds.clear()   
 }
 
 // Finish the test.
@@ -738,81 +731,6 @@ playBtn.addEventListener('click', () => {
 
         let _tmpDevices = [ ..._master.JSON.keys()]
         for(let i = 0; i < _mainCharts.length; i++){
-                // var _child = fork(__dirname + "\\js\\demo.js")
-    
-                // arrChilds.set(_child.pid, _child)
-            
-                // // Execute the test.
-                // _child.send({ 
-                //     msg: 'do work',
-                //     nTimes: _settings.imu_rate,
-                //     _device: _tmpDevices[i],
-                //     _refresh: _settings.number_rate,
-                //     _portCOM: _portCOM,
-                //     pid : _child.pid, // passing pid to child
-                //     id_zone: _mainCharts[i].getAttribute('data-device'),
-                //     play: 1,
-                //     iterator: iterator
-                // })
-        
-                // _child.on('message', (msg) =>{
-                //     switch(msg.flag){
-                //         // Start the process.
-                //         case 0: switch(msg.chart){
-                //                     case 'main': addData(_chartsMap.get(`${msg.device}-main`), msg.label, msg.data)
-                //                         break;
-                //                     case 'accelerometer': addData(_chartsMap.get(`${msg.device}-accelerometer`), msg.label, msg.data)
-                //                         break;
-                //                     case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data)
-                //                         break;
-                //                     case 'buffer':  
-                //                                     storeBuffer(_chartsMap.get(`${msg.device}-main`), msg.buffer)
-                //                                     storeBuffer(_chartsMap.get(`${msg.device}-accelerometer`), msg.buffer)
-                //                                     storeBuffer(_chartsMap.get(`${msg.device}-gyroscope`), msg.buffer)
-                //                         break;
-                //                 }
-                //             break;
-                //         case 1: // Display Play Button and Hide the Pause Button
-                //                 playBtn.classList.remove('d-none')
-                //                 pauseBtn.classList.add('d-none')
-
-                //                 if(msg.cmd === 'F' || msg.cmd === 'H'){
-                //                     var date = new Date()
-                                    
-                //                     // Redraw each chart with all the data generated.
-                //                     reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', BUFFER);                
-                //                     reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`),'accelerometer', BUFFER);                
-                //                     reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`), 'gyroscope', BUFFER);
-        
-                //                     show('success',`Monitoreo terminado ${msg.device}.`)
-
-                //                     process.kill(msg.id)
-
-                //                     var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
-                //                     var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
-                //                     var meridian = date.getHours() > 12 ? 'P.M.' : 'A.M.'
-
-                //                     document.querySelector('.menu p').innerHTML = 'Última prueba: ' + localDate + ' ' + localHour + ' ' + meridian;    
-
-                //                     playBtn.classList.remove('pressed')
-                //                     stopBtn.classList.add('d-none')
-                //                     playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
-
-                //                     arrChilds.clear()
-                //                     saveData()
-                //                 }
-                //             break;
-                //         case 2: iterator = msg.iterator
-                //                 show('info','La prueba ha sido pausada por el usuario')
-
-                //                 // Display Pause Button and Hide the Play Button
-                //                 playBtn.classList.remove('d-none')
-                //                 pauseBtn.classList.add('d-none')
-                //             break;
-                //     }
-                // })
-
-                // show('info','La prueba ha empezado.')
             
             if(_master.JSON.get(_tmpDevices[i]).connected){
                 var _child = fork(__dirname + "\\js\\test.js")
@@ -858,27 +776,30 @@ playBtn.addEventListener('click', () => {
 
                                 if(msg.cmd === 'F' || msg.cmd === 'P'){
                                     var date = new Date()
-                                    // msg.update = JSON.parse(msg.update)
 
-                                    // _master.JSON.get(`${msg.device}`).battery = msg.update.bat
+                                    msg.update = JSON.parse(msg.update)
 
+                                    _master.JSON.get(`${msg.device}`).battery = msg.update.bat
 
-                                    // if(!msg.update.edo_con){
-                                    //     _master.JSON.get(`${msg.device}`).connected = msg.update.edo_con
+                                    console.log(_finished);
 
-                                    //     let count = parseInt(_numDevices.innerText)
-                                    //     count = count - 1 <= 0 ? 0 : count--;
-                                    //     _numDevices.innerText = count;
+                                    if(!msg.update.edo_con){
+                                        _master.JSON.get(`${msg.device}`).connected = msg.update.edo_con
 
-                                    //     show('error','Se desconecto el dispositivo: ' +  _master.JSON.get(msg.device).id)
+                                        let count = parseInt(_numDevices.innerText)
+                                        count = count - 1 <= 0 ? 0 : count--;
+                                        _numDevices.innerText = count;
 
-                                    // }
+                                        show('error','Se desconecto el dispositivo: ' +  _master.JSON.get(msg.device).id)
+
+                                    }
                                     
                                     // Redraw each chart with all the data generated.
                                     reDrawChart(_chartsMap.get(`${msg.device}-main`),'main', BUFFER);                
                                     reDrawChart(_chartsMap.get(`${msg.device}-accelerometer`),'accelerometer', BUFFER);                
                                     reDrawChart(_chartsMap.get(`${msg.device}-gyroscope`), 'gyroscope', BUFFER);
                                     displayChannels(_master.JSON)
+
                                     show('success',`Monitoreo terminado ${msg.device}.`)
 
                                     process.kill(msg.id)
@@ -908,6 +829,7 @@ playBtn.addEventListener('click', () => {
                                 playBtn.classList.remove('d-none')
                                 pauseBtn.classList.add('d-none')
                             break;
+                        case 3: 
                     }
                 })
             }else{
@@ -1221,9 +1143,11 @@ function readData(device, div){
 }
 
 // Update a chart
-function reDrawChart(map, chart, buffer = 0){
+async function reDrawChart(map, chart, buffer = 0){
     let max = null;
     let min = null;
+
+    let arre = Array.from({length: map.buffer.length - 1}, (_, i) => i);
 
     if(buffer){
         let arr;
@@ -1239,7 +1163,6 @@ function reDrawChart(map, chart, buffer = 0){
 
         processData(arr, map.buffer, chart)
         
-
         // Update datasets with the buffer 
         map.chart.data.datasets.forEach((dataset, index) => {
             if(max === null)
@@ -1255,15 +1178,11 @@ function reDrawChart(map, chart, buffer = 0){
             dataset.data = arr[index]
 
             // Clean map values.
-            map.values[index] = []
-
-            // Update labels
-            map.chart.data.labels = map.labels;
+            map.values[index] = []     
         });
 
-        // Update labels
-        map.chart.data.labels = Array.from({length: map.buffer.length}, (_, i) => i)
-
+        map.chart.data.labels = arre;
+                
     }else{
         // Update datasets without the buffer 
         map.chart.data.datasets.forEach((dataset, index) => {
@@ -1292,14 +1211,14 @@ function reDrawChart(map, chart, buffer = 0){
     map.chart.config._config.options.plugins.zoom.limits.y.max = max + 1
     map.chart.config._config.options.plugins.zoom.limits.y.min = min - 1
 
-    // console.log(map.chart.config._config.options.plugins.zoom.limits);
 
 
-    // // Clean map labels
-    map.labels = []
+   map.labels = []
 
     // Redraw chart
     map.chart.update()
+
+
 }
 
 
@@ -1330,11 +1249,15 @@ function processData(arreglo, buffer, chart){
 // Close the window.
 closeBtn.addEventListener('click', () =>{
     if(!playBtn.classList.contains('d-none') && !playBtn.classList.contains('pressed')){
-        ipc.send('closeProject', 1)
         _master.JSON.forEach(device =>{
             let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
+
+            while(res.includes('ERROR')){
+                res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
+            }
         })
         
+        ipc.send('closeProject', 1)
     }    
     else{
         document.querySelector('.hd-close').click()
@@ -1366,6 +1289,10 @@ homeBtn.addEventListener('click', () =>{
         ipc.send('closeProject',0)
         _master.JSON.forEach(device =>{
             let res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
+
+            while(res.includes('ERROR')){
+                res = execSync(`${__dirname}\\serial\\main.exe STP ${device.id} ${_portCOM}`).toString()
+            }
         })
         
     }    

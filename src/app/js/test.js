@@ -35,11 +35,8 @@ process.on('message', async (msg)=>{
                     while(x.includes('ERROR')){
                         x = execSync(`${path1} STP ${msg._device} ${msg._portCOM}`).toString();
                     }
-
-                    console.log('Dipositivo ' + msg.id_zone + ': ', x);
-
                     // Send the order to kill the process.
-                    process.send({id: msg.pid, flag: 1, device: msg.id_zone, iterator: iterator, cmd: resp_cmd, buffer: buffer})
+                    process.send({id: msg.pid, flag: 1, device: msg.id_zone, iterator: iterator, cmd: resp_cmd, buffer: buffer, update: x})
 
                 }else{
                     process.send({
@@ -81,10 +78,21 @@ process.on('message', async (msg)=>{
             }
             await sleep(refresh)
         }
+    }else if(msg.stop){
+        let x = execSync(`${path1} STP ${msg._device} ${msg._portCOM}`).toString();
+
+        while(x.includes('ERROR')){
+            x = execSync(`${path1} STP ${msg._device} ${msg._portCOM}`).toString();
+        }
+
+        process.send({id: msg.pid, flag: 1, device: msg._device, iterator: iterator, cmd: 'F', buffer: buffer, update: x})
+
+
     }else{
         process.send({id: msg.pid, flag: 2, device: msg.id_zone, iterator: iterator, max: _nTimes})
         iterator = _nTimes;
-    }    
+        console.log('muerto');
+    }   
 })
 
 // Delay functions
