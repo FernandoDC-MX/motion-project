@@ -31,9 +31,16 @@ process.on('message', async (msg)=>{
                     resp_cmd = lastData.resp_cmd;
 
                     let x = execSync(`${path1} STP ${msg._device} ${msg._portCOM}`).toString();
-                    console.log(x);
+
+                    while(x.includes('ERROR')){
+                        x = execSync(`${path1} STP ${msg._device} ${msg._portCOM}`).toString();
+                    }
+
+                    console.log('Dipositivo ' + msg.id_zone + ': ', x);
+
                     // Send the order to kill the process.
                     process.send({id: msg.pid, flag: 1, device: msg.id_zone, iterator: iterator, cmd: resp_cmd, buffer: buffer})
+
                 }else{
                     process.send({
                         chart:'main', 

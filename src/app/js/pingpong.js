@@ -205,7 +205,7 @@ function updateClickable(){
 				switch(msg.action){
 					case 'stop': stopMyo();
 						break;
-					case 'movement': console.log('Valor actual: ', lastValue, ' Valor que llega: ', msg.last);
+					case 'movement': //console.log('Valor actual: ', lastValue, ' Valor que llega: ', msg.last);
 									if(msg.last > 1000){ //Sube
 										paddle_1.style.top =
 											Math.max(
