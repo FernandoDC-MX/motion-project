@@ -105,6 +105,7 @@ async function moveBall(dx, dy, dxd, dyd) {
 			score_1.innerHTML = +score_1.innerHTML + 1;
 		}
 
+
 		// Stop action
 		child.send({
 			'action': 'stop',
@@ -129,6 +130,16 @@ async function moveBall(dx, dy, dxd, dyd) {
 		message.innerHTML = 'Presionar Enter';
 		document.querySelector('.control').classList.remove('d-none')
 		message.style.left = 38 + 'vw';
+
+		if(score_1.innerHTML >= 2){
+			alert('Jugador 1 ganó')
+			score_1.innerHTML = 0;
+			score_2.innerHTML = 0;
+		}else if(score_2.innerHTML >= 2){
+			alert('Jugador 2 ganó')
+			score_1.innerHTML = 0;
+			score_2.innerHTML = 0;
+		}
 
 		return;
 	}
