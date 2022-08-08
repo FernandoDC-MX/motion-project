@@ -730,6 +730,8 @@ playBtn.addEventListener('click', () => {
         _master.startTest(_settings)
 
         let _tmpDevices = [ ..._master.JSON.keys()]
+        let count = 0;
+
         for(let i = 0; i < _mainCharts.length; i++){
             
             if(_master.JSON.get(_tmpDevices[i]).connected){
@@ -780,8 +782,6 @@ playBtn.addEventListener('click', () => {
                                     msg.update = JSON.parse(msg.update)
 
                                     _master.JSON.get(`${msg.device}`).battery = msg.update.bat
-
-                                    console.log(_finished);
 
                                     if(!msg.update.edo_con){
                                         _master.JSON.get(`${msg.device}`).connected = msg.update.edo_con
@@ -834,6 +834,16 @@ playBtn.addEventListener('click', () => {
                 })
             }else{
                 show('error', `${_tmpDevices[i]} sin respuesta `)
+                count++
+
+                if(count >= _master.JSON.size){
+                    playBtn.classList.remove('pressed','d-none')
+                    stopBtn.classList.add('d-none')
+                    playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
+
+                    arrChilds.clear()
+                    _finished = 0;
+                }
             }
         }
 
@@ -2208,9 +2218,7 @@ function updateReadables(){
             if(_response.Estado === 'OK'){
                 var _content = _response.Contenido.data;
                 
-                
-                document.querySelector('.menu').classList.add('d-none')
-
+            
                 const _zone = document.querySelector('._charts');
                 _zone.innerHTML = ''
                 document.querySelector('.container-message').classList.add('d-none');                
