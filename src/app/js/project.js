@@ -8,7 +8,7 @@ const zoomPlugin = require('chartjs-plugin-zoom');
 const Chart = require('chart.js');
 
 // Process
-const { execSync, exec } = require('child_process');
+const { execSync } = require('child_process');
 const fork = require("child_process").fork
 
 /* ---------------------------- Classes ------------------------------ */
@@ -946,7 +946,7 @@ function drawMainChart(color){
             labels: [],
             datasets: [{
                 backgroundColor: color,
-                borderColor: color,
+                borderColor: color + '3A',
                 label: 'EMG',
                 data: [],
                 tension: 0.2
@@ -1221,7 +1221,7 @@ async function reDrawChart(map, chart, buffer = 0){
 
     map.chart.config._config.options.plugins.zoom.limits.y.max = max + 1
     map.chart.config._config.options.plugins.zoom.limits.y.min = min - 1
-
+    console.log(map.chart.config._config.options.plugins.zoom.limits);
 
 
    map.labels = []

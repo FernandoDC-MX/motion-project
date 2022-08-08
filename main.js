@@ -1,7 +1,7 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, globalShortcut  } = require('electron')
 const usbDetect = require('usb-detection');
 const path = require('path')
 
@@ -27,7 +27,7 @@ const splashScreen = () =>{
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: true,
+      devTools: false,
     },
     backgroundColor: '#383838',
     show: false,
@@ -61,7 +61,7 @@ const  createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: true,
+      devTools: false,
     },
     frame:false,
     show: false,
@@ -132,7 +132,7 @@ const projectWindow = (evt, args) =>{
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: true,
+      devTools: false,
     },
     frame: false,
     show: false,
@@ -245,7 +245,7 @@ const pingpongWindow = (evt, args) =>{
       Height:800,
       Width: 1000,
       webPreferences: {
-        devTools: true,
+        devTools: false,
         nodeIntegration: true,
         contextIsolation: false,
       },
@@ -299,5 +299,18 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
 
+app.on('browser-window-focus', function () {
+  globalShortcut.register("CommandOrControl+R", () => {
+      console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+  });
+  globalShortcut.register("F5", () => {
+      console.log("F5 is pressed: Shortcut Disabled");
+  });
+});
+
+app.on('browser-window-blur', function () {
+  globalShortcut.unregister('CommandOrControl+R');
+  globalShortcut.unregister('F5');
+});
 // In this file you can include the rest of your app's specific main process
 // code. Tu también puedes ponerlos en archivos separados y requerirlos aquí.
