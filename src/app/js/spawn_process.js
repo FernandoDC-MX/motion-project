@@ -13,8 +13,6 @@ process.on('message', (args) => {
             break;
         case 'stop': stopTest(args.id, args.com);
             break;
-        // case 'get': getLastData();
-        //     break;
     }
 })
 
@@ -45,7 +43,7 @@ const playTest = (_id, com) =>{
         let res = JSON.parse(response);
 
         if(res.edo_con){
-            // fillBuffer(_id, com);
+            fillBuffer(_id, com);
             process.send({response: res.edo_con, message: res, action: 'play', function: 'playTest'})
         }else{
             process.send({response: res.edo_con, message: res, action: 'stop', function: 'playTest'})
@@ -89,48 +87,30 @@ const stopTest = (_id, com) =>{
 }
 
 
-// const fillBuffer = async (_id, com) =>{
-//     iterator = 0;
+const fillBuffer = async (_id, com) =>{
+    iterator = 0;
 
-//     while(iterator < nMaxIterations){
-//         const child = spawn(__dirname + '\\main.exe', ['DAT', _id, com]);
+    while(iterator < nMaxIterations){
+        let response = execSync(`${__dirname}\\main.exe DAT ${_id} ${com}`).toString();
 
-//         child.stdout.on('data', (data) => {
-//             if(!data.toString().includes('ERROR')){
-//                 process.send({'buffer': data.toString()})
-//                 let cleanData = data.toString().replaceAll("\\r\\n",'').split('-');
-//                 console.log("Buffer: ", cleanData);
+        if(!response.includes('ERROR')){
+            process.send({'buffer': response})
+            
+            let cleanData = response.replaceAll('\r\n','').split('-');
 
-//                 let lastData = JSON.parse(cleanData[cleanData.length - 1])
+            let lastData = JSON.parse(cleanData[cleanData.length - 1])
 
-//                 if(!lastData.hasOwnProperty('resp_cmd')){
-//                     buffer.push(lastData)
-//                     process.send({'last': lastData.myo, 'action': 'movement'})
-//                 }
-//             }
-//         });
+            if(!lastData.hasOwnProperty('resp_cmd')){
+                buffer.push(lastData)
+                process.send({'last': lastData.myo, 'action': 'movement'})
+            }
+        }
 
-//         child.stderr.on('data', (data) => {
-//             process.send({'stderr':data})
-//         });
+        iterator++;
 
-//         child.on('error', (error) => {
-//             process.send({'error':error.message})
-//         });
-
-//         // child.on('close', (code) => {
-//         //     process.send({'close': 'Saliendo de fill: ' + code})
-//         // });
-
-//         iterator++;
-
-//         await sleep(nRefresh)
-//     }
-// }
-
-// const getLastData = () =>{
-//     process.send({'lastData': buffer[buffer.length - 1]})
-// }
+        await sleep(nRefresh)
+    }
+}
 
 // Delay functions
 function sleep(ms) {

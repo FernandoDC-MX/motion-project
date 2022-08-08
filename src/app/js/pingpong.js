@@ -36,7 +36,7 @@ document.addEventListener('keydown', (e) => {
 		gameState = gameState == 'start' ? 'play' : 'start';
 
 		if (gameState == 'play') {
-			
+			startMyo()
 
 			document.querySelector('#goal-notification').style.animation = '';
 			message.innerHTML = '';
@@ -53,24 +53,6 @@ document.addEventListener('keydown', (e) => {
 	}
 
 	if (gameState == 'play') {
-				
-		// if (e.key == 'w') {
-		// paddle_1.style.top =
-		// 	Math.max(
-		// 		board_coord.top,
-		// 		paddle_1_coord.top - window.innerHeight * 0.06
-		// 	) + 'px';
-		// 	paddle_1_coord = paddle_1.getBoundingClientRect();
-		// }
-
-		// if (e.key == 's') {
-		// 	paddle_1.style.top =
-		// 		Math.min(
-		// 			board_coord.bottom - paddle_common.height,
-		// 			paddle_1_coord.top + window.innerHeight * 0.06
-		// 		) + 'px';
-		// 	paddle_1_coord = paddle_1.getBoundingClientRect();
-		// }
 
 		if (e.key == 'ArrowUp') {
 		paddle_2.style.top =
@@ -122,8 +104,6 @@ async function moveBall(dx, dy, dxd, dyd) {
 		} else {
 			score_1.innerHTML = +score_1.innerHTML + 1;
 		}
-
-		await(500)
 
 		// Stop action
 		child.send({
@@ -222,7 +202,6 @@ function updateClickable(){
 			document.querySelector('.loader').classList.remove('d-none')
 
 			child.on('message', (msg) => {
-				console.log(msg);
 				switch(msg.action){
 					case 'stop': stopMyo();
 						break;
@@ -244,13 +223,12 @@ function updateClickable(){
 									}
 									lastValue = msg.last;
 							break;
-					case 'play': 
-							break;
 					case 'continue': cards_zone.classList.remove('d-none') 
 									 bootstrap.Modal.getInstance(document.getElementById("editableDevice")).hide();
 									 document.querySelector('.control').classList.remove('d-none');
 						break;
-					case 'failed': cards_zone.classList.remove('d-none') 
+					case 'failed': 	gameState = 'start';
+									cards_zone.classList.remove('d-none') 
 									document.querySelector('.loader').classList.add('d-none');
 									alert('Error al conectar dispositivo')
 						break;
