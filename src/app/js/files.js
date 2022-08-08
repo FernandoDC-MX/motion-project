@@ -40,6 +40,11 @@ function storeData(__path, _data, filename){
     fs.writeFile(__path + filename + '.json', JSON.stringify(_data), { flag: 'wx' }, function(err){
         if(err){
             z++;
+
+            if(filename.indexOf('(') > -1){
+                filename = filename.substring(0, filename.indexOf('('))
+            }
+            
             storeData(`${__path}`, _data, `${filename}(${z})`);
         }
     })

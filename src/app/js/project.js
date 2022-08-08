@@ -841,6 +841,7 @@ playBtn.addEventListener('click', () => {
                     stopBtn.classList.add('d-none')
                     playBtn.querySelector('title').innerHTML = 'Empezar prueba.'
 
+                    saveData()
                     arrChilds.clear()
                     _finished = 0;
                 }
@@ -851,7 +852,7 @@ playBtn.addEventListener('click', () => {
         show('error', 'Primero debes de seleccionar una configuración.')
     }
     
-    // Untoggle this comments to enable the pause option
+    // Uncomment this lines to enable the pause option
     // else{
     //     // Display Play Button and Hide the Pause Button
     //     playBtn.classList.add('d-none')
