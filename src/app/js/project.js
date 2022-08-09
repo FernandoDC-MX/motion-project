@@ -771,7 +771,8 @@ playBtn.addEventListener('click', () => {
                         case 0: switch(msg.chart){
                                     case 'main': addData(_chartsMap.get(`${msg.device}-main`), msg.label, msg.data)
                                         break;
-                                    case 'accelerometer': addData(_chartsMap.get(`${msg.device}-accelerometer`), msg.label, msg.data)
+                                    case 'accelerometer': 
+                                                 addData(_chartsMap.get(`${msg.device}-accelerometer`), msg.label, msg.data)
                                         break;
                                     case 'gyroscope': addData(_chartsMap.get(`${msg.device}-gyroscope`), msg.label, msg.data)
                                         break;
@@ -788,7 +789,7 @@ playBtn.addEventListener('click', () => {
 
                                 if(msg.cmd === 'F' || msg.cmd === 'P'){
                                     var date = new Date()
-                                    console.log(msg)
+                                    // console.log(msg)
 
                                     msg.update = JSON.parse(msg.update)
 
@@ -1510,7 +1511,7 @@ function updateDisabledMuscles(){
 
     for(let i = 0; i < musculos.length; i++){
         musculos[i].addEventListener('click', function(){
-            console.log(musculos[i])
+            // console.log(musculos[i])
             show('warning', 'Este músculo ya esta ligado a otro dispositivo.')
         })
     }
@@ -1824,7 +1825,7 @@ const pickColor = () =>{
     var index = 0;
 
     while(_hexColors[index] === 0){
-        console.log(index);
+        // console.log(index);
         index++;
     }
 

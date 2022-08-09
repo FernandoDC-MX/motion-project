@@ -25,7 +25,7 @@ process.on('message', async (msg)=>{
             let response = execSync(`${path1} DAT ${msg._device} ${msg._portCOM}`).toString();
 
             if(response && !response.includes('Error')){
-                let cleanData = response.replaceAll('\\r\\n','').split('-');
+                let cleanData = response.replaceAll('\r\n','').split('-');
                 let lastData = JSON.parse(cleanData[cleanData.length - 1]);
 
                 if(lastData.resp_cmd === 'F' || lastData.resp_cmd === 'P'){
