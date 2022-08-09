@@ -998,7 +998,6 @@ function drawMainChart(color){
                     },
                     limits: {
                         y: {min: -5, max: 4000, minRange: 1},
-                        x: {min: 0, max: 1000, minRange: 2},
                     }
                 },
                 title: {
@@ -1059,8 +1058,12 @@ function drawAccelerometerGyroChart(color, title){
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
-                }
+                    ticks: {
+                      callback: function(val, index) {
+                          return val;
+                      },
+                    }
+                },
             },
             plugins: {
                 zoom: {
@@ -1366,6 +1369,7 @@ staticBackdrop.addEventListener('shown.bs.modal', function(){
         Array.from(document.querySelectorAll(`path[data-name="${name}"]`)).forEach((element, index) => {
             element.classList.add('cls-selected')
             element.classList.remove('cls-2') 
+            element.classList.remove('cls-disabled')
         })
 
         this.querySelector('.nombre').innerHTML = _muscle_info._muscle_name.toUpperCase()
@@ -1442,8 +1446,11 @@ staticBackdrop.addEventListener('hidden.bs.modal', () =>{
         Array.from(document.querySelectorAll('.cls-selected')).forEach(element =>{
             element.classList.add('cls-2')
             element.classList.remove('cls-selected')
+            element.classList.remove('cls-disabled')
         })
     }
+
+    
 })
 
 // Event to link the device with the muscle and save into the info.json file.
@@ -1503,6 +1510,7 @@ function updateDisabledMuscles(){
 
     for(let i = 0; i < musculos.length; i++){
         musculos[i].addEventListener('click', function(){
+            console.log(musculos[i])
             show('warning', 'Este músculo ya esta ligado a otro dispositivo.')
         })
     }
