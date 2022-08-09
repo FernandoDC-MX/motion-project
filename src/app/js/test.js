@@ -14,7 +14,7 @@ let path1 = path.resolve("src/app/serial", "main.exe");
 const delay = 0.03
 
 process.on('message', async (msg)=>{
-
+    console.log(msg)
     if(msg.play){
         _nTimes = msg.nTimes;
         let refresh = msg._refresh + delay;
@@ -23,6 +23,7 @@ process.on('message', async (msg)=>{
 
         while(resp_cmd != 'F'){
             let response = execSync(`${path1} DAT ${msg._device} ${msg._portCOM}`).toString();
+
             if(response && !response.includes('Error')){
                 let cleanData = response.replaceAll('\\r\\n','').split('-');
                 let lastData = JSON.parse(cleanData[cleanData.length - 1]);

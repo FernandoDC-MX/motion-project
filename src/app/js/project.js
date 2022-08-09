@@ -180,18 +180,20 @@ class MasterDevice{
 
     startTest(settings){
         this.#_slaveDevices.forEach((value, key) => {
-            let res = JSON.parse(execSync(`${__dirname}\\serial\\main.exe STR ${key} ${_portCOM} ${settings.number_rate} ${settings.imu_rate}`).toString())
-
+            if(value.connected){
+                let res = JSON.parse(execSync(`${__dirname}\\serial\\main.exe STR ${key} ${_portCOM} ${settings.number_rate} ${settings.imu_rate}`).toString())
+            
             if(!res.edo_con){
                 value.connected = 0
-
                 let count = parseInt(_numDevices.innerText)
                 count = count - 1 <= 0 ? 0 : count--;
                 _numDevices.innerText = count
+
             }else if(!value.connected && res.edo_con){
                 let count = parseInt(_numDevices.innerText)
                 count += 1;
                 _numDevices.innerText = count
+            }
             }
         });
     }
@@ -222,7 +224,7 @@ let _settings = null;
 
 let BUFFER = 1;
 let _finished = 0;
-
+let _started = 0;
 /* ------------------------------------ Functions ---------------------------- */
 
 // Set the window's title.
@@ -691,13 +693,20 @@ async function stopAll(e, status = 0){
      let dev = document.querySelectorAll('.main-graph-container');
 
      arrChilds.forEach((value, key) => {
-         value.send({
-             stop: 1,
-             pid: key,
-             _portCOM: _portCOM,
-             _device: dev[i].getAttribute('data-device')
-         })
-         i++;
+
+        let x = _master.JSON.get(dev[i].getAttribute('data-device'))
+        while(!x.connected){
+            x = _master.JSON.get(dev[i].getAttribute('data-device'))
+            i++
+        };
+
+        value.send({
+            stop: 1,
+            pid: key,
+            _portCOM: _portCOM,
+            _device: x.id
+        })
+
      });
 
     // Clear the map.
@@ -735,6 +744,7 @@ playBtn.addEventListener('click', () => {
         for(let i = 0; i < _mainCharts.length; i++){
             
             if(_master.JSON.get(_tmpDevices[i]).connected){
+                _started++;
                 var _child = fork(__dirname + "\\js\\test.js")
                     
                 arrChilds.set(_child.pid, _child)
@@ -778,6 +788,7 @@ playBtn.addEventListener('click', () => {
 
                                 if(msg.cmd === 'F' || msg.cmd === 'P'){
                                     var date = new Date()
+                                    console.log(msg)
 
                                     msg.update = JSON.parse(msg.update)
 
@@ -805,7 +816,8 @@ playBtn.addEventListener('click', () => {
                                     process.kill(msg.id)
                                     _finished++;
 
-                                    if(_finished >= parseInt(_numDevices.innerText)){
+                                    if(_finished >= _started){
+
                                         var localDate = date.getFullYear() + '/' + ('0' + (date.getMonth()+1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
                                         var localHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)
                                         var meridian = date.getHours() > 12 ? 'P.M.' : 'A.M.'
@@ -819,6 +831,7 @@ playBtn.addEventListener('click', () => {
                                         arrChilds.clear()
                                         saveData()
                                         _finished = 0;
+                                        _started = 0;
                                     }
                                 }
                             break;
@@ -1158,7 +1171,7 @@ async function reDrawChart(map, chart, buffer = 0){
     let max = null;
     let min = null;
 
-    let arre = Array.from({length: map.buffer.length - 1}, (_, i) => i);
+    let arre = Array.from({length: map.buffer.length}, (_, i) => i);
 
     if(buffer){
         let arr;
@@ -1221,7 +1234,7 @@ async function reDrawChart(map, chart, buffer = 0){
 
     map.chart.config._config.options.plugins.zoom.limits.y.max = max + 1
     map.chart.config._config.options.plugins.zoom.limits.y.min = min - 1
-    console.log(map.chart.config._config.options.plugins.zoom.limits);
+    // console.log(map.chart.config._config.options.plugins.zoom.limits);
 
 
    map.labels = []

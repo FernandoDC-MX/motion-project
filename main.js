@@ -61,7 +61,7 @@ const  createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: false,
+      devTools: true,
     },
     frame:false,
     show: false,
@@ -132,7 +132,7 @@ const projectWindow = (evt, args) =>{
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: false,
+      devTools: true,
     },
     frame: false,
     show: false,
@@ -245,7 +245,7 @@ const pingpongWindow = (evt, args) =>{
       Height:800,
       Width: 1000,
       webPreferences: {
-        devTools: false,
+        devTools: true,
         nodeIntegration: true,
         contextIsolation: false,
       },
@@ -296,21 +296,24 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+   // Stop the USB process.
+   usbDetect.stopMonitoring();
+   
   if (process.platform !== 'darwin') app.quit()
 })
 
-app.on('browser-window-focus', function () {
-  globalShortcut.register("CommandOrControl+R", () => {
-      console.log("CommandOrControl+R is pressed: Shortcut Disabled");
-  });
-  globalShortcut.register("F5", () => {
-      console.log("F5 is pressed: Shortcut Disabled");
-  });
-});
+// app.on('browser-window-focus', function () {
+//   globalShortcut.register("CommandOrControl+R", () => {
+//       console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+//   });
+//   globalShortcut.register("F5", () => {
+//       console.log("F5 is pressed: Shortcut Disabled");
+//   });
+// });
 
-app.on('browser-window-blur', function () {
-  globalShortcut.unregister('CommandOrControl+R');
-  globalShortcut.unregister('F5');
-});
+// app.on('browser-window-blur', function () {
+//   globalShortcut.unregister('CommandOrControl+R');
+//   globalShortcut.unregister('F5');
+// });
 // In this file you can include the rest of your app's specific main process
 // code. Tu también puedes ponerlos en archivos separados y requerirlos aquí.
