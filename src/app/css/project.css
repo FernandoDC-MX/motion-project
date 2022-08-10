@@ -175,6 +175,14 @@ html, body{
 
 .cls-1{fill:#252525;}
 
+.cls-w{
+    fill: none;
+    stroke: rgb(255, 255, 255);
+    stroke-linecap: round;
+    stroke-miterlimit: 10;
+    stroke-width: 10px;
+}
+
 .cls-h{fill:none;stroke:rgb(255, 255, 255);stroke-linecap:round;stroke-linejoin:round;stroke-width:10px;}
 
 .cls-w{fill: gray;}
