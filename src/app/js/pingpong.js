@@ -86,8 +86,8 @@ async function moveBall(dx, dy, dxd, dyd) {
 		ball_coord.bottom <= paddle_1_coord.bottom
 	) {
 		dxd = 1;
-		dx = Math.floor(Math.random() * 4) + 3;
-		dy = Math.floor(Math.random() * 4) + 3;
+		dx = Math.floor(Math.random() * 2) + 3;
+		dy = Math.floor(Math.random() * 2) + 3;
 	}
 	if (
 		ball_coord.right >= paddle_2_coord.left &&
@@ -95,8 +95,8 @@ async function moveBall(dx, dy, dxd, dyd) {
 		ball_coord.bottom <= paddle_2_coord.bottom
 	) {
 		dxd = 0;
-		dx = Math.floor(Math.random() * 4) + 3;
-		dy = Math.floor(Math.random() * 4) + 3;
+		dx = Math.floor(Math.random() * 2) + 3;
+		dy = Math.floor(Math.random() * 2) + 3;
 	}
 	if ( ball_coord.left <= board_coord.left || ball_coord.right >= board_coord.right) {
 		if (ball_coord.left <= board_coord.left) {
