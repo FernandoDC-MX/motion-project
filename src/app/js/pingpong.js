@@ -46,11 +46,11 @@ document.addEventListener('keydown', (e) => {
 			message.style.left = 42 + 'vw';
 			
 			requestAnimationFrame(() => {
-					dx = Math.floor(Math.random() * 4) + 3;
-					dy = Math.floor(Math.random() * 4) + 3;
-					dxd = Math.floor(Math.random() * 2);
-					dyd = Math.floor(Math.random() * 2);
-					moveBall(dx, dy, dxd, dyd);
+					dx = Math.floor(Math.random() * VEL_BALL) + 3;
+					dy = Math.floor(Math.random() * VEL_BALL) + 3;
+					dxd = Math.floor(Math.random() * VEL_BALL);
+					dyd = Math.floor(Math.random() * VEL_BALL);
+					moveBall(dx, dy, 2, dyd);
 			});
 		}
 	}
@@ -77,6 +77,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 async function moveBall(dx, dy, dxd, dyd) {
+	console.log(dx,dy,dxd,dyd);
 	if (ball_coord.top <= board_coord.top) {
 		dyd = 1;
 	}
