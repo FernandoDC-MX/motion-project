@@ -1537,17 +1537,17 @@ function settings(){
 
             // Displays the correct description and sets the default values.
             switch(this.getAttribute('data-option')){
-                case 'basic':   title.innerHTML = 'Modalidad 1';
-                                description.innerHTML = 'La configuración básica sirve para...'
-                                setSettingsValues(0,0,60, true)                                
+                case 'basic':   title.innerHTML = 'Corredor';
+                                description.innerHTML = 'Rutina para un atleta promedio de entre 10 y 15 kilómetros por hora con una frecuencia cardiaca de 135 a 160 latidos por minuto.'
+                                setSettingsValues(20,800,1500, true)                                
                     break;
-                case 'medium':  title.innerHTML = 'Modalidad 2';
-                                description.innerHTML = 'La configuración media sirve para...'
-                                setSettingsValues(1,1,60, true)
+                case 'medium':  title.innerHTML = 'Gimnasta';
+                                description.innerHTML = 'Acróbata de disciplina mixta que realizan varios movimientos continuos que requieren flexibilidad, resistencia, y conocimiento de los saltos en la viga de balance y en el piso.'
+                                setSettingsValues(60,1000,3600, true)
                     break;
-                case 'hard':    title.innerHTML = 'Modalidad 3';
-                                description.innerHTML = 'La configuración experta sirve para...'
-                                setSettingsValues(2,2,60, true)                                
+                case 'hard':    title.innerHTML = 'Boxeador';
+                                description.innerHTML = 'Deportista promedio de entre 15 a 25 años que enfrenta con sus puños cubiertos con diferentes frecuencias cardiacas con aproximadamente entre 350 a 450 golpes.'
+                                setSettingsValues(40,800,3000, true)                                
                     break;
                 case 'advanced':title.innerHTML = 'Configuración avanzada';
                                 description.innerHTML = 'La configuración avanzada sirve para...'
