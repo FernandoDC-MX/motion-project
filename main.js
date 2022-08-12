@@ -29,7 +29,7 @@ const splashScreen = () =>{
       contextIsolation: false,
       devTools: false,
     },
-    backgroundColor: '#383838',
+    backgroundColor: '#282828',
     show: false,
     frame: false
   })
